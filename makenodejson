@@ -1,0 +1,11 @@
+#!/usr/bin/ruby
+
+require 'multi_json'
+
+h = Hash.new
+h['ilk']='host'
+h['status'] = :surplus
+h['params'] = Hash.new
+h['params']['site'] = 'moon'
+File.open('node.json','w'){|f| f.print MultiJson.dump(h) + "\n"}
+

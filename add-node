@@ -1,0 +1,4 @@
+#!/bin/bash -x
+
+curl -XPOST http://localhost:9292/nodes/jojo.example.com -d @node.json
+
