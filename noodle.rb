@@ -33,7 +33,7 @@ class Noodle < Sinatra::Base
     end
 
     get '/help' do
-        puts 'Noodle helps!'
+        "Noodle helps!\n"
     end
 
     post '/nodes/:name' do
