@@ -1,9 +1,8 @@
-require 'sinatra/base'
-require 'elasticsearch/persistence'
-require 'multi_json'
-require 'oj'
-
 class Node
+    attr_accessor :name, :ilk, :status, :facts, :params
+    include Enumerable
+    @@nodes = []
+
     def initialize(name,options)
 	@name   = name
 	# TODO: limit these two to a list of defaults
@@ -11,6 +10,7 @@ class Node
 	@status = options[:status] || 'enabled'
         @facts  = options[:facts]  || Hash.new
 	@params = options[:params] || Hash.new
+	@@nodes.push self
     end
 
     def to_s
@@ -23,6 +23,10 @@ class Node
 	s << "Facts:\n"
 	@facts.map{ |name,value| s << "  #{name} = #{value}\n"}
 	s
+    end
+
+    def self.find(name)
+        @@nodes.find{|n| n.name == name}
     end
 end
 
@@ -40,13 +44,18 @@ class Noodle < Sinatra::Base
         options = nil
 	begin
 	    options = MultiJson.load(request.body.read,:symbolize_keys => true)
-	rescue MultiJson::ParseError => exception
-	    puts exception.data
+        rescue MultiJson::ParseError => exception
+            puts exception.data
             puts exception.cause
-	    halt 500
-	end
-        n =  Node.new(params['name'],options)
-	n.to_s
+            halt 500
+        end
+        node = Node.new(params['name'],options)
+        node.to_s
+    end
+
+    get '/nodes/:name' do
+        node = Node.find(params[:name])
+        node.to_s unless node.nil?
     end
 end
 
