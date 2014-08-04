@@ -9,9 +9,11 @@ and server database that we [use at work](bit.ly/noodlerockeagle2013).
 
 ## Examples
 ```bash
+# Search
 curl -s -XGET http://localhost:9292/nodes/jojo.example.com
 # (returns nothing)
 
+# Create
 curl -s -XPOST http://localhost:9292/nodes/jojo.example.com -d @node.json
 # Name:   jojo.example.com
 # Ilk:    host
@@ -20,6 +22,7 @@ curl -s -XPOST http://localhost:9292/nodes/jojo.example.com -d @node.json
 #   site = moon
 # Facts:
 
+# Search again
 curl -s -XGET http://localhost:9292/nodes/jojo.example.com
 # Name:   jojo.example.com
 # Ilk:    host
