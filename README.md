@@ -7,6 +7,13 @@ and server database that we [use at work](bit.ly/noodlerockeagle2013).
 * Magicaly templated Heira backend
 * Relationships, including enough to define network config for an entire stack (from IPs to firewall and load balancer, etc)
 
+## Running it (untested)
+* `git clone`
+* `cd noodle`
+* `bundle install`
+* Run tests: `rake`
+* Start app: `rackup`
+
 ## Examples
 ```bash
 # Search

@@ -1,1 +1,0 @@
-bundle exec rspec -c --format d spec/*
