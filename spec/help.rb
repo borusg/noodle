@@ -1,12 +1,11 @@
-# Cribbed from http://recipes.sinatrarb.com/p/testing/rspec
+require_relative 'spec_helper'
 
-require File.expand_path '../spec_helper.rb', __FILE__
+describe 'Hello World' do
 
-describe "Noodle" do
-  it "should allow getting help" do
+  it 'should have hello world' do
     get '/help'
-    expect last_response.ok?
-    expect last_response.body == 'Noodle Helps!'
+    assert last_response.must_be :ok?
+    assert last_response.body.must_include "Noodle helps!"
   end
 end
 

@@ -5,5 +5,6 @@ gem 'thin'
 gem 'elasticsearch-persistence'
 gem 'oj'
 gem 'multi_json'
-gem 'rspec'
+gem 'minitest'
+gem 'minitest-reporters'
 
