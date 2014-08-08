@@ -1,4 +1,9 @@
 # TODO: JSON all responses
+require 'sinatra/base'
+require 'sinatra/reloader' # TODO: Only if dev
+require 'elasticsearch/persistence'
+require 'multi_json'
+require 'oj'
 
 class Node
     attr_accessor :name, :ilk, :status, :facts, :params
