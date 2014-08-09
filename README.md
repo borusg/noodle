@@ -48,6 +48,15 @@ curl -s -XGET http://localhost:9292/nodes/jojo.example.com
 #   site = moon
 # Facts:
 
+# Patch
+curl -s -XPATCH http://localhost:9292/nodes/jojo.example.com -d @patch.json
+# Name:   jojo.example.com
+# Ilk:    host
+# Status: surplus
+# Params:
+#   site = mars  <--- changed
+# Facts:
+
 # Delete
 curl -s -XDELETE http://localhost:9292/nodes/jojo.example.com
 # Deleted jojo.example.com
