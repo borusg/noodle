@@ -7,4 +7,5 @@ gem 'oj'
 gem 'multi_json'
 gem 'minitest'
 gem 'minitest-reporters'
+gem 'rake'
 
