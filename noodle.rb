@@ -56,11 +56,13 @@ class Noodle < Sinatra::Base
         status 200
     end
 
-    patch 'nodes/:name' do
+    patch '/nodes/:name' do
     end
 
-    # TODO: Do?
-    #options '/nodes/:name' do
-    #end
+    options '/nodes/:name' do
+        # TODO: Generate this list
+        headers 'Allow' => 'DELETE, GET, OPTIONS, PATCH, POST, PUT'
+        status 200
+    end
 end
 
