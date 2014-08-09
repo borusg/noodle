@@ -30,6 +30,15 @@ curl -s -XPOST http://localhost:9292/nodes/jojo.example.com -d @node.json
 #   site = moon
 # Facts:
 
+# Or create via PUT
+curl -s -XPUT http://localhost:9292/nodes/jojo.example.com -d @node.json
+# Name:   jojo.example.com
+# Ilk:    host
+# Status: surplus
+# Params:
+#   site = moon
+# Facts:
+
 # Search again
 curl -s -XGET http://localhost:9292/nodes/jojo.example.com
 # Name:   jojo.example.com
