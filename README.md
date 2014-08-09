@@ -16,6 +16,7 @@ and server database that we [use at work](bit.ly/noodlerockeagle2013).
 
 ## Examples
 ```bash
+
 # Search
 curl -s -XGET http://localhost:9292/nodes/jojo.example.com
 # (returns nothing)
@@ -37,6 +38,11 @@ curl -s -XGET http://localhost:9292/nodes/jojo.example.com
 # Params:
 #   site = moon
 # Facts:
+
+# Delete
+curl -s -XDELETE http://localhost:9292/nodes/jojo.example.com
+# Deleted jojo.example.com
+
 
 ```
 
