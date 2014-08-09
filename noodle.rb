@@ -19,8 +19,11 @@ class Noodle < Sinatra::Base
         status 200
     end
 
-    post '/nodes/:name' do
-        halt(422, "#{params[:name]} already exists.\n") if Node.find(params[:name])
+    put '/nodes/:name' do
+        # TODO: Surely order matters
+        if node = Node.find(params[:name])
+            node.delete
+        end
 
         options = nil
         begin
@@ -35,6 +38,11 @@ class Noodle < Sinatra::Base
         status 201
     end
 
+    post '/nodes/:name' do
+        halt(422, "#{params[:name]} already exists.\n") if Node.find(params[:name])
+        call! env.merge("REQUEST_METHOD" => 'PUT')
+    end
+
     get '/nodes/:name' do
         node = Node.find(params[:name])
         body node.to_s unless node.nil?
@@ -47,5 +55,12 @@ class Noodle < Sinatra::Base
         body "Deleted #{params[:name]}\n"
         status 200
     end
+
+    patch 'nodes/:name' do
+    end
+
+    # TODO: Do?
+    #options '/nodes/:name' do
+    #end
 end
 
