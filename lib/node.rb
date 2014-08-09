@@ -13,6 +13,12 @@ class Node
         @@nodes.push self
     end
 
+    def update(name,options)
+        # TODO: Switch to hashie + deep merge
+        # For now, assume we're only merging params
+        @params.merge!(options[:params])
+    end
+
     def to_s
         s = ''
         s << "Name:   #{@name}\n"

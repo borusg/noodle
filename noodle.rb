@@ -25,6 +25,7 @@ class Noodle < Sinatra::Base
             node.delete
         end
 
+        # TODO: DRY with patch
         options = nil
         begin
             options = MultiJson.load(request.body.read,:symbolize_keys => true)
@@ -36,6 +37,21 @@ class Noodle < Sinatra::Base
         node = Node.new(params[:name],options)
         body node.to_s
         status 201
+    end
+
+    patch '/nodes/:name' do
+        halt(422, "#{params[:name]} does not exist.\n") unless node = Node.find(params[:name])
+
+        begin
+            options = MultiJson.load(request.body.read,:symbolize_keys => true)
+        rescue MultiJson::ParseError => exception
+            puts exception.data
+            puts exception.cause
+            halt 500
+        end
+        node.update(params[:name],options)
+        body node.to_s
+        status 200
     end
 
     post '/nodes/:name' do
@@ -54,9 +70,6 @@ class Noodle < Sinatra::Base
         node.delete
         body "Deleted #{params[:name]}\n"
         status 200
-    end
-
-    patch '/nodes/:name' do
     end
 
     options '/nodes/:name' do
