@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/happymcplaksin/noodle.svg?branch=master)](https://travis-ci.org/happymcplaksin/noodle)
+
 # noodle
 Clean-room implementation of the [Puppet External Node Classifier](http://docs.puppetlabs.com/guides/external_nodes.html)
 and server database that we [use at work](bit.ly/noodlerockeagle2013).
@@ -8,12 +9,15 @@ and server database that we [use at work](bit.ly/noodlerockeagle2013).
 * Magicaly templated Heira backend
 * Relationships, including enough to define network config for an entire stack (from IPs to firewall and load balancer, etc)
 
-## Running it (untested)
+## Running it
+Step-by-step:
 * `git clone`
 * `cd noodle`
 * `bundle install`
 * Run tests: `rake`
 * Start app: `rackup`
+
+Perhaps the [travis-ci.org steps](https://travis-ci.org/happymcplaksin/noodle) are helpful and/or a decent alternative :)
 
 ## Examples
 ```bash
