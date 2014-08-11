@@ -108,6 +108,7 @@ PLATFORMS
 
 DEPENDENCIES
   elasticsearch-persistence
+  hashie
   minitest
   minitest-reporters
   multi_json
