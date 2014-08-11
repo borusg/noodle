@@ -71,6 +71,7 @@ curl -s -XDELETE http://localhost:9292/nodes/jojo.example.com
 
 ## Thanks and references and notes to self
 * [elasticsearch-persistence](https://github.com/elasticsearch/elasticsearch-rails/tree/master/elasticsearch-persistence)
+* [elasticsearch-persistence model definition](https://github.com/elasticsearch/elasticsearch-rails/tree/master/elasticsearch-persistence#model-definition)
 * [Sinatra](https://github.com/sinatra/sinatra)
 * [Heroku HTTP+JSON API design](https://github.com/interagent/http-api-design)
 * [REST](http://en.wikipedia.org/wiki/Representational_state_transfer#Applied_to_web_services)
