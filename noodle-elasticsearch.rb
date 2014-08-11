@@ -1,6 +1,6 @@
 # TODO: JSON all responses
 #
-# TODO: Using name is the key is probably stupid
+# TODO: Using name as the key is probably stupid
 #
 # TODO: Assuming we're perfect and there's only one result for a search
 #       by name is probably stupid
