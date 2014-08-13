@@ -8,7 +8,7 @@ class Node
     # TODO: limit these two to a list of defaults
     attribute :ilk,    String
     attribute :status, String
-    attribute :facts,  Hashie::Mash
-    attribute :params, Hashie::Mash
+    attribute :facts,  Hashie::Mash, mapping: { type: 'object' }
+    attribute :params, Hashie::Mash, mapping: { type: 'object' }
 end
 

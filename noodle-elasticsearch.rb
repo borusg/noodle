@@ -10,9 +10,9 @@ require 'elasticsearch/persistence'
 require 'multi_json'
 require 'oj'
 
-# Noodle parts
-#require_relative 'lib/node'
 require_relative 'lib/node-elasticsearch'
+# TODO: This seems like a stupid spot for this:
+Node.gateway.create_index!
 
 class Noodle < Sinatra::Base
     # TODO: Production :)

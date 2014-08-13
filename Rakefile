@@ -4,6 +4,6 @@ task :default => [:test]
 
 require 'rake/testtask'
 Rake::TestTask.new do |t|
-    t.pattern = 'spec/*.rb'
+    t.pattern = 'spec/elasticsearch/*.rb'
 end
 
