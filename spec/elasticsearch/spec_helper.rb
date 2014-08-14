@@ -12,6 +12,11 @@ begin
 rescue
 end
 
+# TODO: Enable this via 'rake debug' or something
+# Holy cow, log
+#Node.gateway.client.transport.logger = Logger.new(STDERR)
+
+# Make sure the index exists
 Node.gateway.create_index!
 
 require "minitest/reporters"

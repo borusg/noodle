@@ -44,6 +44,7 @@ class Noodle < Sinatra::Base
                            status:  options[:status],
                            facts:   options[:facts],
                            params:  options[:params])
+        # TODO: It's not really instantly created!  So by returning right away we're sort of lying.
         body node.to_json + "\n"
         status 201
     end

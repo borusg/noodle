@@ -11,6 +11,9 @@ describe "Noodle" do
     assert_equal r['status'],         'surplus'
     assert_equal r['params']['site'], 'moon'
 
+    # If you don't wait, the node doesn't really exist in Elasticsearch yet!
+    sleep 1
+
     get '/nodes/jojo.example.com'
     assert_equal last_response.status, 200
 
