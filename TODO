@@ -1,9 +1,15 @@
+- Put it all under /api/v1.  But have a convenience /_/ alias
+for searching.
+
+- Set content type and return JSON by default.  Support
+returning "pretty" output as text/plain and make it match
+what existing Noodle returns
+
 make it one giant hashie to avoid quirks like if :ilk, etc?
 
-plus one giant hashie makes it easier to extend
-
-put it all under /api/v1
+plus one giant hashie makes it easier to extend?
 
 split out backends?
 
-just for a joke try a 2nd back end like mongo_mapper
+just for a joke try a 2nd back end like mongo_mapper?
+
