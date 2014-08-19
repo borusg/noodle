@@ -39,11 +39,21 @@ class Noodle < Sinatra::Base
             puts exception.cause
             halt 500
         end
-        node = Node.create(name:    params[:name],
-                           ilk:     options[:ilk],
-                           status:  options[:status],
-                           facts:   options[:facts],
-                           params:  options[:params])
+
+        args = {name:    params[:name],
+                id:      params[:name],
+                ilk:     options[:ilk],
+                status:  options[:status]}
+        args[:facts]  = options[:facts] unless options[:facts].nil?
+        args[:params] = options[:params] unless options[:params].nil?
+        node = Node.create(args)
+
+        # Default FQDN fact in case none provided
+        if node.facts[:fqdn].nil?
+            node.facts[:fqdn] = params[:name]
+            node.save
+        end
+
         # TODO: It's not really instantly created!  So by returning right away we're sort of lying.
         body node.to_json + "\n"
         status 201
@@ -97,6 +107,12 @@ class Noodle < Sinatra::Base
     options '/nodes/:name' do
         # TODO: Generate this list
         headers 'Allow' => 'DELETE, GET, OPTIONS, PATCH, POST, PUT'
+        status 200
+    end
+
+    # "Magic" search
+    get '/nodes/_/:search' do
+        body "Your search is: #{params[:search]}\n"
         status 200
     end
 end
