@@ -11,6 +11,7 @@ describe "Noodle" do
     assert_equal r['ilk'],            'host'
     assert_equal r['status'],         'surplus'
     assert_equal r['params']['site'], 'moon'
+    assert_equal r['facts']['fqdn'],  'gogo.example.com'
 
     get '/nodes/gogo.example.com'
     assert_equal last_response.status, 200
@@ -21,6 +22,7 @@ describe "Noodle" do
     assert_equal r['ilk'],            'host'
     assert_equal r['status'],         'surplus'
     assert_equal r['params']['site'], 'moon'
+    assert_equal r['facts']['fqdn'],  'gogo.example.com'
   end
 end
 

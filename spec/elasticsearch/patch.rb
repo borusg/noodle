@@ -15,6 +15,7 @@ describe "Noodle" do
     assert_equal r['ilk'],            'host'
     assert_equal r['status'],         'surplus'
     assert_equal r['params']['site'], 'mars'
+    assert_equal r['facts']['fqdn'],  'dodo.example.com'
   end
 end
 

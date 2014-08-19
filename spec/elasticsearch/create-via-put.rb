@@ -10,6 +10,7 @@ describe "Noodle" do
     assert_equal r['ilk'],            'host'
     assert_equal r['status'],         'surplus'
     assert_equal r['params']['site'], 'moon'
+    assert_equal r['facts']['fqdn'],  'popo.example.com'
   end
 end
 
