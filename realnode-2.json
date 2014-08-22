@@ -1,0 +1,12 @@
+{"ilk":"host","status":"surplus",
+ "params": {
+    "site":"mars",
+    "project":"heat",
+    "prodlevel":"prod"
+ },
+ "facts": {
+    "operatingsystem":"ackack",
+    "ram_gigs":"16",
+    "processorcount":"4"
+    }
+}

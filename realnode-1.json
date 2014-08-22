@@ -1,0 +1,12 @@
+{"ilk":"host","status":"surplus",
+ "params": {
+    "site":"moon",
+    "project":"luun",
+    "prodlevel":"dev"
+ },
+ "facts": {
+    "operatingsystem":"moonix",
+    "ram_gigs":"4",
+    "processorcount":"2"
+    }
+}

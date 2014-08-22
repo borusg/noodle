@@ -66,6 +66,11 @@ curl -s -XPATCH http://localhost:9292/nodes/jojo.example.com -d @patch.json
 curl -s -XDELETE http://localhost:9292/nodes/jojo.example.com
 # Deleted jojo.example.com
 
+# Pry me a river
+curl -s -XPUT http://localhost:9292/nodes/jojo.example.com -d @realnode-1.json
+curl -s -XPUT http://localhost:9292/nodes/jojo.example.com -d @realnode-2.json
+./prymeariver
+# And try some of the examples it spits out
 
 ```
 

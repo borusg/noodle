@@ -1,0 +1,21 @@
+#!/usr/bin/ruby
+
+require_relative "./lib/node-elasticsearch"
+require 'pry'
+
+puts "For example:"
+puts "Node.search( query: { match: { name: 'cheese1.example.com'}})"
+puts
+puts "Or:"
+puts "r = Node.search( query: { match: { 'params.site' => 'moon'} } )"
+puts
+puts "Or:"
+puts "r = Node.search( query: { match: { 'params.site' => 'moon'} } ).response.hits.hits.collect{|hit| hit._source.name}"
+puts
+puts "Or this which means OR:"
+puts "r = Node.search( query: { match: { 'params.project' => 'luun'},"
+puts "                          match: { site: 'moon'}"
+puts "                        } ).response.hits.hits.collect{|hit| hit._source.name}"
+
+pry
+
