@@ -13,9 +13,13 @@ puts "Or:"
 puts "r = Node.search( query: { match: { 'params.site' => 'moon'} } ).response.hits.hits.collect{|hit| hit._source.name}"
 puts
 puts "Or this which means OR:"
-puts "r = Node.search( query: { match: { 'params.project' => 'luun'},"
-puts "                          match: { site: 'moon'}"
-puts "                        } ).response.hits.hits.collect{|hit| hit._source.name}"
-
+puts "r = Node.search( query: { bool: { must: ["
+puts "                                            { match: { 'params.project' => 'luun'}},"
+puts "                                            { match: { site: 'moon'}}"
+puts "                                        ]}}).response.hits.hits.collect{|hit| hit._source.name}"
+puts
+puts "r = Node.search( query: { multi_match: { query: 'luun', fields: "
+puts "                      ['params.project','facts.project']}}).response.hits.hits.collect{|hit| hit._source.name}"
+puts
 pry
 
