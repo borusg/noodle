@@ -112,8 +112,11 @@ class Noodle < Sinatra::Base
 
     # "Magic" search
     get '/nodes/_/:search' do
-        body "Your search is: #{params[:search]}\n"
-        status 200
+        # TODO: Content-type
+        # TODO: Prettier
+        b,s = Node.magic(params[:search])
+        body   b.sort.join("\n") + "\n"
+        status s
     end
 end
 

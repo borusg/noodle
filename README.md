@@ -72,6 +72,15 @@ curl -s -XPUT http://localhost:9292/nodes/jojo.example.com -d @realnode-2.json
 ./prymeariver
 # And try some of the examples it spits out
 
+# Magic search #1
+curl -q -XGET 'http://localhost:9292/nodes/_/site=moon'
+# cheese1.example.com
+# jojo.example.com
+
+# Magic search #2
+curl -q -XGET 'http://localhost:9292/nodes/_/operatingsystem=ackack'
+# greenie.example.com
+
 ```
 
 ## Thanks and references and notes to self
