@@ -59,11 +59,13 @@ class Node
                 when term_present_and_show_value
                 when term_show_value
                 when term_matches_regexp
-                     term,value = part.split(/=/,2)
+                     term,value = part.split(/=~/,2)
                      search.match(term,value)
+
                 when term_equals
                      term,value = part.split(/=/,2)
                      search.equals(term,value)
+
                 else
                      puts "TODO: Handle unknown magic parts gracefully"
             end
@@ -91,6 +93,7 @@ class Node::Search
     end
 
     def go
-        Node.search(query: {query_string: { default_operator: 'AND', query: query.join }})
+        q = query.join(' ')
+        Node.search(query: {query_string: { default_operator: 'AND', query: q }})
     end
 end
