@@ -67,7 +67,7 @@ class Node
                      puts "TODO: Handle unknown magic parts gracefully"
             end
         end
-        r = Node.search(query: search.query)
+        r = search.go
         # TODO: This is ugly
         [r.response.hits.hits.collect{|hit| hit._source.name}, 200]
     end
@@ -78,11 +78,16 @@ class Node::Search
     attr_accessor :query
 
     def initialize
-        @query = Hash.new
+        @query = []
     end
 
     def equals(term,value)
-        @query[:multi_match] = { query: value, fields: ["params.#{term}","facts.#{term}"]}
+        @query << "(params.#{term}:#{value} OR facts.#{term}:#{value})"
     end
 
+    def go
+        # TODO: Maybe change default operator to AND
+        q = @query.join(' AND ')
+        Node.search(query: {query_string: { query: q }})
+    end
 end
