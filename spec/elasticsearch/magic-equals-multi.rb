@@ -1,4 +1,5 @@
 require_relative 'spec_helper'
+require 'uri'
 
 describe "Noodle" do
   it "should allow finding by 'TERM1=VALUE1 TERM2=VALUE2'" do
@@ -9,7 +10,7 @@ describe "Noodle" do
 
     Node.gateway.refresh_index!
 
-    get '/nodes/_/site=jupiter%20prodlevel=prod'
+    get "/nodes/_/site=jupiter#{URI.escape(' ')}prodlevel=prod"
     assert_equal last_response.status, 200
     assert_equal last_response.body, "coco.example.com\n"
   end
