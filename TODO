@@ -1,5 +1,3 @@
-- Order tests to GETs can search for things created by earlier PUTs
-
 - Put it all under /api/v1.  But have a convenience /_/ alias
 for searching.
 
