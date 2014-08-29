@@ -59,9 +59,10 @@ class Node
                 when term_present_and_show_value
                 when term_show_value
                 when term_matches_regexp
+                     term,value = part.split(/=/,2)
+                     search.match(term,value)
                 when term_equals
-                     # TODO: Limit split to 2
-                     term,value = part.split(/=/)
+                     term,value = part.split(/=/,2)
                      search.equals(term,value)
                 else
                      puts "TODO: Handle unknown magic parts gracefully"
@@ -85,9 +86,11 @@ class Node::Search
         @query << "(params.#{term}:#{value} OR facts.#{term}:#{value})"
     end
 
+    def match(term,value)
+        @query << "(params.#{term}:*#{value}* OR facts.#{term}:*#{value}*)"
+    end
+
     def go
-        # TODO: Maybe change default operator to AND
-        q = @query.join(' AND ')
-        Node.search(query: {query_string: { query: q }})
+        Node.search(query: {query_string: { default_operator: 'AND', query: query.join }})
     end
 end
