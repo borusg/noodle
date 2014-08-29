@@ -27,7 +27,7 @@ class Node
     # x=~y
     # x=y
     #
-    # @x=y
+    # @x=y AKA -x=y
     # x?
     # full
     # json
@@ -52,6 +52,7 @@ class Node
         # NOTE: Order below should be preserved in case statement
         term_present                = Regexp.new '\?$'
         term_present_and_show_value = Regexp.new '\?=$'
+        term_does_not_equal         = Regexp.new '^[-@][^=]+=.+'
         term_show_value             = Regexp.new '=$'
         term_matches_regexp         = Regexp.new '=~'
         term_equals                 = Regexp.new '='
@@ -60,8 +61,15 @@ class Node
                 when term_present
                      term = part.sub(/\?$/,'')
                      search.exists(term)
+
                 when term_present_and_show_value
+
+                when term_does_not_equal
+                     term,value = part.sub(/^[-@]/,'').split(/=/,2)
+                     search.not_equal(term,value)
+
                 when term_show_value
+
                 when term_matches_regexp
                      term,value = part.split(/=~/,2)
                      search.match(term,value)
@@ -98,6 +106,10 @@ class Node::Search
 
     def exists(term)
         @query << "(_exists_:params.#{term} OR _exists_:facts.#{term})"
+    end
+
+    def not_equal(term,value)
+        @query << "-(params.#{term}:#{value} AND -facts.#{term}:#{value})"
     end
 
     def go
