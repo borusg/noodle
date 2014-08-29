@@ -50,12 +50,16 @@ class Node
         search = Node::Search.new
 
         # NOTE: Order below should be preserved in case statement
+        term_present                = Regexp.new '\?$'
         term_present_and_show_value = Regexp.new '\?=$'
         term_show_value             = Regexp.new '=$'
         term_matches_regexp         = Regexp.new '=~'
         term_equals                 = Regexp.new '='
         query.split(/\s+/).each do |part|
             case part
+                when term_present
+                     term = part.sub(/\?$/,'')
+                     search.exists(term)
                 when term_present_and_show_value
                 when term_show_value
                 when term_matches_regexp
@@ -90,6 +94,10 @@ class Node::Search
 
     def match(term,value)
         @query << "(params.#{term}:*#{value}* OR facts.#{term}:*#{value}*)"
+    end
+
+    def exists(term)
+        @query << "(_exists_:params.#{term} OR _exists_:facts.#{term})"
     end
 
     def go
