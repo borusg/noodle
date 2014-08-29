@@ -12,6 +12,10 @@ class Node
     attribute :facts,  Hashie::Mash, mapping: { type: 'object' }, default: {}
     attribute :params, Hashie::Mash, mapping: { type: 'object' }, default: {}
 
+    def to_puppet
+        "TODO"
+    end
+
     # Magic:
     #
     # Make everything return either JSON or pretty text, defaul based on
@@ -19,18 +23,19 @@ class Node
     #
     # Duplicate existing:
     #
-    # All parts of the query are ANDed
+    # All parts of the query are ANDed by default
     #
     # hostname (partial or full)
-    # x?=
-    # x=
-    # x=~y
-    # x=y
     #
+    # x=y
+    # x=~y
     # @x=y AKA -x=y
     # x?
+    #
+    # x?=
+    # x=
     # full
-    # json
+    # json # Implies full
     # jmm :)  Maybe by some extensible plugin thing?
     #
     # New ideas:
@@ -48,6 +53,8 @@ class Node
     #   could be used in a search to mean prodlevel=prod
     def self.magic(query)
         search = Node::Search.new
+        show   = []
+        format = :default
 
         # NOTE: Order below should be preserved in case statement
         term_present                = Regexp.new '\?$'
@@ -58,33 +65,54 @@ class Node
         term_equals                 = Regexp.new '='
         query.split(/\s+/).each do |part|
             case part
-                when term_present
-                     term = part.sub(/\?$/,'')
-                     search.exists(term)
+            when term_present
+                 term = part.sub(/\?$/,'')
+                 search.exists(term)
 
-                when term_present_and_show_value
+            when term_present_and_show_value
+                 term = part.sub(/\?$/,'')
+                 search.exists(term)
+                 show << term
 
-                when term_does_not_equal
-                     term,value = part.sub(/^[-@]/,'').split(/=/,2)
-                     search.not_equal(term,value)
+            when term_does_not_equal
+                 term,value = part.sub(/^[-@]/,'').split(/=/,2)
+                 search.not_equal(term,value)
 
-                when term_show_value
+            when term_show_value
+                 show << term
 
-                when term_matches_regexp
-                     term,value = part.split(/=~/,2)
-                     search.match(term,value)
+            when term_matches_regexp
+                 term,value = part.split(/=~/,2)
+                 search.match(term,value)
 
-                when term_equals
-                     term,value = part.split(/=/,2)
-                     search.equals(term,value)
+            when term_equals
+                 term,value = part.split(/=/,2)
+                 search.equals(term,value)
 
-                else
-                     puts "TODO: Handle unknown magic parts gracefully"
+            when 'full'
+                 format = :full
+
+            when 'json'
+                 format = :json
+
+            else
+                 puts "TODO: Handle unknown magic parts gracefully"
             end
         end
-        r = search.go
-        # TODO: This is ugly
-        [r.response.hits.hits.collect{|hit| hit._source.name}, 200]
+
+        status = 200
+        found = search.go
+        case format
+        when :json
+            body = found.results.to_json"\n"
+        when :yaml
+            body = found.results.map{|one| one.to_puppet}.join("\n") + "\n"
+        when :full
+            body = 'TODO'
+        else
+            body = found.response.hits.hits.collect{|hit| hit._source.name}.sort.join("\n") + "\n"
+        end
+        [body,status]
     end
 end
 
@@ -117,3 +145,4 @@ class Node::Search
         Node.search(query: {query_string: { default_operator: 'AND', query: q }})
     end
 end
+

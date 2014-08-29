@@ -115,7 +115,7 @@ class Noodle < Sinatra::Base
         # TODO: Content-type
         # TODO: Prettier
         b,s = Node.magic(params[:search])
-        body   b.sort.join("\n") + "\n"
+        body   b
         status s
     end
 end
