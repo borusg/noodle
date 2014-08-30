@@ -9,6 +9,10 @@ and server database that we [use at work](http://bit.ly/noodlerockeagle2013).
 * Magicaly templated Heira backend
 * Relationships, including enough to define network config for an entire stack (from IPs to firewall and load balancer, etc)
 
+## Requirements
+* [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)  It's easy to install, too powerful to ignore :)
+* Ruby.  TravisCI says it works with version 1.9, 2.0 and 2.1
+
 ## Running it
 Step-by-step:
 * `git clone`
