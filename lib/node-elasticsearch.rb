@@ -70,7 +70,7 @@ class Node
                  search.exists(term)
 
             when term_present_and_show_value
-                 term = part.sub(/\?$/,'')
+                 term = part.sub(/\?=$/,'')
                  search.exists(term)
                  show << term
 
@@ -79,7 +79,7 @@ class Node
                  search.not_equal(term,value)
 
             when term_show_value
-                 show << term
+                 show << part.chop
 
             when term_matches_regexp
                  term,value = part.split(/=~/,2)
@@ -110,7 +110,21 @@ class Node
         when :full
             body = 'TODO'
         else
-            body = found.response.hits.hits.collect{|hit| hit._source.name}.sort.join("\n") + "\n"
+            ['',200] if found.response.hits.empty?
+            # Always show name, show term=value pairs for anything in 'show'
+            body = []
+            found.results.each do |hit|
+                add = hit.name
+                show.each do |term|
+                    if !hit.params.nil?   and hit.params[term]
+                        add << " #{term}=#{hit.params[term]}"
+                    elsif !hit.facts.nil? and hit.facts[term]
+                        add << " #{term}=#{hit.facts[term]}"
+                    end
+                end
+                body << add + "\n"
+            end
+            body = body.sort.join
         end
         [body,status]
     end
