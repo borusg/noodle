@@ -21,5 +21,8 @@ puts
 puts "r = Node.search( query: { multi_match: { query: 'luun', fields: "
 puts "                      ['params.project','facts.project']}}).response.hits.hits.collect{|hit| hit._source.name}"
 puts
+
+r = Node.search( query: { match: { 'params.site' => 'moon'} } )
+
 pry
 
