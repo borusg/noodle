@@ -27,7 +27,7 @@ curl -s -XGET http://localhost:9292/nodes/jojo.example.com
 # (returns nothing)
 
 # Create
-curl -s -XPOST http://localhost:9292/nodes/jojo.example.com -d @node.json
+curl -s -XPOST http://localhost:9292/nodes/jojo.example.com -d @util/node.json
 # Name:   jojo.example.com
 # Ilk:    host
 # Status: surplus
@@ -36,7 +36,7 @@ curl -s -XPOST http://localhost:9292/nodes/jojo.example.com -d @node.json
 # Facts:
 
 # Or create via PUT
-curl -s -XPUT http://localhost:9292/nodes/jojo.example.com -d @node.json
+curl -s -XPUT http://localhost:9292/nodes/jojo.example.com -d @util/node.json
 # Name:   jojo.example.com
 # Ilk:    host
 # Status: surplus
@@ -54,7 +54,7 @@ curl -s -XGET http://localhost:9292/nodes/jojo.example.com
 # Facts:
 
 # Patch
-curl -s -XPATCH http://localhost:9292/nodes/jojo.example.com -d @patch.json
+curl -s -XPATCH http://localhost:9292/nodes/jojo.example.com -d @util/patch.json
 # Name:   jojo.example.com
 # Ilk:    host
 # Status: surplus
@@ -67,8 +67,8 @@ curl -s -XDELETE http://localhost:9292/nodes/jojo.example.com
 # Deleted jojo.example.com
 
 # Pry me a river
-curl -s -XPUT http://localhost:9292/nodes/jojo.example.com -d @realnode-1.json
-curl -s -XPUT http://localhost:9292/nodes/jojo.example.com -d @realnode-2.json
+curl -s -XPUT http://localhost:9292/nodes/jojo.example.com -d @util/realnode-1.json
+curl -s -XPUT http://localhost:9292/nodes/jojo.example.com -d @util/realnode-2.json
 ./prymeariver
 # And try some of the examples it spits out
 

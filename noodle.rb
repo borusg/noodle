@@ -10,7 +10,7 @@ require 'elasticsearch/persistence'
 require 'multi_json'
 require 'oj'
 
-require_relative 'lib/node-elasticsearch'
+require_relative 'lib/node'
 # TODO: This seems like a stupid spot for this:
 Node.gateway.create_index!
 

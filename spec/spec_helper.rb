@@ -2,7 +2,7 @@ ENV['RACK_ENV'] = 'test'
 
 require 'minitest/autorun'
 require 'rack/test'
-require_relative '../../noodle-elasticsearch'
+require_relative '../noodle'
 
 # Make sure we don't explode a real index
 Node.gateway.index = 'this-is-for-running-noodle-elasticsearch-tests-only'
