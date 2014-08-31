@@ -14,7 +14,7 @@ and server database that we [use at work](http://bit.ly/noodlerockeagle2013).
 * Ruby.  travis-ci.org says it works with versions 1.9, 2.0 and 2.1.
 
 ## Running it
-* Remeber to install [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)
+* Remember to install [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)
 * `git clone https://github.com/happymcplaksin/noodle.git`
 * `cd noodle`
 * `bundle install`
