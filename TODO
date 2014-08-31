@@ -1,6 +1,22 @@
+- Tests for:
+-- full
+-- json
+-- term=
+-- term?=
+-- Multiples like:
+--- site=mars site= prodlevel=
+--- site=mars ram_gigs?=
+
 - Put text/plain output in 'column -t' format
 
 - Pretty JSON format a la Elasticsearch
+
+- Move from /nodes index to /noodle/nodes.  So we can have noodle/options, etc.
+
+- Options stored in ES noodle/options
+
+- Only show status=enabled by default (actually, make an option
+for the list of statuses shown by defaul)
 
 - Put it all under /api/v1?  But have a convenience /_/ alias
 for searching.
