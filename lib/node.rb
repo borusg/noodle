@@ -13,7 +13,11 @@ class Node
     attribute :params, Hashie::Mash, mapping: { type: 'object' }, default: {}
 
     def to_puppet
-        "TODO"
+        r = {}
+        # TODO: Get class list from node/options
+        r['classes']    = ['baseclass']
+        r['parameters'] = @params
+        r.to_yaml.strip
     end
 
     def full
@@ -35,17 +39,18 @@ class Node
     #
     # All parts of the query are ANDed by default
     #
-    # hostname (partial or full)
-    #
+    # Implemented:
     # x=y
     # x=~y
     # @x=y AKA -x=y
     # x?
     # x?=
     # x=
-    # json # Implies full
-    #
     # full
+    # json # Implies full
+    # hostname (partial or full)
+    #
+    # Still TODO:
     # jmm :)  Maybe by some extensible plugin thing?
     #
     # New ideas:
@@ -106,7 +111,11 @@ class Node
                  format = :json
 
             else
-                 puts "TODO: Handle unknown magic parts gracefully"
+                 # Assume everything else is a hostname (or partial hostname)
+                 # TODO: Maybe this is a bit awkward when bare words are used with
+                 # other magic operators?
+                 search.match_name(part)
+                 format = :yaml
             end
         end
 
@@ -158,6 +167,10 @@ class Node::Search
 
     def exists(term)
         @query << "(_exists_:params.#{term} OR _exists_:facts.#{term})"
+    end
+
+    def match_name(name)
+        @query << "name:#{name}*"
     end
 
     def not_equal(term,value)
