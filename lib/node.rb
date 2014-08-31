@@ -31,11 +31,11 @@ class Node
     # x=~y
     # @x=y AKA -x=y
     # x?
-    #
     # x?=
     # x=
-    # full
     # json # Implies full
+    #
+    # full
     # jmm :)  Maybe by some extensible plugin thing?
     #
     # New ideas:
@@ -104,14 +104,14 @@ class Node
         found = search.go
         case format
         when :json
-            body = found.results.to_json"\n"
+            body = found.results.to_json + "\n"
         when :yaml
             body = found.results.map{|one| one.to_puppet}.join("\n") + "\n"
         when :full
             body = 'TODO'
         else
             ['',200] if found.response.hits.empty?
-            # Always show name, show term=value pairs for anything in 'show'
+            # Always show name. Show term=value pairs for anything in 'show'
             body = []
             found.results.each do |hit|
                 add = hit.name
