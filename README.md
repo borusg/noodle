@@ -10,12 +10,12 @@ and server database that we [use at work](http://bit.ly/noodlerockeagle2013).
 * Relationships, including enough to define network config for an entire stack (from IPs to firewall and load balancer, etc)
 
 ## Requirements
-* [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)  It's easy to install, too powerful to ignore :)
-* Ruby.  TravisCI says it works with version 1.9, 2.0 and 2.1
+* [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)  It's easy to install, too powerful to ignore.  Plus you get an [awesome UI named Kibana](http://www.elasticsearch.org/overview/kibana/) for free.  Now how much won't you complain about this requirement? :)
+* Ruby.  travis-ci.org says it works with versions 1.9, 2.0 and 2.1.
 
 ## Running it
-Step-by-step:
-* `git clone`
+* Remeber to install [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)
+* `git clone https://github.com/happymcplaksin/noodle.git`
 * `cd noodle`
 * `bundle install`
 * Run tests: `rake`
