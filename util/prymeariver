@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require_relative "./lib/node-elasticsearch"
+require_relative '../lib/node'
 require 'pry'
 
 puts "For example:"
