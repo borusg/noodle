@@ -16,6 +16,16 @@ class Node
         "TODO"
     end
 
+    def full
+        r = []
+        r << "Name:   " + @name
+        r << "Status: " + @status
+        r << "Ilk:    " + @ilk
+        r << "Params: " ; r << @params.map {|term,value| "  #{term}=#{value}"}
+        r << "Facts:  " ; r << @facts.map  {|term,value| "  #{term}=#{value}"}
+        r.join("\n")
+    end
+
     # Magic:
     #
     # Make everything return either JSON or pretty text, defaul based on
@@ -108,7 +118,7 @@ class Node
         when :yaml
             body = found.results.map{|one| one.to_puppet}.join("\n") + "\n"
         when :full
-            body = 'TODO'
+            body = found.results.map{|one| one.full}.join("\n") + "\n"
         else
             ['',200] if found.response.hits.empty?
             # Always show name. Show term=value pairs for anything in 'show'
