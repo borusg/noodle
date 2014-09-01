@@ -1,6 +1,3 @@
-- Tests for:
--- json
-
 - Put text/plain output in 'column -t' format
 
 - Pretty JSON format a la Elasticsearch
