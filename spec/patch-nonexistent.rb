@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 
-describe "Noodle" do
+describe 'Noodle' do
   it "should fail to patch a node that doesn't exist" do
     patch '/nodes/hoho.example.com', params = '{"params":{"site":"mars"}}'
     assert_equal last_response.status,422

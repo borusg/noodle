@@ -21,7 +21,7 @@ end
 # Make sure the index exists
 Node.gateway.create_index!
 
-require "minitest/reporters"
+require 'minitest/reporters'
 Minitest::Reporters.use!
 
 include Rack::Test::Methods

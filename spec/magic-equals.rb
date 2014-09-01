@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 
-describe "Noodle" do
+describe 'Noodle' do
   it "should allow finding by TERM=VALUE" do
     put '/nodes/roro.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"jupiter"}}'
     assert_equal last_response.status, 201

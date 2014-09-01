@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 require 'uri'
 
-describe "Noodle" do
+describe 'Noodle' do
   it "should allow finding by @TERM=VALUE and -TERM=VALUE" do
     put '/nodes/xoxo.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"jupiter", "justfora":"test"}}'
     assert_equal last_response.status, 201

@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 require 'uri'
 
-describe "Noodle" do
+describe 'Noodle' do
   it "should allow finding by 'TERM1=~VALUE1 TERM2=~VALUE2'" do
     put '/nodes/vovo.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"neptune"}}'
     assert_equal last_response.status, 201

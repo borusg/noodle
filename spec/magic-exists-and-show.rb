@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 require 'cgi'
 
-describe "Noodle" do
+describe 'Noodle' do
   it "should allow finding and showing with TERM?=" do
     put '/nodes/lolo.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"jupiter", "funky":"town"}}'
     assert_equal last_response.status, 201

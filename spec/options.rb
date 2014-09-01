@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 
-describe "Noodle" do
+describe 'Noodle' do
   it "should respond to OPTIONS for /nodes/blah" do
     options '/nodes/qoqo.example.com'
     assert_equal last_response.status,200
