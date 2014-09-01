@@ -1,8 +1,10 @@
-- tests
--- /nodes/_/?fqdn=~greenie
--- /nodes/_/?greenie
+- noodle.ruby script
 
-- noodle script
+- magic ilk=
+
+- status= (and/or via plain 'enabled', 'surplus' (configurable list))
+
+- test for bin/noodle (What's the right way to test via %x?)
 
 - noodlin script
 
@@ -17,7 +19,7 @@
 - Only show status=enabled by default (actually, make an option
 for the list of statuses shown by defaul)
 
-- Put it all under /api/v1?  But have a convenience /_/ alias
+- Put it all under /api/v1?  Or just /v1/?  But have a convenience /_/ alias
 for searching.
 
 - Set content type and return JSON by default.  Support

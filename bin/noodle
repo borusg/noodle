@@ -1,0 +1,6 @@
+#!/bin/bash
+
+[[ -z $NOODLE_SERVER ]] && NOODLE_SERVER=localhost:9292
+
+curl -G "http://${NOODLE_SERVER}/nodes/_/" --data-urlencode "$*"
+
