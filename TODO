@@ -1,7 +1,6 @@
 - Tests for:
 -- json
--- term=
--- term?=
+-- hostname/puppet output
 -- Multiples like:
 --- site=mars site= prodlevel=
 --- site=mars ram_gigs?=
