@@ -10,4 +10,5 @@ gem 'minitest-reporters'
 gem 'rake'
 gem 'rspec'
 gem 'hashie'
+gem 'coveralls', require: false
 
