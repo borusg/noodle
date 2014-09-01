@@ -1,10 +1,13 @@
-- noodle.ruby script
-
 - magic ilk=
 
-- status= (and/or via plain 'enabled', 'surplus' (configurable list))
+- magic status status= and/or via plain 'enabled', 'surplus' (configurable list)
 
-- test for bin/noodle (What's the right way to test via %x?)
+- options/defaults:
+-- list of statuses that work as barewords in magic
+-- ilk
+-- support per-param lists
+
+- test for bin/noodle{,.ruby} (What's the right way to test via %x?)
 
 - noodlin script
 
