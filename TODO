@@ -1,3 +1,11 @@
+- tests
+-- /nodes/_/?fqdn=~greenie
+-- /nodes/_/?greenie
+
+- noodle script
+
+- noodlin script
+
 - Put text/plain output in 'column -t' format
 
 - Pretty JSON format a la Elasticsearch

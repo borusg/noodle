@@ -112,9 +112,17 @@ class Noodle < Sinatra::Base
 
     # "Magic" search
     get '/nodes/_/:search' do
-        # TODO: Content-type
-        # TODO: Prettier
         b,s = Node.magic(params[:search])
+        body   b
+        status s
+    end
+
+    # "Magic" search via query (so I can use 'curl -G --data-urlencode' :)
+    get '/nodes/_/' do
+        # TODO: This can't be the way to do this!
+        query = String.new(params.keys.first)
+        query << "=#{params.values.first}" unless params.values.first.nil?
+        b,s = Node.magic(query)
         body   b
         status s
     end
