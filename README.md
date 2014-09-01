@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/happymcplaksin/noodle.svg?branch=master)](https://travis-ci.org/happymcplaksin/noodle)
+[![Build Status](https://travis-ci.org/happymcplaksin/noodle.svg?branch=master)](https://travis-ci.org/happymcplaksin/noodle) [![Coverage Status](https://img.shields.io/coveralls/happymcplaksin/noodle.svg)](https://coveralls.io/r/happymcplaksin/noodle)
 
 # noodle
 Clean-room implementation of the [Puppet External Node Classifier](http://docs.puppetlabs.com/guides/external_nodes.html)
