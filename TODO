@@ -1,9 +1,5 @@
 - Tests for:
 -- json
--- hostname/puppet output
--- Multiples like:
---- site=mars site= prodlevel=
---- site=mars ram_gigs?=
 
 - Put text/plain output in 'column -t' format
 
