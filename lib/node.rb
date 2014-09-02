@@ -31,7 +31,7 @@ class Node
     end
 
     def self.all
-        body = Node::Search.new.all.go.results.collect{|hit| hit.name}.join("\n")
+        body = Node::Search.new.all.go.results.collect{|hit| hit.name}.sort.join("\n")
         [body, 200]
     end
 
