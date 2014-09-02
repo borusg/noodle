@@ -30,6 +30,13 @@ class Node
         r.join("\n")
     end
 
+    def self.all
+        search = Node::Search.new
+        search.all
+        body = search.go.results.collect{|hit| hit.name}.join("\n")
+        [body, 200]
+    end
+
     # Magic:
     #
     # Make everything return either JSON or pretty text, defaul based on
@@ -175,6 +182,10 @@ class Node::Search
 
     def not_equal(term,value)
         @query << "-(params.#{term}:#{value} AND -facts.#{term}:#{value})"
+    end
+
+    def all
+        @query << '*'
     end
 
     def go

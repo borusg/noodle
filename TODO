@@ -1,11 +1,14 @@
-- magic ilk=
-
-- magic status status= and/or via plain 'enabled', 'surplus' (configurable list)
+- test for /nodes
 
 - options/defaults:
 -- list of statuses that work as barewords in magic
 -- ilk
--- support per-param lists
+-- support per-param lists of acceptable values and/or
+types (string, array, maybe hash)
+
+- magic ilk=
+
+- magic status status= and/or via plain 'enabled', 'surplus' (configurable list)
 
 - test for bin/noodle{,.ruby} (What's the right way to test via %x?)
 

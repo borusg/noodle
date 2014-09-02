@@ -25,6 +25,13 @@ class Noodle < Sinatra::Base
         status 200
     end
 
+    get '/nodes' do
+        # TODO: Support JSON output too
+        b,s = Node.all
+        body   b
+        status s
+    end
+
     put '/nodes/:name' do
         # TODO: Surely order matters, like when creating the new one fails
         nodes.first.delete unless (nodes = Node.search(query: { match: { name: params[:name] } })).size == 0
