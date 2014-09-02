@@ -32,6 +32,16 @@ class Noodle < Sinatra::Base
         status s
     end
 
+    delete '/nodes' do
+        index_name = Node.gateway.index
+        Node.gateway.delete_index!
+        Node.gateway.index = index_name
+        Node.gateway.create_index!
+        Node.gateway.refresh_index!
+        body ''
+        status 200
+    end
+
     put '/nodes/:name' do
         # TODO: Surely order matters, like when creating the new one fails
         nodes.first.delete unless (nodes = Node.search(query: { match: { name: params[:name] } })).size == 0
