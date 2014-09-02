@@ -1,5 +1,3 @@
-- test for /nodes
-
 - options/defaults:
 -- list of statuses that work as barewords in magic
 -- ilk
