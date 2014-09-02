@@ -1,3 +1,6 @@
+- Are travis-ci.org intermittent build failures with ES 503's my fault or theirs?
+Has to be my fault, right?
+
 - options/defaults:
 -- list of statuses that work as barewords in magic
 -- ilk
