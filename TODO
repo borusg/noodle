@@ -1,4 +1,9 @@
-- fix failing tests
+- fix intermittently failing tests.  There's a race condition somewhere.
+Plus I'm not being careful enough with ES.  Should use this to check whether
+the index exists after (re-)creating it:
+http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-exists.html
+
+At least.
 
 - finish lib/option.rb
 
