@@ -1,3 +1,5 @@
+# TODO
+
 * fix intermittently failing tests.  There is a race condition somewhere.
 Plus I amm not being careful enough with ES.  Should use this to check whether
 the index exists after (re-)creating it:
