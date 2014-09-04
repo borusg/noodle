@@ -36,11 +36,18 @@ class Noodle < Sinatra::Base
     end
 
     delete '/nodes' do
+puts "deleting"
         index_name = Node.gateway.index
-        Node.gateway.delete_index!
+        begin
+            Node.gateway.delete_index!
+            Node.gateway.refresh_index!
+        rescue => e
+puts "exception is #{e}"
+            body ''
+            status 200
+        end
         Node.gateway.index = index_name
         Node.gateway.create_index!
-        Node.gateway.refresh_index!
         body ''
         status 200
     end
