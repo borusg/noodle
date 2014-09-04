@@ -40,7 +40,7 @@ puts "deleting"
         index_name = Node.gateway.index
         begin
             Node.gateway.delete_index!
-            Node.gateway.refresh_index!
+            #Node.gateway.refresh_index!
         rescue => e
 puts "exception is #{e}"
             body ''
