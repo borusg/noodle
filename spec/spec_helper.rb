@@ -20,6 +20,7 @@ end
 
 # Make sure the index exists
 Node.gateway.create_index!
+Node.gateway.refresh_index!
 
 require 'minitest/reporters'
 Minitest::Reporters.use!
