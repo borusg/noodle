@@ -1,11 +1,9 @@
 # TODO
 
 * fix intermittently failing tests.  There is a race condition somewhere.
-Plus I amm not being careful enough with ES.  Should use this to check whether
+Plus I am not being careful enough with ES.  Should at least use this to check whether
 the index exists after (re-)creating it:
 http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-exists.html
-
-At least.
 
 * finish lib/option.rb
 
