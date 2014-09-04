@@ -1,5 +1,6 @@
 require 'elasticsearch/persistence/model'
 require 'hashie'
+require_relative 'search'
 
 class Node
     include Elasticsearch::Persistence::Model
@@ -31,7 +32,7 @@ class Node
     end
 
     def self.all
-        body = Node::Search.new.all.go.results.collect{|hit| hit.name}.sort.join("\n")
+        body = Search.new(Node).all.go.results.collect{|hit| hit.name}.sort.join("\n")
         [body, 200]
     end
 
@@ -72,7 +73,7 @@ class Node
     #   For example, if 'prodlevel' were in the list then 'prod'
     #   could be used in a search to mean prodlevel=prod
     def self.magic(query)
-        search = Node::Search.new
+        search = Search.new(Node)
         show   = []
         format = :default
 
@@ -151,51 +152,6 @@ class Node
             body = body.sort.join
         end
         [body,status]
-    end
-end
-
-# TODO: each method should add to the query.
-class Node::Search
-    attr_accessor :query
-
-    def initialize
-        @query = []
-        self
-    end
-
-    def equals(term,value)
-        @query << "(params.#{term}:#{value} OR facts.#{term}:#{value})"
-        self
-    end
-
-    def match(term,value)
-        @query << "(params.#{term}:*#{value}* OR facts.#{term}:*#{value}*)"
-        self
-    end
-
-    def exists(term)
-        @query << "(_exists_:params.#{term} OR _exists_:facts.#{term})"
-        self
-    end
-
-    def match_name(name)
-        @query << "name:#{name}*"
-        self
-    end
-
-    def not_equal(term,value)
-        @query << "-(params.#{term}:#{value} AND -facts.#{term}:#{value})"
-        self
-    end
-
-    def all
-        @query << '*'
-        self
-    end
-
-    def go
-        q = query.join(' ')
-        Node.search(query: {query_string: { default_operator: 'AND', query: q }})
     end
 end
 
