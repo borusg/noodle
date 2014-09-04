@@ -2,6 +2,7 @@ before_install:
   - sudo apt-get purge elasticsearch
   - curl -O https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.1.deb
   - sudo dpkg -i elasticsearch-1.1.1.deb
+  - sudo service elasticsearch start
 language: ruby
 rvm:
   - 2.1.1
