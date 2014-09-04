@@ -1,6 +1,5 @@
 require 'elasticsearch/persistence/model'
 require 'hashie'
-require_relative 'search'
 
 class Node
     include Elasticsearch::Persistence::Model

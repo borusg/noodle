@@ -11,6 +11,9 @@ require 'multi_json'
 require 'oj'
 
 require_relative 'lib/node'
+require_relative 'lib/option'
+require_relative 'lib/search'
+
 # TODO: This seems like a stupid spot for this:
 Node.gateway.create_index!
 
