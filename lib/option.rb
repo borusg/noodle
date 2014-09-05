@@ -4,8 +4,10 @@ require 'hashie'
 class Option
     include Elasticsearch::Persistence::Model
 
-    attribute :allowed_statuses, Array
-    attribute :allowed_ilks,     Array
+    attribute :name,             String, default: 'defaults'
+    attribute :allowed_statuses, Array,  default: %w{enabled disabled future surplus}
+    attribute :allowed_ilks,     Array,  default: %w{host esx ucschassis ucsfi}
+    attribute :required_params,  Array,  default: %w{prodlevel project site}
 
     # TODO: Better explanation and maybe something better than "voodoo"
     #
@@ -35,14 +37,14 @@ class Option
     # noodle site=moon
     #
     # Yes it's perilous but I bet it works for me most of the time.  And I'm very lazy.
-    attribute :bareword_terms,   Array  
+    attribute :bareword_terms,   Array, default: %w{prodlevel project site}
 
     # limits specifies per-param limits on the values or type of
     # the param's possible values.  This does not affect facts.
     #
     # For example:
     #
-    # limits = {site: %qw(moon mars jupiter)}
+    # limits = {site: %w{moon mars jupiter}}
     #
     # says the site params can only be 'moon', 'mars' or 'jupiter'
     #
@@ -51,6 +53,13 @@ class Option
     # limits = {role: Array}
     #
     # says that the role param must be an array.
-    attribute :limits,           Hashie::Mash, mapping: { type: 'object' }, default: {}
+    attribute :limits,           Hashie::Mash, mapping: { type: 'object' },
+        default: {
+                   project:   %w{hr financials lms registration warehouse},
+                   prodlevel: %w{dev preprod prod test},
+                   role:      Array,
+                   stack:     Array,
+                   site:      %w{mars moon jupiter pluto},
+                 }
 end
 
