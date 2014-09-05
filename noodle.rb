@@ -41,7 +41,7 @@ class Noodle < Sinatra::Base
         Node.gateway.index = index_name
         Node.gateway.create_index!
 # TODO: Just trying to find the race condition
-        sleep 1
+        sleep 5
         Node.gateway.refresh_index!
         body ''
         status 200
