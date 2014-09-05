@@ -14,8 +14,12 @@ require_relative 'lib/node'
 require_relative 'lib/option'
 require_relative 'lib/search'
 
-# TODO: This seems like a stupid spot for this:
+# TODO: This seems like a stupid spot for this stuff.
+# Plus should only do it if they don't exist.
 Node.gateway.create_index!
+Option.gateway.create_index!
+Option.new.save
+Option.gateway.refresh_index!
 
 class Noodle < Sinatra::Base
     # TODO: Production :)
@@ -40,7 +44,7 @@ class Noodle < Sinatra::Base
         Node.gateway.delete_index!
         Node.gateway.index = index_name
         Node.gateway.create_index!
-# TODO: Just trying to find the race condition
+# TODO: This seems to work around the 503-causing race condition
         sleep 5
         Node.gateway.refresh_index!
         body ''
@@ -147,6 +151,30 @@ class Noodle < Sinatra::Base
         b,s = Node.magic(query)
         body   b
         status s
+    end
+
+    get '/options/:name' do
+        options = Option.search(query: { match: { name: params[:name] } })
+        body options.first.to_json + "\n" unless options.empty?
+        status 200
+    end
+
+    patch '/options/:name' do
+    end
+
+    put '/options/:name' do
+    end
+
+    post '/options/:name' do
+    end
+
+    delete '/options/:name' do
+    end
+
+    get '/options' do
+    end
+
+    delete '/options' do
     end
 end
 
