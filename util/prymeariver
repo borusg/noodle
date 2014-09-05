@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 
 require_relative '../lib/node'
+require_relative '../lib/option'
 require 'pry'
 
 puts "For example:"
