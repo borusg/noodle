@@ -40,6 +40,8 @@ class Noodle < Sinatra::Base
         Node.gateway.delete_index!
         Node.gateway.index = index_name
         Node.gateway.create_index!
+# TODO: Just trying to find the race condition
+        sleep 1
         Node.gateway.refresh_index!
         body ''
         status 200
