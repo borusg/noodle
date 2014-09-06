@@ -17,6 +17,9 @@ require_relative 'lib/search'
 # TODO: This seems like a stupid spot for this stuff.
 # Plus should only do it if they don't exist.
 Node.gateway.create_index!
+Node.gateway.refresh_index!
+#
+# Make sure at least some default options exist
 Option.gateway.create_index!
 Option.new.save
 Option.gateway.refresh_index!
