@@ -2,7 +2,6 @@ require 'coveralls'
 Coveralls.wear!
 
 ENV['RACK_ENV'] = 'test'
-require 'minitest/autorun'
 require 'rack/test'
 require_relative '../noodle'
 
@@ -22,6 +21,7 @@ end
 Node.gateway.create_index!
 Node.gateway.refresh_index!
 
+require 'minitest/autorun'
 require 'minitest/reporters'
 Minitest::Reporters.use!
 
