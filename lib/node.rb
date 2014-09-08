@@ -13,9 +13,10 @@ class Node
     attribute :params, Hashie::Mash, mapping: { type: 'object' }, default: {}
 
     validates_each :params do |record, attr, value|
-        # If prodlevel is a param, it must be one in the approved list
-        record.errors.add attr, 'illegal prodlevel' if value['prodlevel'] and ! %w{dev preprod prod test}.include? value['prodlevel']
-        record.errors.add attr, 'no jojo param' unless value['jojo']
+# TODO: Make this a real bear
+#        # If prodlevel is a param, it must be one in the approved list
+#        record.errors.add attr, 'illegal prodlevel' if value['prodlevel'] and ! %w{dev preprod prod test}.include? value['prodlevel']
+#        record.errors.add attr, 'no jojo param' unless value['jojo']
     end
 
     def to_puppet
