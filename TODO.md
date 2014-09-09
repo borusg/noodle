@@ -7,6 +7,9 @@ http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-ex
 
 * finish lib/option.rb
 
+* Allow magic queries to specify which options set to use.  The default options should work
+for everybody,  But everybody can make their own set.  And use a set created by somebody else.
+
 * magic ilk= and status= based on options
 
 * tests for noodle scripts
