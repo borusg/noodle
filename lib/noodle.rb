@@ -23,7 +23,7 @@ class Noodle < Sinatra::Base
 
     get '/nodes' do
         # TODO: Support JSON output too
-        b,s = Noodle::Node.all
+        b,s = Noodle::Node.all_names
         body   b
         status s
     end
