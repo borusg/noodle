@@ -38,7 +38,7 @@ class Noodle::Node
     end
 
     def self.all_names
-        body = self.all.response.hits.hits.collect{|hit| hit.name}.sort.join("\n")
+        body = self.all.results.collect{|hit| hit.name}.sort.join("\n")
         [body, 200]
     end
 
