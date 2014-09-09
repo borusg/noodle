@@ -9,7 +9,7 @@ describe 'Noodle' do
     assert_equal last_response.status, 201
     put '/nodes/oooo.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"uranus", "justfora":"test"}}'
     assert_equal last_response.status, 201
-    Node.gateway.refresh_index!
+    Noodle::Node.gateway.refresh_index!
 
     get "/nodes/_/@site=jupiter#{URI.escape(' ')}justfora=test"
     assert_equal last_response.status, 200

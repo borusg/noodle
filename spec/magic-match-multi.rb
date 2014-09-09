@@ -8,7 +8,7 @@ describe 'Noodle' do
     put '/nodes/toto.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"neptune","prodlevel":"prod"}}'
     assert_equal last_response.status, 201
 
-    Node.gateway.refresh_index!
+    Noodle::Node.gateway.refresh_index!
 
     get "/nodes/_/site=~nept#{URI.escape(' ')}prodlevel=~pro"
     assert_equal last_response.status, 200

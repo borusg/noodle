@@ -1,4 +1,4 @@
-class Search
+class Noodle::Search
     attr_accessor :query
 
     def initialize(theclass)

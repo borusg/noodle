@@ -4,7 +4,7 @@ describe 'Noodle' do
   it "should allow finding by TERM=VALUE and giving full output" do
     put '/nodes/momo.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"jupiter","full":"yes"}}'
     assert_equal last_response.status, 201
-    Node.gateway.refresh_index!
+    Noodle::Node.gateway.refresh_index!
 
     get '/nodes/_/full=yes%20full'
     assert_equal last_response.status, 200

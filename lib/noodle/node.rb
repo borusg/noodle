@@ -1,7 +1,7 @@
 require 'elasticsearch/persistence/model'
 require 'hashie'
 
-class Node
+class Noodle::Node
     include Elasticsearch::Persistence::Model
 
     attribute :name,   String
@@ -38,7 +38,7 @@ class Node
     end
 
     def self.all
-        body = Search.new(Node).all.go.results.collect{|hit| hit.name}.sort.join("\n")
+        body = Noodle::Search.new(Noodle::Node).all.go.results.collect{|hit| hit.name}.sort.join("\n")
         [body, 200]
     end
 
@@ -79,7 +79,7 @@ class Node
     #   For example, if 'prodlevel' were in the list then 'prod'
     #   could be used in a search to mean prodlevel=prod
     def self.magic(query)
-        search = Search.new(Node)
+        search = Noodle::Search.new(Noodle::Node)
         show   = []
         format = :default
 
@@ -160,4 +160,3 @@ class Node
         [body,status]
     end
 end
-

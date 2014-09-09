@@ -10,20 +10,6 @@ require 'elasticsearch/persistence'
 require 'multi_json'
 require 'oj'
 
-require_relative 'lib/node'
-require_relative 'lib/option'
-require_relative 'lib/search'
-
-# TODO: This seems like a stupid spot for this stuff.
-# Plus should only do it if they don't exist.
-Node.gateway.create_index!
-Node.gateway.refresh_index!
-#
-# Make sure at least some default options exist
-Option.gateway.create_index!
-Option.new.save
-Option.gateway.refresh_index!
-
 class Noodle < Sinatra::Base
     # TODO: Production :)
     configure :development do
@@ -37,26 +23,26 @@ class Noodle < Sinatra::Base
 
     get '/nodes' do
         # TODO: Support JSON output too
-        b,s = Node.all
+        b,s = Noodle::Node.all
         body   b
         status s
     end
 
     delete '/nodes' do
-        index_name = Node.gateway.index
-        Node.gateway.delete_index!
-        Node.gateway.index = index_name
-        Node.gateway.create_index!
+        index_name = Noodle::Node.gateway.index
+        Noodle::Node.gateway.delete_index!
+        Noodle::Node.gateway.index = index_name
+        Noodle::Node.gateway.create_index!
 # TODO: This seems to work around the 503-causing race condition
         sleep 5
-        Node.gateway.refresh_index!
+        Noodle::Node.gateway.refresh_index!
         body ''
         status 200
     end
 
     put '/nodes/:name' do
         # TODO: Surely order matters, like when creating the new one fails
-        nodes.first.delete unless (nodes = Node.search(query: { match: { name: params[:name] } })).size == 0
+        nodes.first.delete unless (nodes = Noodle::Node.search(query: { match: { name: params[:name] } })).size == 0
 
         # TODO: DRY with patch
         # TODO: Delete this line?
@@ -75,7 +61,7 @@ class Noodle < Sinatra::Base
                 status:  options[:status]}
         args[:facts]  = options[:facts] unless options[:facts].nil?
         args[:params] = options[:params] unless options[:params].nil?
-        node = Node.create(args)
+        node = Noodle::Node.create(args)
 
         # Default FQDN fact in case none provided
         if node.facts[:fqdn].nil?
@@ -89,7 +75,7 @@ class Noodle < Sinatra::Base
     end
 
     patch '/nodes/:name' do
-        halt(422, "#{params[:name]} does not exist.\n") if (nodes = Node.search(query: { match: { name: params[:name] } })).size == 0
+        halt(422, "#{params[:name]} does not exist.\n") if (nodes = Noodle::Node.search(query: { match: { name: params[:name] } })).size == 0
 
         begin
             options = MultiJson.load(request.body.read,:symbolize_keys => true)
@@ -116,18 +102,18 @@ class Noodle < Sinatra::Base
     end
 
     post '/nodes/:name' do
-        halt(422, "#{params[:name]} already exists.\n") unless Node.count(query: { match: { name: params[:name] } }) == 0
+        halt(422, "#{params[:name]} already exists.\n") unless Noodle::Node.count(query: { match: { name: params[:name] } }) == 0
         call! env.merge("REQUEST_METHOD" => 'PUT')
     end
 
     get '/nodes/:name' do
-        nodes = Node.search(query: { match: { name: params[:name] } })
+        nodes = Noodle::Node.search(query: { match: { name: params[:name] } })
         body nodes.first.to_json + "\n" unless nodes.empty?
         status 200
     end
 
     delete '/nodes/:name' do
-        halt(422, "#{params[:name]} does not exist.\n") if (nodes = Node.search(query: { match: { name: params[:name] } })).size == 0
+        halt(422, "#{params[:name]} does not exist.\n") if (nodes = Noodle::Node.search(query: { match: { name: params[:name] } })).size == 0
         nodes.first.destroy
         body "Deleted #{params[:name]}\n"
         status 200
@@ -141,7 +127,7 @@ class Noodle < Sinatra::Base
 
     # "Magic" search
     get '/nodes/_/:search' do
-        b,s = Node.magic(params[:search])
+        b,s = Noodle::Node.magic(params[:search])
         body   b
         status s
     end
@@ -151,13 +137,13 @@ class Noodle < Sinatra::Base
         # TODO: This can't be the way to do this!
         query = String.new(params.keys.first)
         query << "=#{params.values.first}" unless params.values.first.nil?
-        b,s = Node.magic(query)
+        b,s = Noodle::Node.magic(query)
         body   b
         status s
     end
 
     get '/options/:name' do
-        options = Option.search(query: { match: { name: params[:name] } })
+        options = Noodle::Option.search(query: { match: { name: params[:name] } })
         body options.first.to_json + "\n" unless options.empty?
         status 200
     end
@@ -180,4 +166,18 @@ class Noodle < Sinatra::Base
     delete '/options' do
     end
 end
+
+require_relative 'noodle/node'
+require_relative 'noodle/search'
+require_relative 'noodle/option'
+
+# TODO: This seems like a stupid spot for this stuff.
+# Plus should only do it if they don't exist.
+Noodle::Node.gateway.create_index!
+Noodle::Node.gateway.refresh_index!
+#
+# Make sure at least some default options exist
+Noodle::Option.gateway.create_index!
+Noodle::Option.new.save
+Noodle::Option.gateway.refresh_index!
 

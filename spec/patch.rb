@@ -4,11 +4,11 @@ describe 'Noodle' do
   it "should patch a node" do
     put '/nodes/dodo.example.com', params = '{"ilk":"host","status":"surplus","params":{"site":"moon"}}'
     assert_equal last_response.status,201
-    Node.gateway.refresh_index!
+    Noodle::Node.gateway.refresh_index!
 
     patch '/nodes/dodo.example.com', params = '{"params":{"site":"mars"}}'
     assert_equal last_response.status,200
-    Node.gateway.refresh_index!
+    Noodle::Node.gateway.refresh_index!
 
     r = MultiJson.load last_response.body
     assert_equal r['name'],           'dodo.example.com'

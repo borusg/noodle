@@ -3,13 +3,13 @@ Coveralls.wear!
 
 ENV['RACK_ENV'] = 'test'
 require 'rack/test'
-require_relative '../noodle'
+require_relative '../lib/noodle'
 
 # Make sure we don't explode a real index
-Node.gateway.index = 'this-is-for-running-noodle-elasticsearch-tests-only'
+Noodle::Node.gateway.index = 'this-is-for-running-noodle-elasticsearch-tests-only'
 # TODO: What's the right way to do this?
 begin
-    Node.gateway.delete_index!
+    Noodle::Node.gateway.delete_index!
 rescue
 end
 
@@ -18,8 +18,8 @@ end
 #Node.gateway.client.transport.logger = Logger.new(STDERR)
 
 # Make sure the index exists
-Node.gateway.create_index!
-Node.gateway.refresh_index!
+Noodle::Node.gateway.create_index!
+Noodle::Node.gateway.refresh_index!
 
 require 'minitest/autorun'
 require 'minitest/reporters'

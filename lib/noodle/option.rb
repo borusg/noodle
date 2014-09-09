@@ -1,7 +1,7 @@
 require 'elasticsearch/persistence/model'
 require 'hashie'
 
-class Option
+class Noodle::Option
     include Elasticsearch::Persistence::Model
 
     attribute :name,             String, default: 'defaults'

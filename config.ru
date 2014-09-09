@@ -3,6 +3,6 @@ require 'bundler'
 
 Bundler.require
 
-require './noodle'
+require './lib/noodle'
 run Noodle
 
