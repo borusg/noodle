@@ -2,6 +2,10 @@ require 'elasticsearch/persistence/model'
 require 'hashie'
 
 class Noodle::Option
+    # option_cache holds option sets so we don't have to query ES every time.
+    # option_cache[name] = options
+    @@option_cache = Hash.new
+
     include Elasticsearch::Persistence::Model
 
     attribute :name,             String, default: 'defaults'
@@ -61,5 +65,13 @@ class Noodle::Option
                    stack:     Array,
                    site:      %w{mars moon jupiter pluto},
                  }
+
+    def self.get(options={})
+        name = options[:name] ? options[:name] : 'defaults'
+        if @@option_cache[name].nil? or options[:refresh]
+            @@option_cache[name] = self.all.results.find{|r| r.name == name}
+        end
+        @@option_cache[name]
+    end
 end
 

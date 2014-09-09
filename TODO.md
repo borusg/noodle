@@ -7,6 +7,8 @@ http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-ex
 
 * finish lib/option.rb
 
+* Make uniqueness validators for :name in Node and Option.
+
 * Allow magic queries to specify which options set to use.  The default options should work
 for everybody,  But everybody can make their own set.  And use a set created by somebody else.
 
