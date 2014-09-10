@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should patch a node" do
-    put '/nodes/dodo.example.com', params = '{"ilk":"host","status":"surplus","params":{"site":"moon"}}'
+    put '/nodes/dodo.example.com', params = '{"ilk":"host","status":"surplus","params":{"site":"moon","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status,201
     Noodle::Node.gateway.refresh_index!
 

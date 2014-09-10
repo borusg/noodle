@@ -61,11 +61,13 @@ class Noodle::Option
         default: {
                    project:   %w{hr financials lms registration warehouse},
                    prodlevel: %w{dev preprod prod test},
-                   role:      Array,
-                   stack:     Array,
-                   site:      %w{mars moon jupiter pluto},
+                   # TODO: Shirley, these could be classes instead of strings.
+                   role:      'array',
+                   stack:     'array',
+                   site:      %w{jupiter mars moon neptune pluto uranus},
                  }
 
+    # Get option set named options[:name]
     def self.get(options={})
         name = options[:name] ? options[:name] : 'defaults'
         if @@option_cache[name].nil? or options[:refresh]

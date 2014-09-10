@@ -67,6 +67,7 @@ class Noodle < Sinatra::Base
         if node.facts[:fqdn].nil?
             node.facts[:fqdn] = params[:name]
             node.save
+            # TODO: Check whether save worked (aka handle validation failures)
         end
 
         # TODO: It's not really instantly created!  So by returning right away we're sort of lying.

@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow finding by TERM=VALUE and giving full output" do
-    put '/nodes/momo.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"jupiter","full":"yes"}}'
+    put '/nodes/momo.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"jupiter","full":"yes","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
     Noodle::Node.gateway.refresh_index!
 
@@ -14,6 +14,8 @@ Ilk:    host
 Params: 
   site=jupiter
   full=yes
+  project=hr
+  prodlevel=dev
 Facts:  
   fqdn=momo.example.com
 '

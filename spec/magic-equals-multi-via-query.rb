@@ -3,9 +3,9 @@ require 'uri'
 
 describe 'Noodle' do
   it "should allow finding by 'TERM1=VALUE1 TERM2=VALUE2' via query (nodes/_/?blah blah)" do
-    put '/nodes/kiki.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"pluto"}}'
+    put '/nodes/kiki.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"pluto","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
-    put '/nodes/cici.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"pluto","prodlevel":"prod"}}'
+    put '/nodes/cici.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"pluto","prodlevel":"prod","project":"hr"}}'
     assert_equal last_response.status, 201
 
     Noodle::Node.gateway.refresh_index!

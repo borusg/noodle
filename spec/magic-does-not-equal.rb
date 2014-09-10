@@ -3,11 +3,11 @@ require 'uri'
 
 describe 'Noodle' do
   it "should allow finding by @TERM=VALUE and -TERM=VALUE" do
-    put '/nodes/xoxo.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"jupiter", "justfora":"test"}}'
+    put '/nodes/xoxo.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"jupiter", "justfora":"test","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
-    put '/nodes/nono.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"jupiter", "justfora":"test"}}'
+    put '/nodes/nono.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"jupiter", "justfora":"test","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
-    put '/nodes/oooo.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"uranus", "justfora":"test"}}'
+    put '/nodes/oooo.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"uranus", "justfora":"test","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
     Noodle::Node.gateway.refresh_index!
 

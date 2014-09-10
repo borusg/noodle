@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should delete a node" do
-    post '/nodes/soso.example.com', params = '{"ilk":"host","status":"surplus","params":{"site":"moon"}}'
+    post '/nodes/soso.example.com', params = '{"ilk":"host","status":"surplus","params":{"site":"moon","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status,201
     Noodle::Node.gateway.refresh_index!
 

@@ -13,10 +13,18 @@ class Noodle::Node
     attribute :params, Hashie::Mash, mapping: { type: 'object' }, default: {}
 
     validates_each :params do |record, attr, value|
-# TODO: Make this a real bear
-#        # If prodlevel is a param, it must be one in the approved list
-#        record.errors.add attr, 'illegal prodlevel' if value['prodlevel'] and ! %w{dev preprod prod test}.include? value['prodlevel']
-#        record.errors.add attr, 'no jojo param' unless value['jojo']
+        # TODO: Don't get options every single time
+        # Get default options
+        options = Noodle::Option.get
+        options.limits.each do |param,limit|
+            case limit.class.to_s
+            when 'Array'
+                record.errors.add attr, "#{param} is not one of these: #{limit.join(',')}.  It is #{value[param]}." unless limit.include?(value[param.to_sym])
+            # cf TODO in option.rb
+            when 'String'
+                record.errors.add attr, "#{param} is not a(n) #{limit}" unless value[param.to_sym].nil? or value[param.to_sym].class.to_s == limit
+            end
+        end
     end
 
     def to_puppet

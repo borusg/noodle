@@ -5,9 +5,9 @@ describe 'Noodle' do
     delete '/nodes'
     assert_equal last_response.status, 200
 
-    post '/nodes/gigi.example.com', params = '{"ilk":"host","status":"surplus","params":{"site":"moon"}}'
+    post '/nodes/gigi.example.com', params = '{"ilk":"host","status":"surplus","params":{"site":"moon","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
-    post '/nodes/hihi.example.com', params = '{"ilk":"host","status":"surplus","params":{"site":"mars"}}'
+    post '/nodes/hihi.example.com', params = '{"ilk":"host","status":"surplus","params":{"site":"mars","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
     Noodle::Node.gateway.refresh_index!
 
