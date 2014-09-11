@@ -26,10 +26,6 @@ for everybody,  But everybody can make their own set.  And use a set created by 
 
 * Pretty JSON format a la Elasticsearch
 
-* Move from /nodes index to /noodle/nodes.  So we can have noodle/options, etc.
-
-* Options stored in ES noodle/options
-
 * Only show status=enabled by default (actually, make an option
 for the list of statuses shown by defaul)
 
