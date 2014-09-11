@@ -37,5 +37,3 @@ what existing Noodle returns
 * Put it all under /api/v1?  Or just /v1/?  But have a convenience /_/ alias
 for searching.
 
-* make it one giant hashie to avoid quirks like if :ilk, etc?  plus one giant hashie makes it easier to extend?
-

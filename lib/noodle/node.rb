@@ -6,9 +6,6 @@ class Noodle::Node
 
     attribute :name,   String
     attribute :fqdn,   String, default: :name
-    # TODO: limit these two to a list of defaults
-    attribute :ilk,    String
-    attribute :status, String
     attribute :facts,  Hashie::Mash, mapping: { type: 'object' }, default: {}
     attribute :params, Hashie::Mash, mapping: { type: 'object' }, default: {}
 
@@ -16,6 +13,13 @@ class Noodle::Node
         # TODO: Don't get options every single time
         # Get default options
         options = Noodle::Option.get
+
+        # Check for required params
+        options.required_params.each do |param|
+            record.errors.add attr, "#{param} must be provided but is not." if value[param.to_sym].nil?
+        end
+
+        # Check per-param liits
         options.limits.each do |param,limit|
             case limit.class.to_s
             when 'Array'
@@ -38,8 +42,6 @@ class Noodle::Node
     def full
         r = []
         r << "Name:   " + @name
-        r << "Status: " + @status
-        r << "Ilk:    " + @ilk
         r << "Params: " ; r << @params.map {|term,value| "  #{term}=#{value}"}
         r << "Facts:  " ; r << @facts.map  {|term,value| "  #{term}=#{value}"}
         r.join("\n")

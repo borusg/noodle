@@ -3,7 +3,7 @@ require 'cgi'
 
 describe 'Noodle' do
   it "should allow finding by hostname or FQDN and give Puppet ENC YAML output" do
-    put '/nodes/ioio.example.com', params = '{"ilk":"host","status":"enabled","params":{"site":"jupiter", "funky":"town","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/ioio.example.com', params = '{"params":{"ilk":"host","status":"enabled","site":"jupiter", "funky":"town","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
     Noodle::Node.gateway.refresh_index!
 
@@ -13,6 +13,8 @@ describe 'Noodle' do
 classes:
 - baseclass
 parameters:
+  ilk: host
+  status: enabled
   site: jupiter
   funky: town
 '

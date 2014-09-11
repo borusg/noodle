@@ -10,8 +10,8 @@ class Noodle::Option
 
     attribute :name,             String, default: 'defaults'
     attribute :allowed_statuses, Array,  default: %w{enabled disabled future surplus}
-    attribute :allowed_ilks,     Array,  default: %w{host esx ucschassis ucsfi}
-    attribute :required_params,  Array,  default: %w{prodlevel project site}
+    attribute :required_params,  Array,  default: %w{ilk prodlevel project site status}
+    attribute :default_ilks,     Array,  default: %w{host} # ilk(s) returned by queries that don't specify an ilk
 
     # TODO: Better explanation and maybe something better than "voodoo"
     #
@@ -65,6 +65,8 @@ class Noodle::Option
                    role:      'array',
                    stack:     'array',
                    site:      %w{jupiter mars moon neptune pluto uranus},
+                   ilk:       %w{host esx ucschassis ucsfi},
+                   status:    %w{disabled enabled future surplus},
                  }
 
     # Get option set named options[:name]
