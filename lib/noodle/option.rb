@@ -12,6 +12,7 @@ class Noodle::Option
     attribute :allowed_statuses, Array,  default: %w{enabled disabled future surplus}
     attribute :required_params,  Array,  default: %w{ilk prodlevel project site status}
     attribute :default_ilks,     Array,  default: %w{host} # ilk(s) returned by queries that don't specify an ilk
+    attribute :default_statuses, Array,  default: %w{enabled} # status(es) returned by queries that don't specify one
 
     # TODO: Better explanation and maybe something better than "voodoo"
     #

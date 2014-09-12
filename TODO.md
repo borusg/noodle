@@ -1,5 +1,16 @@
 # TODO
 
+* noodlin script
+
+* docs
+
+* Make uniqueness validators for :name in Node and Option.
+
+* Only show default status and ilk by ... default
+
+* Allow magic queries to specify which options set to use.  The default options should work
+for everybody,  But everybody can make their own set.  And use a set created by somebody else.
+
 * grep -r TODO and DO
 
 * Make sure everything is either a symbol or a string.  No mixing allowed.
@@ -9,25 +20,11 @@ Plus I am not being careful enough with ES.  Should at least use this to check w
 the index exists after (re-)creating it:
 http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-exists.html
 
-* finish lib/option.rb
-
-* Make uniqueness validators for :name in Node and Option.
-
-* Allow magic queries to specify which options set to use.  The default options should work
-for everybody,  But everybody can make their own set.  And use a set created by somebody else.
-
-* magic ilk= and status= based on options
-
 * tests for noodle scripts
-
-* noodlin script
 
 * Put text/plain output in column -t format
 
 * Pretty JSON format a la Elasticsearch
-
-* Only show status=enabled by default (actually, make an option
-for the list of statuses shown by defaul)
 
 * Set content type and return JSON by default.  Support
 returning "pretty" output as text/plain and make it match
