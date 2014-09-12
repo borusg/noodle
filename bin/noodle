@@ -2,5 +2,5 @@
 
 [[ -z $NOODLE_SERVER ]] && NOODLE_SERVER=localhost:9292
 
-curl -G "http://${NOODLE_SERVER}/nodes/_/" --data-urlencode "$*"
+curl -s -G "http://${NOODLE_SERVER}/nodes/_/" --data-urlencode "$*"
 
