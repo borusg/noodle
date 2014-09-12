@@ -1,18 +1,21 @@
 class Noodle::Search
-    attr_accessor :query
+    attr_accessor :query, :search_terms
 
     def initialize(theclass)
         @theclass = theclass
         @query = []
+        @search_terms = []
         self
     end
 
     def equals(term,value)
+        @search_terms << term
         @query << "(params.#{term}:#{value} OR facts.#{term}:#{value})"
         self
     end
 
     def match(term,value)
+        @search_terms << term
         @query << "(params.#{term}:*#{value}* OR facts.#{term}:*#{value}*)"
         self
     end
@@ -28,6 +31,7 @@ class Noodle::Search
     end
 
     def not_equal(term,value)
+        @search_terms << term
         @query << "-(params.#{term}:#{value} AND -facts.#{term}:#{value})"
         self
     end

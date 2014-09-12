@@ -141,6 +141,12 @@ class Noodle::Node
             end
         end
 
+        # TODO: Don't get options every single time
+        # Get default options
+        options = Noodle::Option.get
+        search.equals('ilk',   options.default_ilk)    unless search.search_terms.include?('ilk')
+        search.equals('status',options.default_status) unless search.search_terms.include?('status')
+
         status = 200
         found = search.go
         case format

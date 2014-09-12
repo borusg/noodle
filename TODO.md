@@ -6,8 +6,6 @@
 
 * Make uniqueness validators for :name in Node and Option.
 
-* Only show default status and ilk by ... default
-
 * Allow magic queries to specify which options set to use.  The default options should work
 for everybody,  But everybody can make their own set.  And use a set created by somebody else.
 
