@@ -175,4 +175,31 @@ class Noodle::Node
         end
         [body,status]
     end
+
+    ## noodlin
+    #
+    # Below HOST can be short name (as long as it's unique) or FQDN
+    # noodlin param|fact -r NAME HOST1 [HOST2 ...]    # Remove param or fact named NAME from listed HOSTs
+    # noodlin param|fact NAME=VALUE HOST1 [HOST2 ...]  # Set param or fact named NAME to VALUE for listed HOSTs
+    # noodlin param|fact NAME+=VALUE HOST1 [HOST2 ...] # Add    VALUE to   NAME (which must be an array) for listed HOSTs
+    # noodlin param|fact NAME-=VALUE HOST1 [HOST2 ...] # Remove VALUE from NAME (which must be an array) for listed HOSTs
+    #
+    # noodlin enabled HOST1 [HOST2 ...] # shorthand for noodlin param status=enabled HOST1 [HOST2 ...]
+    # noodlin enable  HOST1 [HOST2 ...] # more natural to type
+    # noodlin surplus HOST1 [HOST2 ...] # shorthand for noodlin param status=surplus HOST1 [HOST2 ...]
+    # noodlin future  HOST1 [HOST2 ...] # shorthand for noodlin param status=future HOST1 [HOST2 ...]
+    # TODO: Maybe extend this to cover every possible status.
+    #
+    # Remove requires FQDNs for safety:
+    # noodlin remove FQDN1 [FQDN2]      # Remove node(s)
+    #
+    # Don't forget to specify the required params:
+    # noodlin create [-a PARAM=VALUE ...] [-f FACT=VALUE ...] FQDN
+    #
+    # For historical convenience:
+    # noodlin create -i ILK -s STATUS -p PROJECT -P PRODLEVEL -s SITE [-a PARAM=VALUE ...] [-f FACT=VALUE ...] FQDN
+    #
+    # What else?
+    def self.noodlin(changes)
+    end
 end

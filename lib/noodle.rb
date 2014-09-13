@@ -126,6 +126,8 @@ class Noodle < Sinatra::Base
         status 200
     end
 
+    ## TODO: Maybe magic (aka _) and noodlin should be separate from the "real" API
+    #
     # "Magic" search
     get '/nodes/_/:search' do
         b,s = Noodle::Node.magic(params[:search])
@@ -143,6 +145,13 @@ class Noodle < Sinatra::Base
         status s
     end
 
+    get '/nodes/noodlin/:changes' do
+        b,s = Noodle::Node.noodlin(params[:changes])
+        body   b
+        status s
+    end
+
+    # TODO: Separate options from magic/noodlin and from the rest?
     get '/options/:name' do
         options = Noodle::Option.search(query: { match: { name: params[:name] } })
         body options.first.to_json + "\n" unless options.empty?
