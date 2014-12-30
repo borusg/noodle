@@ -4,6 +4,8 @@
 
 * docs
 
+* 'noodlin help' and 'noodle _ help'
+
 * Make uniqueness validators for :name in Node and Option.
 
 * Allow magic queries to specify which options set to use.  The default options should work

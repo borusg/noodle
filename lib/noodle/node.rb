@@ -1,5 +1,6 @@
 require 'elasticsearch/persistence/model'
 require 'hashie'
+require 'trollop'
 
 class Noodle::Node
     include Elasticsearch::Persistence::Model
@@ -196,10 +197,25 @@ class Noodle::Node
     # Don't forget to specify the required params:
     # noodlin create [-a PARAM=VALUE ...] [-f FACT=VALUE ...] FQDN
     #
-    # For historical convenience:
+    # For historical convenience?
     # noodlin create -i ILK -s STATUS -p PROJECT -P PRODLEVEL -s SITE [-a PARAM=VALUE ...] [-f FACT=VALUE ...] FQDN
     #
     # What else?
     def self.noodlin(changes)
+        subcommand,rest = changes.split(/\s+/,2)
+        opts = Trollop::options(rest) do
+            opt :remove, "thing to remove (used with fact, param, and remove)", :type => :string
+            opt :param,  "Add param paramname=value to add", :type => :string, :multi => true
+            opt :fact,   "Add fact  factname=value",         :type => :string, :multi => true
+        end
+        case subcommand
+        when 'create'
+        end
+        when 'enabled','enable'
+        when 'fact'
+        when 'future'
+        when 'param'
+        when 'surplus'
     end
 end
+

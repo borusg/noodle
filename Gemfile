@@ -11,4 +11,4 @@ gem 'rake'
 gem 'rspec'
 gem 'hashie'
 gem 'coveralls', require: false
-
+gem 'trollop'
