@@ -210,12 +210,22 @@ class Noodle::Node
         end
         case subcommand
         when 'create'
-        end
-        when 'enabled','enable'
+        when 'enabled' #,'enable' # TODO: Why does this fail?
         when 'fact'
         when 'future'
         when 'param'
         when 'surplus'
+        end
+    end
+
+    # TODO: Catch errors
+    def self.delete_everything
+        index_name = Noodle::Node.gateway.index
+        Noodle::Node.gateway.delete_index!
+        Noodle::Node.gateway.index = index_name
+        Noodle::Node.gateway.create_index!
+        # TODO: This seems to work around the 503-causing race condition
+        sleep 5
+        Noodle::Node.gateway.refresh_index!
     end
 end
-

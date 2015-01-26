@@ -29,14 +29,8 @@ class Noodle < Sinatra::Base
     end
 
     delete '/nodes' do
-        # TODO: Move bulk to lib/noodle/node.rb or lib/noodle/node/delete.rb
-        index_name = Noodle::Node.gateway.index
-        Noodle::Node.gateway.delete_index!
-        Noodle::Node.gateway.index = index_name
-        Noodle::Node.gateway.create_index!
-# TODO: This seems to work around the 503-causing race condition
-        sleep 5
-        Noodle::Node.gateway.refresh_index!
+        # TODO: perhaps this should require confirmation
+        Noodle::Node.delete_everything
         body ''
         status 200
     end
