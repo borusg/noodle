@@ -29,6 +29,7 @@ class Noodle < Sinatra::Base
     end
 
     delete '/nodes' do
+        # TODO: Move bulk to lib/noodle/node.rb or lib/noodle/node/delete.rb
         index_name = Noodle::Node.gateway.index
         Noodle::Node.gateway.delete_index!
         Noodle::Node.gateway.index = index_name
@@ -41,6 +42,7 @@ class Noodle < Sinatra::Base
     end
 
     put '/nodes/:name' do
+        # TODO: Move to bulk lib/noodle/node.rb or lib/noodle/node/create.rb
         # TODO: Surely order matters, like when creating the new one fails
         nodes.first.delete unless (nodes = Noodle::Node.search(query: { match: { name: params[:name] } })).size == 0
 
@@ -76,6 +78,7 @@ class Noodle < Sinatra::Base
     end
 
     patch '/nodes/:name' do
+        # TODO: Move bulk to lib/noodle/node.rb or lib/noodle/node/update.rb
         halt(422, "#{params[:name]} does not exist.\n") if (nodes = Noodle::Node.search(query: { match: { name: params[:name] } })).size == 0
 
         begin
@@ -114,6 +117,7 @@ class Noodle < Sinatra::Base
     end
 
     delete '/nodes/:name' do
+        # TODO: Move index del lib/noodle/node.rb or lib/noodle/node/delete.rb
         halt(422, "#{params[:name]} does not exist.\n") if (nodes = Noodle::Node.search(query: { match: { name: params[:name] } })).size == 0
         nodes.first.destroy
         body "Deleted #{params[:name]}\n"

@@ -1,5 +1,9 @@
 # TODO
 
+* Duh, move code out of lib/noodle.rb into lib/noodle/*.rb so it can 
+be reused.  For example, noodlin needs to be able to find and update
+nodes.
+
 * noodlin script
 
 * docs
