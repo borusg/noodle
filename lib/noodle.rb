@@ -111,11 +111,12 @@ class Noodle < Sinatra::Base
     end
 
     delete '/nodes/:name' do
-        # TODO: Move index del lib/noodle/node.rb or lib/noodle/node/delete.rb
-        halt(422, "#{params[:name]} does not exist.\n") if (nodes = Noodle::Node.search(query: { match: { name: params[:name] } })).size == 0
-        nodes.first.destroy
-        body "Deleted #{params[:name]}\n"
-        status 200
+        if Noodle::Node.delete_one(params[:name])
+            body "Deleted #{params[:name]}\n"
+            status 200
+        else
+            halt(422, "#{params[:name]} does not exist.\n")
+        end
     end
 
     options '/nodes/:name' do

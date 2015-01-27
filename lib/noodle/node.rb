@@ -228,4 +228,10 @@ class Noodle::Node
         sleep 5
         Noodle::Node.gateway.refresh_index!
     end
+
+    def self.delete_one(name)
+        return false if (nodes = Noodle::Node.search(query: { match: { name: name } })).size == 0
+        nodes.first.destroy
+        return true
+    end
 end
