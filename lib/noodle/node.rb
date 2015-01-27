@@ -230,8 +230,8 @@ class Noodle::Node
     end
 
     def self.delete_one(name)
-        return false if (nodes = Noodle::Node.search(query: { match: { name: name } })).size == 0
-        nodes.first.destroy
+        return false unless node = Noodle::Node.find(name)
+        node.destroy
         return true
     end
 
@@ -247,5 +247,12 @@ class Noodle::Node
 
         # TODO: It's not really instantly created!  So by returning right away we're sort of lying.
         node
+    end
+
+    # Search for node by name.  Return node if found, else return false
+    # TODO: This should accept a Node.search query as an arg?
+    def self.find(name)
+        return false if (nodes = Noodle::Node.search(query: { match: { name: name } })).size == 0
+        return nodes.first
     end
 end

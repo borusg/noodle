@@ -66,7 +66,7 @@ class Noodle < Sinatra::Base
 
     patch '/nodes/:name' do
         # TODO: Move bulk to lib/noodle/node.rb or lib/noodle/node/update.rb
-        halt(422, "#{params[:name]} does not exist.\n") if (nodes = Noodle::Node.search(query: { match: { name: params[:name] } })).size == 0
+        halt(422, "#{params[:name]} does not exist.\n") unless node = Noodle::Node.find(params[:name])
 
         begin
             options = MultiJson.load(request.body.read,:symbolize_keys => true)
@@ -75,7 +75,6 @@ class Noodle < Sinatra::Base
             puts exception.cause
             halt 500
         end
-        node = nodes.first
 
         options.each_pair do |key,value|
             # TODO: Yuck?
@@ -93,7 +92,7 @@ class Noodle < Sinatra::Base
     end
 
     post '/nodes/:name' do
-        halt(422, "#{params[:name]} already exists.\n") unless Noodle::Node.count(query: { match: { name: params[:name] } }) == 0
+        halt(422, "#{params[:name]} already exists.\n") if Noodle::Node.find(params[:name])
         call! env.merge("REQUEST_METHOD" => 'PUT')
     end
 
