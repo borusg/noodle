@@ -76,17 +76,7 @@ class Noodle < Sinatra::Base
             halt 500
         end
 
-        options.each_pair do |key,value|
-            # TODO: Yuck?
-            if [:status, :ilk].include?(key)
-                # ilk and status are just strings,
-                node.send("#{key}=", value)
-            else
-                # facts and params are Hashie::Mash
-                node.send("#{key}=", node.send(key).deep_merge(value))
-            end 
-            node.save
-        end
+        node.update(options)
         body node.to_json
         status 200
     end

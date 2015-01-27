@@ -48,6 +48,24 @@ class Noodle::Node
         r.join("\n")
     end
 
+    # Update a node based on options.
+    # TODO: Catch errors
+    # TODO: Referring to myself must be wrong?
+    def update(options)
+        options.each_pair do |key,value|
+            # TODO: Yuck?
+            if [:status, :ilk].include?(key)
+                # ilk and status are just strings,
+                self.send("#{key}=", value)
+            else
+                # facts and params are Hashie::Mash
+                self.send("#{key}=", self.send(key).deep_merge(value))
+            end 
+            self.save
+        end
+        self
+    end
+
     def self.all_names
         body = self.all.results.collect{|hit| hit.name}.sort.join("\n")
         [body, 200]
