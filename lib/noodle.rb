@@ -36,9 +36,10 @@ class Noodle < Sinatra::Base
     end
 
     put '/nodes/:name' do
-        # TODO: Move to bulk lib/noodle/node.rb or lib/noodle/node/create.rb
-        # TODO: Surely order matters, like when creating the new one fails
-        nodes.first.delete unless (nodes = Noodle::Node.search(query: { match: { name: params[:name] } })).size == 0
+        # TODO: Refuse to stomp an existing node?
+
+        # Delete it if it exists
+        Noodle::Node.delete_one(params[:name])
 
         # TODO: DRY with patch
         # TODO: Delete this line?
@@ -57,16 +58,8 @@ class Noodle < Sinatra::Base
                 status:  options[:status]}
         args[:facts]  = options[:facts] unless options[:facts].nil?
         args[:params] = options[:params] unless options[:params].nil?
-        node = Noodle::Node.create(args)
 
-        # Default FQDN fact in case none provided
-        if node.facts[:fqdn].nil?
-            node.facts[:fqdn] = params[:name]
-            node.save
-            # TODO: Check whether save worked (aka handle validation failures)
-        end
-
-        # TODO: It's not really instantly created!  So by returning right away we're sort of lying.
+        node = Noodle::Node.create_one(args)
         body node.to_json + "\n"
         status 201
     end

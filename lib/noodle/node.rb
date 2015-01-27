@@ -234,4 +234,18 @@ class Noodle::Node
         nodes.first.destroy
         return true
     end
+
+    def self.create_one(args)
+        node = Noodle::Node.create(args)
+
+        # Default FQDN fact in case none provided
+        if node.facts[:fqdn].nil?
+            node.facts[:fqdn] = node.name
+            node.save
+            # TODO: Check whether save worked (aka handle validation failures)
+        end
+
+        # TODO: It's not really instantly created!  So by returning right away we're sort of lying.
+        node
+    end
 end
