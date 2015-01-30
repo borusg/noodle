@@ -65,7 +65,6 @@ class Noodle < Sinatra::Base
     end
 
     patch '/nodes/:name' do
-        # TODO: Move bulk to lib/noodle/node.rb or lib/noodle/node/update.rb
         halt(422, "#{params[:name]} does not exist.\n") unless node = Noodle::Node.find(params[:name])
 
         begin
