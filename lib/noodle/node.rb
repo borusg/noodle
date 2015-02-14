@@ -90,6 +90,7 @@ class Noodle::Node
     # full
     # json # Implies full
     # hostname (partial or full)
+    # hostnames (partial or full)
     #
     # Still TODO:
     # jmm :)  Maybe by some extensible plugin thing?
@@ -267,10 +268,22 @@ class Noodle::Node
         node
     end
 
-    # Search for node by name.  Return node if found, else return false
+    # Search for node(s) by name.  Return nodes if found, else return false
     # TODO: This should accept a Node.search query as an arg?
-    def self.find(name)
-        return false if (nodes = Noodle::Node.search(query: { match: { name: name } })).size == 0
-        return nodes.first
+    def self.find(name,options = {:minimum => 1})
+        names = [name].flatten.join(' ')
+        nodes = Noodle::Node.search(query:
+                                     { match:
+                                         { name:
+                                             {
+                                                 query: names,
+                                                 minimum_should_match: options[:minimum]
+                                             }
+                                         }
+                                     })
+
+        return false if nodes.size != options[:minimum]
+        return nodes.first if options[:minimum] = 1
+        return nodes
     end
 end
