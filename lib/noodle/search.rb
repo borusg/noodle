@@ -1,10 +1,16 @@
+# Build up a Node.search query and execute with .go
+#
+# The default is AND.  .node is the only exception.  .node adds to a
+# list of nodes.  .go searches for (QUERY) OR (NODES)
 class Noodle::Search
     attr_accessor :query, :search_terms
 
     def initialize(theclass)
-        @theclass = theclass
-        @query = []
+        @theclass     = theclass
+        @query        = []
+        # TODO: unused
         @search_terms = []
+        @node_names   = []
         self
     end
 
@@ -26,7 +32,7 @@ class Noodle::Search
     end
 
     def match_name(name)
-        @query << "name:#{name}*"
+        @node_names << "name:#{name}*"
         self
     end
 
@@ -42,7 +48,8 @@ class Noodle::Search
     end
 
     def go
-        q = query.join(' ')
+        q = "(#{query.join(' ')})"
+        q += " AND (#{@node_names.join(' OR ')})" unless @node_names.empty?
         @theclass.search(query: {query_string: { default_operator: 'AND', query: q }})
     end
 end
