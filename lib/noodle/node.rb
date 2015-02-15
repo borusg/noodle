@@ -237,7 +237,7 @@ class Noodle::Node
         nodes = rest
 
         # Unless creating, must be able to find all nodes
-        return false unless command = 'create' or found =
+        return false unless command == 'create' or found =
             Noodle::Search.new(Noodle::Node).match_names(nodes).go({:minimum => nodes.size})
 
         case command
