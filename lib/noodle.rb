@@ -170,4 +170,3 @@ Noodle::Node.gateway.refresh_index!
 Noodle::Option.gateway.create_index!
 Noodle::Option.new.save
 Noodle::Option.gateway.refresh_index!
-
