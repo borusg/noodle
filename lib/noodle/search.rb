@@ -47,10 +47,14 @@ class Noodle::Search
         self
     end
 
-    def go
+    # Execute the search.  If minimum is specified, must find
+    # at least that many
+    def go(options = {minimum: false})
         q = "(#{query.join(' ')})"
         q += " AND (#{@node_names.join(' OR ')})" unless @node_names.empty?
-        @theclass.search(query: {query_string: { default_operator: 'AND', query: q }})
+        query = {query: {query_string: { default_operator: 'AND', query: q }}}
+        query[:minimum_should_match] = options[:minimum] if options[:minimum]
+        @theclass.search(query)
     end
 end
 
