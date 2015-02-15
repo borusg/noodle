@@ -249,7 +249,8 @@ class Noodle::Node
     end
 
     def self.delete_one(name)
-        return false unless node = Noodle::Node.find(name)
+        return false unless node =
+            Noodle::Search.new(Noodle::Node).match_name(name).go({:justone => true})
         node.destroy
         return true
     end
@@ -266,24 +267,5 @@ class Noodle::Node
 
         # TODO: It's not really instantly created!  So by returning right away we're sort of lying.
         node
-    end
-
-    # Search for node(s) by name.  Return nodes if found, else return false
-    # TODO: This should accept a Node.search query as an arg?
-    def self.find(name,options = {:minimum => 1})
-        names = [name].flatten.join(' ')
-        nodes = Noodle::Node.search(query:
-                                     { match:
-                                         { name:
-                                             {
-                                                 query: names,
-                                                 minimum_should_match: options[:minimum]
-                                             }
-                                         }
-                                     })
-
-        return false if nodes.size != options[:minimum]
-        return nodes.first if options[:minimum] = 1
-        return nodes
     end
 end

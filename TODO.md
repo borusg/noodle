@@ -1,11 +1,10 @@
 # TODO
 
-* yak shave:
--- Ahem. Use Noodle::Search instead of Node.find?  Or make Node.find use Noodle::Search
-
 * Finish noodlin
 
 * noodlin script
+
+* Make Noodle::Search idiom/sugar for finding a single node by name
 
 * docs
 

@@ -65,7 +65,8 @@ class Noodle < Sinatra::Base
     end
 
     patch '/nodes/:name' do
-        halt(422, "#{params[:name]} does not exist.\n") unless node = Noodle::Node.find(params[:name])
+        halt(422, "#{params[:name]} does not exist.\n") unless
+            node = Noodle::Search.new(Noodle::Node).match_name(params[:name]).go({:justone => true})
 
         begin
             options = MultiJson.load(request.body.read,:symbolize_keys => true)
@@ -81,7 +82,8 @@ class Noodle < Sinatra::Base
     end
 
     post '/nodes/:name' do
-        halt(422, "#{params[:name]} already exists.\n") if Noodle::Node.find(params[:name])
+        halt(422, "#{params[:name]} already exists.\n") if
+            Noodle::Search.new(Noodle::Node).match_name(params[:name]).go({:justone => true})
         call! env.merge("REQUEST_METHOD" => 'PUT')
     end
 
