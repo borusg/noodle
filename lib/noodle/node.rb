@@ -199,16 +199,15 @@ class Noodle::Node
     ## noodlin
     #
     # Below HOST can be short name (as long as it's unique) or FQDN
-    # noodlin param|fact -r NAME HOST1 [HOST2 ...]    # Remove param or fact named NAME from listed HOSTs
+    # noodlin param|fact -r NAME HOST1 [HOST2 ...]     # Remove param or fact named NAME from listed HOSTs
     # noodlin param|fact NAME=VALUE HOST1 [HOST2 ...]  # Set param or fact named NAME to VALUE for listed HOSTs
     # noodlin param|fact NAME+=VALUE HOST1 [HOST2 ...] # Add    VALUE to   NAME (which must be an array) for listed HOSTs
     # noodlin param|fact NAME-=VALUE HOST1 [HOST2 ...] # Remove VALUE from NAME (which must be an array) for listed HOSTs
     #
-    # noodlin enabled HOST1 [HOST2 ...] # shorthand for noodlin param status=enabled HOST1 [HOST2 ...]
-    # noodlin enable  HOST1 [HOST2 ...] # more natural to type
+    # TODO: Maybe extend this to cover every possible status.
+    # noodlin enable  HOST1 [HOST2 ...] # shorthand for noodlin param status=enabled HOST1 [HOST2 ...]
     # noodlin surplus HOST1 [HOST2 ...] # shorthand for noodlin param status=surplus HOST1 [HOST2 ...]
     # noodlin future  HOST1 [HOST2 ...] # shorthand for noodlin param status=future HOST1 [HOST2 ...]
-    # TODO: Maybe extend this to cover every possible status.
     #
     # Remove requires FQDNs for safety:
     # noodlin remove FQDN1 [FQDN2]      # Remove node(s)
@@ -221,20 +220,47 @@ class Noodle::Node
     #
     # What else?
     def self.noodlin(changes)
-        subcommand,rest = changes.split(/\s+/,2)
+        # Default to success
+        status = 200
+        body = 'ok'
+
+        command,rest = changes.split(/\s+/,2)
         opts = Trollop::options(rest) do
-            opt :remove, "thing to remove (used with fact, param, and remove)", :type => :string
-            opt :param,  "Add param paramname=value to add", :type => :string, :multi => true
-            opt :fact,   "Add fact  factname=value",         :type => :string, :multi => true
+            opt :remove,   "thing to remove (used with fact, param)", :type => :string
+            opt :aparam,   "Add param paramname=value to add",        :type => :string, :multi => true
+            opt :fact,     "Add fact  factname=value",                :type => :string, :multi => true
+            opt :ilk,      "Set ilk at create",                       :type => :string
+            opt :site,     "Set site at create",                      :type => :string
+            opt :project,  "Set site at create",                      :type => :string
+            opt :prodlevel,"Set prodlevel at create",                 :type => :string, :short => 'P'
         end
-        case subcommand
+        nodes = rest
+
+        # Unless creating, must be able to find all nodes
+        return false unless command = 'create' or found =
+            Noodle::Search.new(Noodle::Node).match_names(nodes).go({:minimum => nodes.size})
+
+        case command
         when 'create'
-        when 'enabled' #,'enable' # TODO: Why does this fail?
-        when 'fact'
-        when 'future'
-        when 'param'
-        when 'surplus'
+
+        when 'fact','param'
+
+        # TODO: This should be the list of available statuses
+        when 'enable','future','surplus'
+            # Set node.status to command
+            found.each do |node|
+                node.params['status'] = command
+                node.save
+                # TODO: Error check
+            end
+        when 'remove'
+            found.map{|node| node.destroy}
+            # TODO: Error check
+        else
+            status = 400
+            body = 'unknown noodlin command'
         end
+        [status,body]
     end
 
     # TODO: Catch errors
