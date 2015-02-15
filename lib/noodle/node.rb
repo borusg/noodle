@@ -156,7 +156,7 @@ class Noodle::Node
                  # Assume everything else is a hostname (or partial hostname)
                  # TODO: Maybe this is a bit awkward when bare words are used with
                  # other magic operators?
-                 search.match_name(part)
+                 search.match_names(part)
                  format = :yaml
             end
         end
@@ -250,7 +250,7 @@ class Noodle::Node
 
     def self.delete_one(name)
         return false unless node =
-            Noodle::Search.new(Noodle::Node).match_name(name).go({:justone => true})
+            Noodle::Search.new(Noodle::Node).match_names(name).go({:justone => true})
         node.destroy
         return true
     end

@@ -31,8 +31,8 @@ class Noodle::Search
         self
     end
 
-    def match_name(name)
-        @node_names << "name:#{name}*"
+    def match_names(names)
+        [names].flatten.map{|name| @node_names << "name:#{name}*"}
         self
     end
 
