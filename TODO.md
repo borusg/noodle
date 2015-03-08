@@ -1,5 +1,8 @@
 # TODO
 
+* Add test which proves Noodle.Search.go :justone DTRT when there's
+more than one match
+
 * Finish noodlin
 
 * noodlin script
@@ -35,6 +38,6 @@ returning "pretty" output as text/plain and make it match
 what existing Noodle returns
 
 # Maybe
-* Put it all under /api/v1?  Or just /v1/?  But have a convenience /_/ alias
-for searching.
+* Put API under /api/v1, but have a convenience /_/ alias for
+searching
 

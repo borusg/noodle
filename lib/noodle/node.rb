@@ -54,6 +54,7 @@ class Noodle::Node
     def update(options)
         options.each_pair do |key,value|
             # TODO: Yuck?
+            # TODO: Elsewhere isn't status a param?
             if [:status, :ilk].include?(key)
                 # ilk and status are just strings,
                 self.send("#{key}=", value)
@@ -224,30 +225,79 @@ class Noodle::Node
         status = 200
         body = 'ok'
 
+        # TODO prettier?
         command,rest = changes.split(/\s+/,2)
-        opts = Trollop::options(rest) do
+        rest = rest.split(/\s+/)
+
+        p = Trollop::Parser.new do
             opt :remove,   "thing to remove (used with fact, param)", :type => :string
-            opt :aparam,   "Add param paramname=value to add",        :type => :string, :multi => true
+            opt :param,    "Add param paramname=value",               :type => :string, :multi => true, :short => 'a'
             opt :fact,     "Add fact  factname=value",                :type => :string, :multi => true
             opt :ilk,      "Set ilk at create",                       :type => :string
             opt :site,     "Set site at create",                      :type => :string
+            opt :status,   "Set status at create",                    :type => :string
             opt :project,  "Set site at create",                      :type => :string
             opt :prodlevel,"Set prodlevel at create",                 :type => :string, :short => 'P'
         end
+        opts = p.parse(rest)
         nodes = rest
 
         # Unless creating, must be able to find all nodes
         return false unless command == 'create' or found =
             Noodle::Search.new(Noodle::Node).match_names(nodes).go({:minimum => nodes.size})
 
+        # TODO: This should be the list of available statuses
+        allowed_statuses = %w{enable future surplus}
+        # TODO:
+        default_ilk = 'host'
+        default_status = 'enable'
+
+        # TODO: Error when "at create" argument given but not
+        # creating.  Maybe easiest if switch to gli :)
         case command
         when 'create'
-
+            nodes.each do |name|
+                args = {
+                    name:    name,
+                    id:      name,
+                    ilk:     opts[:ilk]    || default_ilk,    # TODO
+                    status:  opts[:status] || default_status  # TODO
+                }
+                facts  = Hash.new
+                params = Hash.new
+                opts[:fact].map{|pair| name,value = pair.split(/=/); facts[name] = value}
+                opts[:param].map{|pair| name,value = pair.split(/=/); facts[name] = value}
+                args[:facts]  = facts
+                args[:params] = params
+                node = Noodle::Node.create_one(args)
+            end
         when 'fact','param'
-
-        # TODO: This should be the list of available statuses
-        when 'enable','future','surplus'
-            # Set node.status to command
+            sym = "#{command}s".to_sym
+            opts[sym].each do |change|
+                name,op,value = change.match(/^([^-+=]+)([-+]*=)(.*)$/)[1..3]
+                # TODO: Error check fact names and values
+                # TODO: Do something with the error strings below :)
+                case op
+                when '='
+                    found.each do |node|
+                        node.send(name)[fact] = value
+                        node.save
+                    end
+                when '+=','-='
+                    method = op == '+=' ? :push : :delete
+                    found.each do |node|
+                        if node.send(name)[fact].kind_of?(Array)
+                            node.send(name)[fact].send(method,value)
+                            node.save
+                        else
+                            "#{fact} is not an array for #{node.name}"
+                        end
+                    end
+                else
+                    "unknown op: #{op}"
+                end
+            end
+        when *allowed_statuses
             found.each do |node|
                 node.params['status'] = command
                 node.save
@@ -258,9 +308,9 @@ class Noodle::Node
             # TODO: Error check
         else
             status = 400
-            body = 'unknown noodlin command'
+            body = "Unknown noodlin command: #{command}"
         end
-        [status,body]
+        [body,status]
     end
 
     # TODO: Catch errors
@@ -288,10 +338,12 @@ class Noodle::Node
         if node.facts[:fqdn].nil?
             node.facts[:fqdn] = node.name
             node.save
-            # TODO: Check whether save worked (aka handle validation failures)
         end
 
-        # TODO: It's not really instantly created!  So by returning right away we're sort of lying.
+        unless node.valid? or node.errors
+            errors = node.errors.messages.values.flatten.join("\n")
+            return {errors: errors}
+        end
         node
     end
 end

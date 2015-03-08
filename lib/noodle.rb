@@ -127,8 +127,12 @@ class Noodle < Sinatra::Base
         status s
     end
 
-    get '/nodes/noodlin/:changes' do
-        b,s = Noodle::Node.noodlin(params[:changes])
+    # Noodlin via query (so I can use 'curl -G --data-urlencode' :)
+    get '/nodes/noodlin/' do
+        # TODO: This can't be the way to do this!
+        changes = String.new(params.keys.first)
+        changes << "=#{params.values.first}" unless params.values.first.nil?
+        b,s = Noodle::Node.noodlin(changes)
         body   b
         status s
     end

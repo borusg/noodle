@@ -1,6 +1,14 @@
 #!/bin/bash
 
 [[ -z $NOODLE_SERVER ]] && NOODLE_SERVER=localhost:9292
+URL="http://${NOODLE_SERVER}/nodes"
 
-curl -s -G "http://${NOODLE_SERVER}/nodes/_/" --data-urlencode "$*"
+if [[ $(basename $0) == 'noodlin' ]]
+then
+    URL="${URL}/noodlin/"
+else
+    URL="${URL}/_/"
+fi
+
+curl -s -G $URL --data-urlencode "$*"
 
