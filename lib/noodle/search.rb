@@ -61,7 +61,7 @@ class Noodle::Search
 
         # Finish contructing ES query
         query = {query: {query_string: { default_operator: 'AND', query: q }}}
-        query[:minimum_should_match] = options[:minimum] if options[:minimum]
+        query[:query][:query_string][:minimum_should_match] = options[:minimum] if options[:minimum]
 
         # Execute search, return results
         results = @theclass.search(query)
