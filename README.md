@@ -28,12 +28,65 @@ Perhaps the [travis-ci.org steps](https://travis-ci.org/happymcplaksin/noodle) a
 
 # Create via noodlin
 bin/noodlin create -s mars -i host -p hr -P prod jojo.example.com
+# ok
 
-# Search
+# Search via Noodle 'magic'
+bin/noodle jojo.example.com
+# ---
+# classes:
+# - baseclass
+# parameters:
+#   ilk: host
+#   project: hr
+#   prodlevel: prod
+#   site: mars
+#   status: enabled
+
+# More 'magic':
+bin/noodle site=mars
+# jojo.example.com
+
+# More 'magic':
+bin/noodle site=mars prodlevel=
+# jojo.example.com prodlevel=prod
+
+# More 'magic':
+bin/noodle site?
+# jojo.example.com
+
+# More 'magic':
+bin/noodle site?=
+# jojo.example.com site=mars
+
+# More 'magic':
+bin/noodle full
+# Name:   jojo.example.com
+# Params: 
+#   ilk=host
+#   project=hr
+#   prodlevel=prod
+#   site=mars
+#   status=enabled
+# Facts:
+#   fqdn=jojo.example.com
+
+# More 'magic':
+bin/noodle project=hr
+# jojo.example.com
+
+# More 'magic':
+bin/noodle @project=hr  # @ because ! is too hard in the shell :)
+# <NO OUTPUT>
+
+# More 'magic':
+bin/noodle site=mars prodlevel= site= ilk=
+# jojo.example.com prodlevel=prod site=mars ilk=host
+
+# Search via curl
 curl -s -XGET http://localhost:9292/nodes/jojo.example.com
 # (returns nothing)
 
-# Create
+# Create via curl
 curl -s -XPOST http://localhost:9292/nodes/jojo.example.com -d @util/node.json
 # Name:   jojo.example.com
 # Ilk:    host
