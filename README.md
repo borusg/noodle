@@ -26,6 +26,9 @@ Perhaps the [travis-ci.org steps](https://travis-ci.org/happymcplaksin/noodle) a
 ## Examples
 ```bash
 
+# Create via noodlin
+bin/noodlin create -s mars -i host -p hr -P prod jojo.example.com
+
 # Search
 curl -s -XGET http://localhost:9292/nodes/jojo.example.com
 # (returns nothing)
