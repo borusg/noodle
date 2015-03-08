@@ -250,26 +250,39 @@ class Noodle::Node
         allowed_statuses = %w{enable future surplus}
         # TODO:
         default_ilk = 'host'
-        default_status = 'enable'
+        default_status = 'enabled'
 
         # TODO: Error when "at create" argument given but not
         # creating.  Maybe easiest if switch to gli :)
         case command
         when 'create'
+            # TODO: Create more than one at a time?
             nodes.each do |name|
                 args = {
                     name:    name,
                     id:      name,
-                    ilk:     opts[:ilk]    || default_ilk,    # TODO
-                    status:  opts[:status] || default_status  # TODO
                 }
                 facts  = Hash.new
                 params = Hash.new
+
+                # Convert special opts into params:
+                params[:ilk]       = opts[:ilk]    #|| default_ilk,    # TODO
+                params[:project]   = opts[:project]
+                params[:prodlevel] = opts[:prodlevel]
+                params[:site]      = opts[:site]
+                params[:status]    = opts[:status] || default_status  # TODO
+
+                # Merge in the rest
                 opts[:fact].map{|pair| name,value = pair.split(/=/); facts[name] = value}
                 opts[:param].map{|pair| name,value = pair.split(/=/); facts[name] = value}
                 args[:facts]  = facts
                 args[:params] = params
                 node = Noodle::Node.create_one(args)
+
+                if defined?(node.keys) and node.keys.member?(:errors)
+                    body = node[:errors]
+                    status = 444
+                end
             end
         when 'fact','param'
             sym = "#{command}s".to_sym
@@ -340,9 +353,9 @@ class Noodle::Node
             node.save
         end
 
-        unless node.valid? or node.errors
-            errors = node.errors.messages.values.flatten.join("\n")
-            return {errors: errors}
+        unless node.valid?
+            errors = node.errors.messages.values.flatten.join("\n") + "\n"
+            return {errors: errors, node: node}
         end
         node
     end
