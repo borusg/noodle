@@ -1,5 +1,14 @@
 # TODO
 
+* Fix curl examples in README
+
+* noodlin tests
+
+* noodle tests
+
+* This fails:
+bin/noodle site= jojo
+
 * Add test which proves Noodle.Search.go :justone DTRT when there's
 more than one match
 

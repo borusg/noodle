@@ -28,7 +28,7 @@ Perhaps the [travis-ci.org steps](https://travis-ci.org/happymcplaksin/noodle) a
 
 # Create via noodlin
 bin/noodlin create -s mars -i host -p hr -P prod jojo.example.com
-# ok
+# <NO OUTPUT means success>
 
 # Search via Noodle 'magic'
 bin/noodle jojo.example.com
@@ -81,6 +81,18 @@ bin/noodle @project=hr  # @ because ! is too hard in the shell :)
 # More 'magic':
 bin/noodle site=mars prodlevel= site= ilk=
 # jojo.example.com prodlevel=prod site=mars ilk=host
+
+# Create another one:
+bin/noodlin create -s mars -i host -p hr -P prod momo.example.com
+# <NO OUTPUT means success>
+
+# Find both by project:
+bin/noodle project=hr
+# jojo.example.com
+# momo.example.com
+
+# NOTE: All example below here are broken now that certain params are required.
+# Will fix example RSN.
 
 # Search via curl
 curl -s -XGET http://localhost:9292/nodes/jojo.example.com
