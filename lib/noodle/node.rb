@@ -223,7 +223,7 @@ class Noodle::Node
     def self.noodlin(changes)
         # Default to success
         status = 200
-        body = 'ok'
+        body = ''
 
         # TODO prettier?
         command,rest = changes.split(/\s+/,2)
@@ -240,6 +240,15 @@ class Noodle::Node
             opt :prodlevel,"Set prodlevel at create",                 :type => :string, :short => 'P'
         end
         opts = p.parse(rest)
+        # At this point rest contains node(s) and possibly key=value
+        # pairs for the fact or param sub-commands
+
+        # Now split into nodes and pairs
+        # TODO: Prettier
+        pairs = []
+        rest.each do |elem|
+            pairs << rest.delete(elem) if elem.match('=')
+        end
         nodes = rest
 
         # Unless creating, must be able to find all nodes
@@ -285,22 +294,23 @@ class Noodle::Node
                 end
             end
         when 'fact','param'
-            sym = "#{command}s".to_sym
-            opts[sym].each do |change|
+            which = "#{command}s"
+            [opts[command.to_sym] + pairs].flatten.each do |change|
                 name,op,value = change.match(/^([^-+=]+)([-+]*=)(.*)$/)[1..3]
+
                 # TODO: Error check fact names and values
                 # TODO: Do something with the error strings below :)
                 case op
                 when '='
                     found.each do |node|
-                        node.send(name)[fact] = value
+                        node.send(which)[name] = value
                         node.save
                     end
                 when '+=','-='
                     method = op == '+=' ? :push : :delete
                     found.each do |node|
-                        if node.send(name)[fact].kind_of?(Array)
-                            node.send(name)[fact].send(method,value)
+                        if node.send(which)[name].kind_of?(Array)
+                            node.send(which)[name].send(method,value)
                             node.save
                         else
                             "#{fact} is not an array for #{node.name}"
