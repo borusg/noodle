@@ -17,17 +17,17 @@ class Noodle::Node
 
         # Check for required params
         options.required_params.each do |param|
-            record.errors.add attr, "#{param} must be provided but is not." if value[param.to_sym].nil?
+            record.errors.add attr, "#{param} must be provided but is not." if value[param].nil?
         end
 
         # Check per-param liits
         options.limits.each do |param,limit|
             case limit.class.to_s
             when 'Array'
-                record.errors.add attr, "#{param} is not one of these: #{limit.join(',')}.  It is #{value[param]}." unless limit.include?(value[param.to_sym])
+                record.errors.add attr, "#{param} is not one of these: #{limit.join(',')}.  It is #{value[param]}." unless limit.include?(value[param])
             # cf TODO in option.rb
             when 'String'
-                record.errors.add attr, "#{param} is not a(n) #{limit}" unless value[param.to_sym].nil? or value[param.to_sym].class.to_s == limit
+                record.errors.add attr, "#{param} is not a(n) #{limit}" unless value[param].nil? or value[param].class.to_s == limit
             end
         end
     end

@@ -45,19 +45,19 @@ class Noodle < Sinatra::Base
         # TODO: Delete this line?
         options = nil
         begin
-            options = MultiJson.load(request.body.read,:symbolize_keys => true)
+            options = MultiJson.load(request.body.read)
         rescue MultiJson::ParseError => exception
             puts exception.data
             puts exception.cause
             halt 500
         end
 
-        args = {name:    params[:name],
-                id:      params[:name],
-                ilk:     options[:ilk],
-                status:  options[:status]}
-        args[:facts]  = options[:facts] unless options[:facts].nil?
-        args[:params] = options[:params] unless options[:params].nil?
+        args = {'name'    => params[:name],
+                'id'      => params[:name],
+                'ilk'     => options['ilk'],
+                'status'  => options['status']}
+        args['facts']  = options['facts'] unless options['facts'].nil?
+        args['params'] = options['params'] unless options['params'].nil?
 
         node = Noodle::Node.create_one(args)
         body node.to_json + "\n"
@@ -69,7 +69,7 @@ class Noodle < Sinatra::Base
             node = Noodle::Search.new(Noodle::Node).match_names(params[:name]).go({:justone => true})
 
         begin
-            options = MultiJson.load(request.body.read,:symbolize_keys => true)
+            options = MultiJson.load(request.body.read)
         rescue MultiJson::ParseError => exception
             puts exception.data
             puts exception.cause
