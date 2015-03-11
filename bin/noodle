@@ -3,8 +3,7 @@
 [[ -z $NOODLE_SERVER ]] && NOODLE_SERVER=localhost:9292
 URL="http://${NOODLE_SERVER}/nodes"
 
-# TODO: This is hokey and wrong.  Find real problem
-query=$(echo "$*" | sed 's/ /%20/')
+query="$*"
 
 if [[ $(basename $0) == 'noodlin' ]]
 then
@@ -13,7 +12,7 @@ else
     URL="${URL}/_/"
 fi
 
-curl -s -G $URL --data-urlencode "$query"
+curl -s -X GET $URL --data-urlencode "=$query"
 status=$?
 
 if [[ $status != 0 ]]
