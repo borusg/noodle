@@ -288,11 +288,11 @@ class Noodle::Node
                 params = Hash.new
 
                 # Convert special opts into params:
-                params[:ilk]       = opts[:ilk]    #|| default_ilk,    # TODO
-                params[:project]   = opts[:project]
-                params[:prodlevel] = opts[:prodlevel]
-                params[:site]      = opts[:site]
-                params[:status]    = opts[:status] || default_status  # TODO
+                params['ilk']       = opts[:ilk]    #|| default_ilk,    # TODO
+                params['project']   = opts[:project]
+                params['prodlevel'] = opts[:prodlevel]
+                params['site']      = opts[:site]
+                params['status']    = opts[:status] || default_status  # TODO
 
                 # Merge in the rest
                 opts[:fact].map{|pair| name,value = pair.split(/=/); facts[name] = value}
