@@ -335,11 +335,11 @@ class Noodle::Node
                             node.send(which)[name].send(method,value)
                             node.save
                         else
-                            "#{name} is not an array for #{node.name}"
+                            body << "#{name} is not an array for #{node.name}"
                         end
                     end
                 else
-                    "unknown op: #{op}"
+                    body << "unknown op: #{op}"
                 end
             end
         when *allowed_statuses
