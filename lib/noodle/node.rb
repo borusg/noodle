@@ -326,7 +326,7 @@ class Noodle::Node
                             node.send(which)[name].send(method,value)
                             node.save
                         else
-                            "#{fact} is not an array for #{node.name}"
+                            "#{name} is not an array for #{node.name}"
                         end
                     end
                 else
