@@ -13,6 +13,8 @@ begin
 rescue
 end
 
+require 'securerandom'
+
 # TODO: Enable this via 'rake debug' or something
 # Holy cow, log
 #Noodle::Node.gateway.client.transport.logger = Logger.new(STDERR)
