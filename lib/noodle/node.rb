@@ -64,15 +64,20 @@ class Noodle::Node
             end 
             self.save
         end
-        self
+        self.errors?
     end
 
     # If node has errors, return hash containing errors and node.
+    # If no errors and ! args[:silent_if_none], return node
     # Otherwise return node
-    def errors?
-        return self if self.valid?
-        errors = self.errors.messages.values.flatten.join("\n") + "\n"
-        return {errors: errors, node: self}
+    # Otherwise return node
+    def errors?(args={:silent_if_none => false})
+        unless self.valid?
+            errors = self.errors.messages.values.flatten.join("\n") + "\n"
+            return {errors: errors, node: self}
+        else
+            return args[:silent_if_none] ? '' : self
+        end
     end
 
     def self.all_names
@@ -327,6 +332,7 @@ class Noodle::Node
                     found.each do |node|
                         node.send(which)[name] = value
                         node.save
+                        body << node.errors?(silent_if_none: true)
                     end
                 when '+=','-='
                     method = op == '+=' ? :push : :delete
@@ -334,6 +340,7 @@ class Noodle::Node
                         if node.send(which)[name].kind_of?(Array)
                             node.send(which)[name].send(method,value)
                             node.save
+                            body << node.errors?(silent_if_none: true)
                         else
                             body << "#{name} is not an array for #{node.name}"
                         end
@@ -346,7 +353,7 @@ class Noodle::Node
             found.each do |node|
                 node.params['status'] = command
                 node.save
-                # TODO: Error check
+                body << node.errors?(silent_if_none: true)
             end
         when 'remove'
             found.map{|node| node.destroy}

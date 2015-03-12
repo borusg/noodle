@@ -1,8 +1,5 @@
 # TODO
 
-* Error handling:
-Check every save and return errors via body.
-
 * Add test for this:
 site= jojo
 
