@@ -315,6 +315,7 @@ class Noodle::Node
                 # TODO: Do something with the error strings below :)
                 case op
                 when '='
+                    # TODO: Need to check whether this param should be an array and make it so
                     found.each do |node|
                         node.send(which)[name] = value
                         node.save
