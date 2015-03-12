@@ -67,6 +67,14 @@ class Noodle::Node
         self
     end
 
+    # If node has errors, return hash containing errors and node.
+    # Otherwise return node
+    def errors?
+        return self if self.valid?
+        errors = self.errors.messages.values.flatten.join("\n") + "\n"
+        return {errors: errors, node: self}
+    end
+
     def self.all_names
         body = self.all.results.collect{|hit| hit.name}.sort.join("\n")
         [body, 200]
@@ -377,10 +385,6 @@ class Noodle::Node
             node.save
         end
 
-        unless node.valid?
-            errors = node.errors.messages.values.flatten.join("\n") + "\n"
-            return {errors: errors, node: node}
-        end
-        node
+        node.errors?
     end
 end
