@@ -1,21 +1,22 @@
 # TODO
 
+* Error handling:
+Check every save and return errors via body.
+
 * Add test for this:
 site= jojo
 
 * Add [.] to node-finding query so that, for example, searching for 'jojo' only matches 'jojo.example.com' and not 'jojomomo.example.com'
 * Fix curl examples in README
 
-* noodlin tests
+* bin/noodlin tests
 
-* noodle tests
+* bin/noodle tests
 
 * Add test which proves Noodle.Search.go :justone DTRT when there's
 more than one match
 
-* Finish noodlin
-
-* noodlin script
+* Finish testing noodlin
 
 * Make Noodle::Search idiom/sugar for finding a single node by name
 
