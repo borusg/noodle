@@ -113,6 +113,7 @@ class Noodle::Node
         search = Noodle::Search.new(Noodle::Node)
         show   = []
         format = :default
+        list   = false
 
         # NOTE: Order below should be preserved in case statement
         term_present                = Regexp.new '\?$'
@@ -124,26 +125,32 @@ class Noodle::Node
         query.split(/\s+/).each do |part|
             case part
             when term_present
+                 list = true
                  term = part.sub(/\?$/,'')
                  search.exists(term)
 
             when term_present_and_show_value
+                 list = true
                  term = part.sub(/\?=$/,'')
                  search.exists(term)
                  show << term
 
             when term_does_not_equal
+                 list = true
                  term,value = part.sub(/^[-@]/,'').split(/=/,2)
                  search.not_equal(term,value)
 
             when term_show_value
+                 list = true
                  show << part.chop
 
             when term_matches_regexp
+                 list = true
                  term,value = part.split(/=~/,2)
                  search.match(term,value)
 
             when term_equals
+                 list = true
                  term,value = part.split(/=/,2)
                  search.equals(term,value)
 
@@ -158,8 +165,14 @@ class Noodle::Node
                  # TODO: Maybe this is a bit awkward when bare words are used with
                  # other magic operators?
                  search.match_names(part)
-                 format = :yaml
             end
+        end
+
+        # TODO: Not pretty
+        # If list is true, just list nodes, otherwise output in YAML.
+        # Unless, or course, json or full was specified
+        if format != :json and format != :full
+            format = list ? :default : :yaml
         end
 
         # TODO: Don't get options every single time
