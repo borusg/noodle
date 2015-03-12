@@ -4,6 +4,7 @@
 site= jojo
 
 * Add [.] to node-finding query so that, for example, searching for 'jojo' only matches 'jojo.example.com' and not 'jojomomo.example.com'
+
 * Fix curl examples in README
 
 * bin/noodlin tests
