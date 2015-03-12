@@ -24,10 +24,12 @@ class Noodle::Node
         options.limits.each do |param,limit|
             case limit.class.to_s
             when 'Array'
-                record.errors.add attr, "#{param} is not one of these: #{limit.join(',')}.  It is #{value[param]}." unless limit.include?(value[param])
+                record.errors.add attr, "#{param} is not one of these: #{limit.join(',')}.  It is #{value[param]}." unless
+                    limit.include?(value[param])
             # cf TODO in option.rb
             when 'String'
-                record.errors.add attr, "#{param} is not a(n) #{limit}" unless value[param].nil? or value[param].class.to_s == limit
+                record.errors.add attr, "#{param} is not a(n) #{limit}" unless
+                    value[param].nil? or value[param].class.to_s.downcase == limit
             end
         end
     end
@@ -328,11 +330,12 @@ class Noodle::Node
                 # TODO: Do something with the error strings below :)
                 case op
                 when '='
-                    # TODO: Need to check whether this param should be an array and make it so
+                    # If param must be an array split value on ,
+                    value = value.split(',') if Noodle::Option.get.limits[name] == 'array'
                     found.each do |node|
                         node.send(which)[name] = value
                         node.save
-                        body << node.errors?(silent_if_none: true)
+                        body << node.errors?(silent_if_none: true).to_s
                     end
                 when '+=','-='
                     method = op == '+=' ? :push : :delete
@@ -353,7 +356,7 @@ class Noodle::Node
             found.each do |node|
                 node.params['status'] = command
                 node.save
-                body << node.errors?(silent_if_none: true)
+                body << node.errors?(silent_if_none: true).to_s
             end
         when 'remove'
             found.map{|node| node.destroy}
