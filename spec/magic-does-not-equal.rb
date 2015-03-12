@@ -1,5 +1,4 @@
 require_relative 'spec_helper'
-require 'uri'
 
 describe 'Noodle' do
   it "should allow finding by @TERM=VALUE and -TERM=VALUE" do

@@ -1,5 +1,4 @@
 require_relative 'spec_helper'
-require 'uri'
 
 describe 'Noodle' do
   it "should allow finding by 'TERM1=VALUE1 TERM2=VALUE2' via query (nodes/_/?blah blah)" do
