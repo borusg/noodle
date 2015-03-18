@@ -59,7 +59,7 @@ class Noodle::Option
     #
     # says that the role param must be an array.
     attribute :limits,           Hashie::Mash, mapping: { type: 'object' },
-        'default' => {
+        default: {
                    'project'   => %w{hr financials lms registration warehouse},
                    'prodlevel' => %w{dev preprod prod test},
                    # TODO: Shirley, these could be classes instead of strings.
