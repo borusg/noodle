@@ -1,7 +1,6 @@
 # TODO
 
-* Add test for this:
-site= jojo
+* Oops!  This should give an error: noodlin param jojo=poop # no hostnames supplied
 
 * Add [.] to node-finding query so that, for example, searching for 'jojo' only matches 'jojo.example.com' and not 'jojomomo.example.com'
 
