@@ -64,7 +64,7 @@ class Noodle::Node
                 # facts and params are Hashie::Mash
                 self.send("#{key}=", self.send(key).deep_merge(value))
             end 
-            self.save
+            self.save refresh: true
         end
         self.errors?
     end
@@ -334,7 +334,7 @@ class Noodle::Node
                     value = value.split(',') if Noodle::Option.get.limits[name] == 'array'
                     found.each do |node|
                         node.send(which)[name] = value
-                        node.save
+                        node.save refresh: true
                         body << node.errors?(silent_if_none: true).to_s
                     end
                 when '+=','-='
@@ -342,7 +342,7 @@ class Noodle::Node
                     found.each do |node|
                         if node.send(which)[name].kind_of?(Array)
                             node.send(which)[name].send(method,value)
-                            node.save
+                            node.save refresh: true
                             body << node.errors?(silent_if_none: true)
                         else
                             body << "#{name} is not an array for #{node.name}"
@@ -355,7 +355,7 @@ class Noodle::Node
         when *allowed_statuses
             found.each do |node|
                 node.params['status'] = command
-                node.save
+                node.save refresh: true
                 body << node.errors?(silent_if_none: true).to_s
             end
         when 'remove'
@@ -389,10 +389,13 @@ class Noodle::Node
     def self.create_one(args)
         node = Noodle::Node.create(args)
 
+        # TODO: Um, surely this can be an option to create too?
+        node.save refresh: true
+        
         # Default FQDN fact in case none provided
         if node.facts[:fqdn].nil?
             node.facts[:fqdn] = node.name
-            node.save
+            node.save refresh: true
         end
 
         node.errors?
