@@ -174,5 +174,5 @@ Noodle::Node.gateway.refresh_index!
 #
 # Make sure at least some default options exist
 Noodle::Option.gateway.create_index!
-Noodle::Option.new.save # TODO Why save here but not above?
+Noodle::Option.new.save refresh: true # TODO Why save here but not above?
 Noodle::Option.gateway.refresh_index!

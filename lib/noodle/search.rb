@@ -60,13 +60,18 @@ class Noodle::Search
         q += "(#{@node_names.join(' OR ')})" unless @node_names.empty?
 
         # Finish contructing ES query
-        query = {query: {query_string: { default_operator: 'AND', query: q }}}
+        # TODO: Allow option to limit size
+        query = {size: 10000, query: {query_string: { default_operator: 'AND', query: q }}}
         query[:query][:query_string][:minimum_should_match] = options[:minimum] if options[:minimum]
-        # TODO: Add debug puts query
+
+        # TODO: Add debug that shows query
+        # puts query
 
         # Execute search, return results
         results = @theclass.search(query)
-        # TODO: Add debug puts results
+
+        # TODO: Add debug that shows results
+        # puts results
 
         return results.first if options[:justone]
         return results
