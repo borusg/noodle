@@ -18,9 +18,14 @@ more than one match
 
 * Make Noodle::Search idiom/sugar for finding a single node by name
 
+* Handle node (etc) names containing dashes and other separators that
+the ES indexer keys off of.
+
 * docs
 
 * 'noodlin help' and 'noodle _ help'
+
+* Add versioning (via ES' versioning)
 
 * Make uniqueness validators for :name in Node and Option.
 
