@@ -12,7 +12,10 @@ else
     URL="${URL}/_/"
 fi
 
-curl -s -X GET $URL --data-urlencode "=$query"
+DEBUG='--trace-ascii /dev/stdout'
+DEBUG=
+
+curl $DEBUG -s -X GET $URL --data-urlencode "=$query"
 status=$?
 
 if [[ $status != 0 ]]
