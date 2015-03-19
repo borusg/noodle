@@ -323,33 +323,40 @@ class Noodle::Node
             end
         when 'fact','param'
             which = "#{command}s"
-            [opts[command.to_sym] + pairs].flatten.each do |change|
-                name,op,value = change.match(/^([^-+=]+)([-+]*=)(.*)$/)[1..3]
-
-                # TODO: Error check fact names and values
-                # TODO: Do something with the error strings below :)
-                case op
-                when '='
-                    # If param must be an array split value on ,
-                    value = [value.split(',')].flatten if Noodle::Option.get.limits[name] == 'array'
-                    found.each do |node|
-                        node.send(which)[name] = value
-                        node.save refresh: true
-                        body << node.errors?(silent_if_none: true).to_s
-                    end
-                when '+=','-='
-                    method = op == '+=' ? :push : :delete
-                    found.each do |node|
-                        if node.send(which)[name].kind_of?(Array)
-                            node.send(which)[name].send(method,value)
+            if opts[:remove]
+                found.each do |node|
+                    node.send(which).delete(opts[:remove])
+                    node.save refresh: true
+                end
+            else
+                [opts[command.to_sym] + pairs].flatten.each do |change|
+                    name,op,value = change.match(/^([^-+=]+)([-+]*=)(.*)$/)[1..3]
+    
+                    # TODO: Error check fact names and values
+                    # TODO: Do something with the error strings below :)
+                    case op
+                    when '='
+                        # If param must be an array split value on ,
+                        value = [value.split(',')].flatten if Noodle::Option.get.limits[name] == 'array'
+                        found.each do |node|
+                            node.send(which)[name] = value
                             node.save refresh: true
-                            body << node.errors?(silent_if_none: true)
-                        else
-                            body << "#{name} is not an array for #{node.name}"
+                            body << node.errors?(silent_if_none: true).to_s
                         end
+                    when '+=','-='
+                        method = op == '+=' ? :push : :delete
+                        found.each do |node|
+                            if node.send(which)[name].kind_of?(Array)
+                                node.send(which)[name].send(method,value)
+                                node.save refresh: true
+                                body << node.errors?(silent_if_none: true)
+                            else
+                                body << "#{name} is not an array for #{node.name}"
+                            end
+                        end
+                    else
+                        body << "unknown op: #{op}"
                     end
-                else
-                    body << "unknown op: #{op}"
                 end
             end
         when *allowed_statuses
