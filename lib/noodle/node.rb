@@ -283,8 +283,8 @@ class Noodle::Node
         return false unless command == 'create' or found =
             Noodle::Search.new(Noodle::Node).match_names(nodes).go({:minimum => nodes.size})
 
-        # TODO: This should be the list of available statuses
-        allowed_statuses = %w{enable future surplus}
+        # TODO: Cache options
+        allowed_statuses = Noodle::Option.get.allowed_statuses
         # TODO:
         default_ilk = 'host'
         default_status = 'enabled'
