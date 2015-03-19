@@ -37,12 +37,10 @@ for everybody,  But everybody can make their own set.  And use a set created by 
 
 * Make sure everything is either a symbol or a string.  No mixing allowed.
 
-* fix intermittently failing tests.  There is a race condition somewhere.
+* Fix intermittently failing tests.  There is a race condition somewhere.
 Plus I am not being careful enough with ES.  Should at least use this to check whether
 the index exists after (re-)creating it:
 http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-exists.html
-
-* tests for noodle scripts
 
 * Put text/plain output in column -t format
 
