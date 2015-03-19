@@ -331,7 +331,7 @@ class Noodle::Node
                 case op
                 when '='
                     # If param must be an array split value on ,
-                    value = value.split(',') if Noodle::Option.get.limits[name] == 'array'
+                    value = [value.split(',')].flatten if Noodle::Option.get.limits[name] == 'array'
                     found.each do |node|
                         node.send(which)[name] = value
                         node.save refresh: true
