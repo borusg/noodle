@@ -1,5 +1,10 @@
 # TODO
 
+* Fix intermittently failing tests.  There is a race condition somewhere.
+Plus I am not being careful enough with ES.  Should at least use this to check whether
+the index exists after (re-)creating it:
+http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-exists.html
+
 * When printing arrays, join with ,
 
 * Oops!  This should give an error: noodlin param jojo=poop # no hostnames supplied
@@ -36,11 +41,6 @@ for everybody,  But everybody can make their own set.  And use a set created by 
 * grep -r TODO and DO
 
 * Make sure everything is either a symbol or a string.  No mixing allowed.
-
-* Fix intermittently failing tests.  There is a race condition somewhere.
-Plus I am not being careful enough with ES.  Should at least use this to check whether
-the index exists after (re-)creating it:
-http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-exists.html
 
 * Put text/plain output in column -t format
 
