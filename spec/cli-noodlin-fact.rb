@@ -13,6 +13,5 @@ describe 'Noodle' do
         # Make sure ram_gigs fact is present
         noodle = "ram_gigs= #{hostname}"
         assert_output(stdout="#{hostname} ram_gigs=2.0\n"){puts %x{bin/noodle #{noodle}}}
-
     end
 end

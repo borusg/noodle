@@ -366,7 +366,7 @@ class Noodle::Node
                 body << node.errors?(silent_if_none: true).to_s
             end
         when 'remove'
-            found.map{|node| node.destroy}
+            found.map{|node| node.destroy refresh: true}
             # TODO: Error check
         else
             status = 400
