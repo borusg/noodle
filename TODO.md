@@ -5,6 +5,8 @@ Plus I am not being careful enough with ES.  Should at least use this to check w
 the index exists after (re-)creating it:
 http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-exists.html
 
+* -a role=db and similar fails @ create
+
 * When printing arrays, join with ,
 
 * Oops!  This should give an error: noodlin param jojo=poop # no hostnames supplied
