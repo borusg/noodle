@@ -382,7 +382,7 @@ class Noodle::Node
         Noodle::Node.gateway.index = index_name
         Noodle::Node.gateway.create_index!
         # TODO: This seems to work around the 503-causing race condition
-        # sleep 5
+        sleep 5
         Noodle::Node.gateway.refresh_index!
     end
 
