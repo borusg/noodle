@@ -394,12 +394,9 @@ class Noodle::Node
     end
 
     def self.create_one(args)
-        node = Noodle::Node.create(args)
+        node = Noodle::Node.create(args,refresh: true)
 
-        # TODO: Um, surely this can be an option to create too?
-        node.save refresh: true
-        
-        # Default FQDN fact in case none provided
+        # Set default FQDN fact in case none provided
         if node.facts[:fqdn].nil?
             node.facts[:fqdn] = node.name
             node.save refresh: true
