@@ -30,7 +30,7 @@ the ES indexer keys off of.
 
 * 'noodlin help' and 'noodle _ help'
 
-* Add versioning (via ES' versioning)
+* Add versioning
 
 * Make uniqueness validators for :name in Node and Option.
 
