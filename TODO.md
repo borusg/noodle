@@ -2,8 +2,6 @@
 
 * Think about ES mappings and DTRT.
 
-* -a role=db and similar fails @ create
-
 * When printing arrays, join with ,
 
 * Oops!  This should give an error: noodlin param jojo=poop # no hostnames supplied

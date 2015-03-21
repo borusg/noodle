@@ -310,8 +310,10 @@ class Noodle::Node
                 params['status']    = opts[:status] || default_status  # TODO
 
                 # Merge in the rest
-                opts[:fact].map{|pair| name,value = pair.split(/=/); facts[name] = value}
-                opts[:param].map{|pair| name,value = pair.split(/=/); facts[name] = value}
+                # TODO: Can facts have required type?
+                opts[:fact].map {|pair| name,value = pair.split(/=/); facts[name]  = value}
+                opts[:param].map{|pair| name,value = pair.split(/=/); params[name] = maybe2array(name,value)}
+
                 args[:facts]  = facts
                 args[:params] = params
                 node = Noodle::Node.create_one(args)
@@ -403,5 +405,10 @@ class Noodle::Node
         end
 
         node.errors?
+    end
+
+    def self.maybe2array(name,value)
+        return [value.split(',')].flatten if Noodle::Option.get.limits[name] == 'array'
+        return value
     end
 end
