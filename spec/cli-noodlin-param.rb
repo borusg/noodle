@@ -12,6 +12,6 @@ describe 'Noodle' do
 
         # Make sure role param is present
         noodle = "role= #{hostname}"
-        assert_output(stdout="#{hostname} role=[\"db\"]\n"){puts %x{bin/noodle #{noodle}}}
+        assert_output(stdout="#{hostname} role=db\n"){puts %x{bin/noodle #{noodle}}}
     end
 end

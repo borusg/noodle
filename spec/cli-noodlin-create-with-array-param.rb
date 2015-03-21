@@ -9,6 +9,6 @@ describe 'Noodle' do
         
         # Make sure it's there and that role is an array
         noodle = "role= #{hostname}"
-        assert_output(stdout="#{hostname} role=[\"db\", \"app\"]\n"){puts %x{bin/noodle #{noodle}}}
+        assert_output(stdout="#{hostname} role=app,db\n"){puts %x{bin/noodle #{noodle}}}
     end
 end

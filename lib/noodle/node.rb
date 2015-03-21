@@ -213,7 +213,10 @@ class Noodle::Node
                 add = hit.name
                 show.each do |term|
                     if !hit.params.nil?   and hit.params[term]
-                        add << " #{term}=#{hit.params[term]}"
+                        value = hit.params[term]
+                        # TODO: Join arrays for facts too?  What about hashes?
+                        value = value.sort.join(',') if Noodle::Option.get.limits[term] == 'array'
+                        add << " #{term}=#{value}"
                     elsif !hit.facts.nil? and hit.facts[term]
                         add << " #{term}=#{hit.facts[term]}"
                     end
