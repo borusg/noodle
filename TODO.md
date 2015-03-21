@@ -1,5 +1,7 @@
 # TODO
 
+* Think about ES mappings and DTRT.
+
 * Fix intermittently failing tests.  There is a race condition somewhere.
 Plus I am not being careful enough with ES.  Should at least use this to check whether
 the index exists after (re-)creating it:

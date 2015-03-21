@@ -5,7 +5,7 @@ require 'trollop'
 class Noodle::Node
     include Elasticsearch::Persistence::Model
 
-    attribute :name,   String
+    attribute :name,   String,       mapping: { index: 'not_analyzed' }
     attribute :fqdn,   String, default: :name
     attribute :facts,  Hashie::Mash, mapping: { type: 'object' }, default: {}
     attribute :params, Hashie::Mash, mapping: { type: 'object' }, default: {}
