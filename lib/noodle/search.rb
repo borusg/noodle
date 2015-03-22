@@ -47,6 +47,15 @@ class Noodle::Search
         self
     end
 
+    # Return all values for param named TERM
+    def paramvalues(term)
+        @query = {}
+        @query[:aggs] = {}
+        @query[:aggs][term.to_s] = {terms: {field: "params.#{term}"}}
+        results = @theclass.search(@query)
+        return results.response.aggregations.send(term).buckets.collect{|x| x['key']}
+    end
+
     # Execute the search.  If minimum is specified, must find
     # at least that many (TODO: error if more than one found?)
     def go(options = {minimum: false, justone: false})

@@ -131,14 +131,22 @@ class Noodle::Node
         list   = false
 
         # NOTE: Order below should be preserved in case statement
+        bareword_hash               = get_bareword_hash
         term_present                = Regexp.new '\?$'
         term_present_and_show_value = Regexp.new '\?=$'
         term_does_not_equal         = Regexp.new '^[-@][^=]+=.+'
         term_show_value             = Regexp.new '=$'
         term_matches_regexp         = Regexp.new '=~'
         term_equals                 = Regexp.new '='
+
         query.split(/\s+/).each do |part|
             case part
+            when *bareword_hash.keys
+                list  = true
+                value = part
+                term  = bareword_hash[value]
+                search.equals(term,value)
+
             when term_present
                 list = true
                 term = part.sub(/\?$/,'')
@@ -413,5 +421,24 @@ class Noodle::Node
     def self.maybe2array(name,value)
         return [value.split(',')].flatten if Noodle::Option.get.limits[name] == 'array'
         return value
+    end
+
+    # Return a hash of barewordvalue => paramname for use in magic
+    # For example:
+    # {
+    #   'mars'       => 'site'
+    #   'jupiter     => 'site'
+    #   'hr'         => 'project'
+    #   'financials' => 'project'
+    # }
+    # Convoluted?  Maybe but makes magic easier
+    def self.get_bareword_hash
+        h = {}
+        Noodle::Option.get.bareword_terms.each do |term|
+            Noodle::Search.new(Noodle::Node).paramvalues(term).each do |value|
+                h[value] = term
+            end
+        end
+        h
     end
 end
