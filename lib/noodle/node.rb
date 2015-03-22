@@ -140,46 +140,46 @@ class Noodle::Node
         query.split(/\s+/).each do |part|
             case part
             when term_present
-                 list = true
-                 term = part.sub(/\?$/,'')
-                 search.exists(term)
+                list = true
+                term = part.sub(/\?$/,'')
+                search.exists(term)
 
             when term_present_and_show_value
-                 list = true
-                 term = part.sub(/\?=$/,'')
-                 search.exists(term)
-                 show << term
+                list = true
+                term = part.sub(/\?=$/,'')
+                search.exists(term)
+                show << term
 
             when term_does_not_equal
-                 list = true
-                 term,value = part.sub(/^[-@]/,'').split(/=/,2)
-                 search.not_equal(term,value)
+                list = true
+                term,value = part.sub(/^[-@]/,'').split(/=/,2)
+                search.not_equal(term,value)
 
             when term_show_value
-                 list = true
-                 show << part.chop
+                list = true
+                show << part.chop
 
             when term_matches_regexp
-                 list = true
-                 term,value = part.split(/=~/,2)
-                 search.match(term,value)
+                list = true
+                term,value = part.split(/=~/,2)
+                search.match(term,value)
 
             when term_equals
-                 list = true
-                 term,value = part.split(/=/,2)
-                 search.equals(term,value)
+                list = true
+                term,value = part.split(/=/,2)
+                search.equals(term,value)
 
             when 'full'
-                 format = :full
+                format = :full
 
             when 'json'
-                 format = :json
+                format = :json
 
             else
-                 # Assume everything else is a hostname (or partial hostname)
-                 # TODO: Maybe this is a bit awkward when bare words are used with
-                 # other magic operators?
-                 search.match_names(part)
+                # Assume everything else is a hostname (or partial hostname)
+                # TODO: Maybe this is a bit awkward when bare words are used with
+                # other magic operators?
+                search.match_names(part)
             end
         end
 
