@@ -5,13 +5,12 @@ Clean-room implementation of the [Puppet External Node Classifier](http://docs.p
 and server database that we [use at work](http://bit.ly/noodlerockeagle2013).
 
 ## Future dreamland
-* Duplicate existing functionality
 * Magicaly templated Heira backend
 * Relationships, including enough to define network config for an entire stack (from IPs to firewall and load balancer, etc)
 
 ## Requirements
-* [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)  It's easy to install, too powerful to ignore.  Plus you get an [awesome UI named Kibana](http://www.elasticsearch.org/overview/kibana/) for free.  Now how much won't you complain about this requirement? :)
-* Ruby.  travis-ci.org says it works with versions 1.9, 2.0 and 2.1.
+* [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)  It's easy to install, too powerful to ignore.  Plus you get an [awesome UI named Kibana](http://www.elasticsearch.org/overview/kibana/) for free.
+* Ruby.  travis-ci.org says it works with versions 1.9, 2.0, 2.1 and 2.2.
 
 ## Running it
 * Remember to install and start [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)
