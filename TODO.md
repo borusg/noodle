@@ -16,6 +16,8 @@
 ** Allow magic queries to specify which options set to use.  The default options should work
 for everybody,  But everybody can make their own set.  And use a set created by somebody else.
 
+* content-type
+
 * Add [.] to node-finding query so that, for example, searching for 'jojo' only matches 'jojo.example.com' and not 'jojomomo.example.com'?
 
 * Make Noodle::Search idiom/sugar for finding a single node by name
