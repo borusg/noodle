@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Grab the wiki markup from http://en.wikipedia.org/wiki/List_of_pasta
+# Run it through this:
+
+grep -A 1  File: |egrep -v 'File:|^[-][-]' | tr -d '|' | tr -d '[' | tr -d ']'| tr '[:upper:]' '[:lower:]' |awk '{print $1}'  |sort -u | sed 's/<.*//'| grep -v '^$'
+

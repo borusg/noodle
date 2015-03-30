@@ -154,6 +154,16 @@ curl -q -XGET 'http://localhost:9292/nodes/_/operatingsystem=ackack'
 
 ```
 
+## Create sample nodes
+```bash
+# Create pre-generated random nodes:
+util/create-sample-nodes.sh
+
+# Create your own random nodes
+util/makepasta.rb > /tmp/makepasta.out
+. /tmp/makepasta.out
+```
+
 ## Thanks and references and notes to self
 * [elasticsearch-persistence](https://github.com/elasticsearch/elasticsearch-rails/tree/master/elasticsearch-persistence)
 * [elasticsearch-persistence model definition](https://github.com/elasticsearch/elasticsearch-rails/tree/master/elasticsearch-persistence#model-definition)
