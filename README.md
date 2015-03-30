@@ -164,6 +164,40 @@ util/makepasta.rb > /tmp/makepasta.out
 . /tmp/makepasta.out
 ```
 
+# Running Noodle on OpenShift
+Exercise left to reader: I assume you can hook up [OpenShift](https://www.openshift.com/) to a Noodle repository :)  I picked OpenShift because it's free and doesn't require a credit card.
+
+Until I grok it, manually change the rack version in Gemfile.lock to 1.5.2.
+
+```bash
+
+# Install Elasticsearch in OpenShift OS
+
+# SSH to your OpenShfit OS then:
+cd app-root/data
+# Any version should do
+wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.5.0.tar.gz
+tar xf elasticsearch-1.5.0.tar.gz
+cd elasticsearch-1.5.0
+
+# Either copy util/elasticsearch.yml to the config dir OR:
+
+vi config/elasticsearch.yml
+# And set the following:
+# network.host: ${OPENSHIFT_RUBY_IP}
+# transport.tcp.port: 29300
+# http.port: 29200
+
+# Start ES
+bin/elasticsearch
+
+# On your desktop or some other remote OS:
+export NOODLE_SERVER=YOUROPENSHIFTNAME.rhcloud.com
+
+# Then noodlin and noodle away
+
+```
+
 ## Thanks and references and notes to self
 * [elasticsearch-persistence](https://github.com/elasticsearch/elasticsearch-rails/tree/master/elasticsearch-persistence)
 * [elasticsearch-persistence model definition](https://github.com/elasticsearch/elasticsearch-rails/tree/master/elasticsearch-persistence#model-definition)
