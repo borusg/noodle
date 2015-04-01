@@ -86,6 +86,7 @@ bucatini.example.com  needle=haystack
 # Find all nodes that have 'needle' defined
 n needle?
 bucatini.example.com  needle=haystack
+```
 
 It is easy to create and update Noodle nodes via the 'noodlin' CLI:
 
@@ -98,6 +99,7 @@ noodlin create -i host -s mars -p hr -P prod -f cpus=2 -f ramgigs=2 -f diskgigs=
 
 Noodle is an [External Node Classifier](https://docs.puppetlabs.com/guides/external_nodes.html) for [Puppet](https://puppetlabs.com/)
 ```bash
+noodle bucatini.example.com
 # ---
 # classes:
 # - baseclass
