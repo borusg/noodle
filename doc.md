@@ -12,7 +12,7 @@ than servers.
 
 Noodle is an
 [External Node Classifier](https://docs.puppetlabs.com/guides/external_nodes.html)
-(ENC) for [Puppet](https://puppetlabs.com/) Noodle makes it easy to
+(ENC) for [Puppet](https://puppetlabs.com/). Noodle makes it easy to
 create and update *nodes* corresponding to your servers.  Define
 *parameters* for nodes and they are available in Puppet manifests.
 
@@ -87,7 +87,7 @@ bucatini.example.com  needle=haystack
 n needle?
 bucatini.example.com  needle=haystack
 
-It's easy to create and update Noodle nodes via the 'noodlin' CLI:
+It is easy to create and update Noodle nodes via the 'noodlin' CLI:
 
 ```bash
 noodlin create --ilk host --site mars --project hr --prodlevel prod --fact cpus=2 --fact ramgigs=2 --fact diskgigs=32 -param role=web,mariadb bucatini.example.com
@@ -113,9 +113,8 @@ Noodle is an [External Node Classifier](https://docs.puppetlabs.com/guides/exter
 #   needle: haystack
 ```
 
+Note:
 ```bash
-# NOTE:
-#
 # All examples assume this:
 function n() {
   bin/noodle "$@" | column -t
@@ -141,7 +140,7 @@ function sort () {
 * InfluxDB/Grafana
 
 # Who wrote Noodle?
-Noodle was originally writ<ten by @riddley and @happymcplaksin while
+Noodle was originally written by @riddley and @happymcplaksin while
 working for the [University System of Georgia](http://usg.edu/) Since
 we were not allowed to open source it, @happymcplaksin rewrote it from
 scratch clean room style ><
