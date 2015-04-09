@@ -12,7 +12,7 @@ ENV['NOODLE_SERVER'] = 'localhost:2929'
 Noodle::Node.gateway.index = 'this-is-for-running-noodle-elasticsearch-tests-only'
 # TODO: What's the right way to do this?
 begin
-    Noodle::Node.gateway.delete_index!
+  Noodle::Node.gateway.delete_index!
 rescue
 end
 
@@ -31,9 +31,9 @@ Minitest::Reporters.use!
 include Rack::Test::Methods
 
 module HappyHelper
-    def self.randomhostname
-        SecureRandom.uuid.gsub('-','') + '.example.com'
-    end
+  def self.randomhostname
+    SecureRandom.uuid.gsub('-','') + '.example.com'
+  end
 end
 
 # Minitest
@@ -43,7 +43,7 @@ end
 
 # Start a local rack server to serve up test pages.
 @server_thread = Thread.new do
-    Noodle::Node.gateway.index = 'this-is-for-running-noodle-elasticsearch-tests-only'
-    Rack::Handler::Thin.run Noodle.new, :Port => 2929
+  Noodle::Node.gateway.index = 'this-is-for-running-noodle-elasticsearch-tests-only'
+  Rack::Handler::Thin.run Noodle.new, :Port => 2929
 end
 sleep(1) # wait a sec for the server to be booted
