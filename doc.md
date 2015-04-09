@@ -7,8 +7,8 @@ clean-roomed yet.
 Noodle is to server information as Google is to general information.
 
 Google quickly and accurately finds all kinds of information.  Noodle
-does the same thing for servers.  And it's easy to use Noodle for more
-than servers.
+does the same for servers.  And it's easy to use Noodle for more than
+servers.
 
 Noodle is an
 [External Node Classifier](https://docs.puppetlabs.com/guides/external_nodes.html)
@@ -153,7 +153,7 @@ function sort () {
 
 # Who wrote Noodle?
 Noodle was originally written by @riddley and @happymcplaksin while
-working for the [University System of Georgia](http://usg.edu/) Since
+working for the [University System of Georgia](http://usg.edu/). Since
 we were not allowed to open source it, @happymcplaksin rewrote it from
 scratch clean room style ><
 
