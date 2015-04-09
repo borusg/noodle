@@ -16,11 +16,30 @@
 ** Allow magic queries to specify which options set to use.  The default options should work
 for everybody,  But everybody can make their own set.  And use a set created by somebody else.
 
+* puppetdb2noodle
+
+* puppet functions: noodleparam noodlefact noodlemagic
+
+* noo-alike
+
+* does 'noodlin future blah' and similar work?
+
 * content-type
+
+* openshift ES cartridge:
+https://hub.openshift.com/quickstarts/125-elasticsearch
+
+* noodle display arguments to support:
+- values only
+- csv
+- sort
+- column -t
 
 * Add [.] to node-finding query so that, for example, searching for 'jojo' only matches 'jojo.example.com' and not 'jojomomo.example.com'?
 
 * Make Noodle::Search idiom/sugar for finding a single node by name
+
+* fail more gracefully when ES isn't running
 
 * docs
 
