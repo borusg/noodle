@@ -165,7 +165,7 @@ util/makepasta.rb > /tmp/makepasta.out
 ```
 
 # Running Noodle on OpenShift
-Exercise left to reader: I assume you can hook up a Ruby Application at [OpenShift](https://www.openshift.com/) to a Noodle repository :)  Use I picked OpenShift because it's free and doesn't require a credit card.
+Exercise left to reader: I assume you can hook up a Ruby Application at [OpenShift](https://www.openshift.com/) to a Noodle repository :)  I picked OpenShift because it's free and doesn't require a credit card.
 
 Until I grok it, manually change the rack version in Gemfile.lock to 1.5.2.
 
