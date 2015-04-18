@@ -1,5 +1,16 @@
 # TODO
 
+* Order:
+- ilk/status should be params everywhere
+- puppetdb2noodle
+- puppet functions
+- finish /options/
+- docs
+
+* API: When try to update a node that doesn't exist, give error
+
+* API: Everything should support bulk operations (GET,POST,PUT,PATCH,DELETE)
+
 * Oops!  This should give an error: noodlin param jojo=poop # no hostnames supplied
 
 * Add tests:
