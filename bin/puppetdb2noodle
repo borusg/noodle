@@ -1,0 +1,73 @@
+#!/usr/bin/ruby
+
+# Copy PuppetDB facts into corresponding Noodle node facts.
+
+require 'trollop'
+require 'open-uri'
+require 'json'
+require 'multi_json'
+require 'oj'
+require_relative '../lib/noodle/client'
+
+opts = Trollop::options do
+  opt :puppetdb_server, "PuppetDB server", :type => :string,  :default => 'localhost'
+  opt :puppetdb_port,   "PuppetDB port",   :type => :integer, :default => 8080,       :short => '-P'
+  opt :noodle_server,   "Noodle server",   :type => :string,  :default => 'localhost'
+  opt :retrieve_limit,  "Maximum facts to retrieve at once",        :type => :integer, :default => 1000
+  opt :retrieve_delay,  "Delay between fact retrievals in seconds", :type => :float,   :default => 0.01
+end
+
+# Send facts in JSON to Noodle, return the number of facts processed
+def json2noodle(json)
+  begin
+    puppetdb = MultiJson.load(json)
+  rescue MultiJson::ParseError => exception
+    puts exception.data
+    puts exception.cause
+  end
+
+puts Time.now.to_f
+  puppetdb.each do |hash|
+    hostname = hash['certname']
+    node = (Noodle.find{|n| n.name == hostname} or Noodle.new(hostname))
+    node.facts[hash['name']] = hash['value']
+  end
+puts Time.now.to_f
+
+  Noodle.map{|n| n.update}
+puts Time.now.to_f
+  return puppetdb.size
+end
+
+# put '/nodes/dodo.example.com', params = '{"params":{"ilk":"host","status":"surplus","site":"moon","project":"hr","prodlevel":"dev"}}'
+#
+#[ {  "value" : "Seagate",
+#     "name" : "blockdevice_sde_vendor",
+#     "certname" : "plakistan.mcplaksin.org"},
+#  {  "value" : "Linux",
+#     "name" : "kernel",
+#     "certname" : "plakistan.mcplaksin.org"},
+#  {  "value" : "Ubuntu 14.10",
+#     "name" : "lsbdistdescription",
+#     "certname" : "plakistan.mcplaksin.org"},
+#  {  "value" : "3.16.0-33-generic",
+#     "name" : "kernelrelease",
+#     "certname" : "plakistan.mcplaksin.org"},
+#  {  "value" : "14.10",
+#     "name" : "lsbdistreleas",
+#     "certname" : "plakistan.mcplaksin.org"} ]
+
+## Main :)
+#
+base_hit = "http://#{opts[:puppetdb_server]}:#{opts[:puppetdb_port]}/v3/facts/?limit=#{opts[:retrieve_limit]}"
+
+# Get first batch and totoal
+r =  open(URI.escape(base_hit + '&include-total=true'))
+total = r.metas['x-records'].first.to_i
+got = json2noodle(r.read)
+
+while got < total do
+  sleep(opts[:retrieve_delay])
+  r = open(URI.escape(base_hit + "&offset=#{got}"))
+  got += json2noodle(r.read)
+end
