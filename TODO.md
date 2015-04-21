@@ -2,8 +2,6 @@
 
 * Order:
 - ilk/status should be params everywhere
-- puppetdb2noodle
-- puppet functions
 - finish /options/
 - docs
 
