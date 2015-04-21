@@ -11,6 +11,8 @@
 
 * API: Everything should support bulk operations (GET,POST,PUT,PATCH,DELETE)
 
+* Add /magic/ as an alias for /_/
+
 * Oops!  This should give an error: noodlin param jojo=poop # no hostnames supplied
 
 * Add tests:
