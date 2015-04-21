@@ -73,4 +73,31 @@ class Noodle
   def to_json
     {params: @params, facts: @facts}.to_json
   end
+
+  # Return the value of one PARAM for HOST.  Optional third argument
+  # specifies Noodle server:port to query
+  def self.paramvalue(host,param,server=false)
+    Noodle.server = server if server
+    # TODO: Switch to value-only query when magic supports that
+    begin
+      r = RestClient.get(URI.encode("http://#{Noodle.server}/nodes/_/#{host} #{param}="))
+    rescue => e
+      # TODO: Fancier :)
+      return ''
+    end
+    r.match(/=/) ? r.to_str.sub(/.*=/,'').strip : ''
+  end
+
+  # Return the result of Noodle magic QUERY as a string.  Optional
+  # second argument specifies Noodle server:port to query
+  def self.magic(query,server=false)
+    Noodle.server = server if server
+    begin
+      r = RestClient.get(URI.encode("http://#{Noodle.server}/nodes/_/#{query}"))
+    rescue
+      # TODO: Fancier :)
+      return ''
+    end
+    r.to_str
+  end
 end
