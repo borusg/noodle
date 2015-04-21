@@ -27,10 +27,6 @@
 ** Allow magic queries to specify which options set to use.  The default options should work
 for everybody,  But everybody can make their own set.  And use a set created by somebody else.
 
-* puppetdb2noodle
-
-* puppet functions: noodleparam noodlefact noodlemagic
-
 * noo-alike
 
 * does 'noodlin future blah' and similar work?
