@@ -1,6 +1,6 @@
 before_script:
   - sleep 10
-  - elasticsearch -v
+  - dpkg -l elasticsearch 
 language: ruby
 rvm:
   - 2.3.0
