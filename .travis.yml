@@ -1,6 +1,6 @@
 before_script:
   - sleep 10
-  - dpkg -l elasticsearch 
+  - curl localhost:9200
 language: ruby
 rvm:
   - 2.3.0
