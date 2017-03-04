@@ -7,7 +7,7 @@ describe 'Noodle' do
     assert_equal last_response.status, 201
     Noodle::Node.gateway.refresh_index!
 
-    get "/nodes/_/funky#{URI.escape('?')}"
+    get "/nodes/_/funky#{CGI.escape('?')}"
     assert_equal last_response.status, 200
     assert last_response.body.must_include 'yoyo.example.com'
   end
