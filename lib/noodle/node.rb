@@ -234,7 +234,7 @@ class Noodle::Node
             body = body.sort.join
         end
         [body,status]
-    end
+  end
 
     ## noodlin
     #
@@ -323,27 +323,27 @@ class Noodle::Node
           # Merge in the rest
           # TODO: Can facts have required type?
           opts[:fact].map {|pair| name,value = pair.split(/=/); facts[name]  = value}
-                opts[:param].map{|pair| name,value = pair.split(/=/); params[name] = maybe2array(name,value)}
+          opts[:param].map{|pair| name,value = pair.split(/=/); params[name] = maybe2array(name,value)}
 
-                args[:facts]  = facts
-                args[:params] = params
-                node = Noodle::Node.create_one(args)
+          args[:facts]  = facts
+          args[:params] = params
+          node = Noodle::Node.create_one(args)
 
-                if defined?(node.keys) and node.keys.member?(:errors)
-                    body = node[:errors]
-                    status = 444
-                end
-            end
-        when 'fact','param'
-            which = "#{command}s"
-            if opts[:remove]
-                found.each do |node|
-                    node.send(which).delete(opts[:remove])
-                    node.save refresh: true
-                end
-            else
-                [opts[command.to_sym] + pairs].flatten.each do |change|
-                    name,op,value = change.match(/^([^-+=]+)([-+]*=)(.*)$/)[1..3]
+          if defined?(node.keys) and node.keys.member?(:errors)
+            body = node[:errors]
+            status = 444
+          end
+        end
+      when 'fact','param'
+        which = "#{command}s"
+        if opts[:remove]
+          found.each do |node|
+            node.send(which).delete(opts[:remove])
+            node.save refresh: true
+          end
+        else
+          [opts[command.to_sym] + pairs].flatten.each do |change|
+            name,op,value = change.match(/^([^-+=]+)([-+]*=)(.*)$/)[1..3]
             
             # TODO: Error check fact names and values
             # TODO: Do something with the error strings below :)
@@ -380,7 +380,7 @@ class Noodle::Node
         end
       when 'remove'
         found.map{|node| node.destroy refresh: true}
-        # TODO: Error check
+      # TODO: Error check
       else
         status = 400
         body = "Unknown noodlin command: #{command}"
