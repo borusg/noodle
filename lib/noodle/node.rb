@@ -89,8 +89,8 @@ class Noodle::Node
 
   # Magic:
   #
-  # Make everything return either JSON or pretty text, defaul based on
-  # either user-agent or accepts or both or more :)
+  # Make everything return either JSON or pretty text, default based
+  # on either user-agent or accepts or both or more :)
   #
   # Duplicate existing:
   #
