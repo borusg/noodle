@@ -5,8 +5,6 @@
 - finish /options/
 - docs
 
-* API: When try to update a node that doesn't exist, give error
-
 * API: Everything should support bulk operations (GET,POST,PUT,PATCH,DELETE)
 
 * Add /magic/ as an alias for /_/

@@ -51,7 +51,7 @@ class Noodle::Search
   def paramvalues(term)
     @query = {}
     @query[:aggs] = {}
-    @query[:aggs][term.to_s] = {terms: {field: "params.#{term}"}}
+    @query[:aggs][term.to_s] = {terms: {field: "params.#{term}.keyword"}}
     results = @theclass.search(@query)
     return results.response.aggregations.send(term).buckets.collect{|x| x['key']}
   end

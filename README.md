@@ -16,9 +16,9 @@ and server database that we [use at work](http://bit.ly/noodlerockeagle2013).
 * Remember to install and start [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)
 * `git clone https://github.com/happymcplaksin/noodle.git`
 * `cd noodle`
-* `bundle install`
-* Run tests: `rake`
-* Start app: `rackup`
+* `bundle install --path vendor/bundle`
+* Run tests: `bundle exec rake`
+* Start app: `bundle exec rackup`
 
 Perhaps the [travis-ci.org steps](https://travis-ci.org/happymcplaksin/noodle) are helpful and/or a decent alternative :)
 
