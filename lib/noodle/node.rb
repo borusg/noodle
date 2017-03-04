@@ -161,34 +161,34 @@ class Noodle::Node
       when term_does_not_equal
         list = true
         term,value = part.sub(/^[-@]/,'').split(/=/,2)
-                search.not_equal(term,value)
+        search.not_equal(term,value)
 
-            when term_show_value
-                list = true
-                show << part.chop
+      when term_show_value
+        list = true
+        show << part.chop
 
-            when term_matches_regexp
-                list = true
-                term,value = part.split(/=~/,2)
-                search.match(term,value)
+      when term_matches_regexp
+        list = true
+        term,value = part.split(/=~/,2)
+        search.match(term,value)
 
-            when term_equals
-                list = true
-                term,value = part.split(/=/,2)
-                search.equals(term,value)
+      when term_equals
+        list = true
+        term,value = part.split(/=/,2)
+        search.equals(term,value)
 
-            when 'full'
-                format = :full
+      when 'full'
+        format = :full
 
-            when 'json'
-                format = :json
+      when 'json'
+        format = :json
 
-            else
-                # Assume everything else is a hostname (or partial hostname)
-                # TODO: Maybe this is a bit awkward when bare words are used with
-                # other magic operators?
-                search.match_names(part)
-            end
+      else
+        # Assume everything else is a hostname (or partial hostname)
+        # TODO: Maybe this is a bit awkward when bare words are used with
+        # other magic operators?
+        search.match_names(part)
+      end
         end
 
         # TODO: Not pretty
@@ -296,8 +296,7 @@ class Noodle::Node
 
       # TODO: Cache options
       allowed_statuses = Noodle::Option.get.allowed_statuses
-      # TODO:
-      default_ilk = 'host'
+      # TODO: default_ilk = 'host'
       default_status = 'enabled'
 
       # TODO: Error when "at create" argument given but not
@@ -441,4 +440,4 @@ class Noodle::Node
       end
       h
     end
-  end
+end
