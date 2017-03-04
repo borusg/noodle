@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow output in JSON format" do
-    put '/nodes/fofo.example.com', params = '{"params":{"ilk":"host","status":"enabled","site":"jupiter","output":"json","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/fofo.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter","output":"json","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
     Noodle::Node.gateway.refresh_index!
 

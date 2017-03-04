@@ -3,7 +3,7 @@ require 'cgi'
 
 describe 'Noodle' do
   it "should allow finding by TERM?" do
-    put '/nodes/yoyo.example.com', params = '{"params":{"ilk":"host","status":"enabled","site":"jupiter", "funky":"town","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/yoyo.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter", "funky":"town","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
     Noodle::Node.gateway.refresh_index!
 

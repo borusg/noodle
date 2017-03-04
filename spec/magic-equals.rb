@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow finding by TERM=VALUE" do
-    put '/nodes/roro.example.com', params = '{"params":{"ilk":"host","status":"enabled","site":"jupiter","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/roro.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
     Noodle::Node.gateway.refresh_index!
 

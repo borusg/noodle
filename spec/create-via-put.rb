@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow creating a node via PUT" do
-    put '/nodes/popo.example.com', params = '{"params":{"ilk":"host","status":"surplus","site":"moon","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/popo.example.com', '{"params":{"ilk":"host","status":"surplus","site":"moon","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
 
     r = MultiJson.load last_response.body
