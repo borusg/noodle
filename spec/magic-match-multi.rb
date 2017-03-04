@@ -9,7 +9,7 @@ describe 'Noodle' do
 
     Noodle::Node.gateway.refresh_index!
 
-    get "/nodes/_/site=~nept#{URI.escape(' ')}prodlevel=~pro"
+    get "/nodes/_/site=~nept#{CGI.escape(' ')}prodlevel=~pro"
     assert_equal last_response.status, 200
     assert_equal last_response.body, "toto.example.com\n"
   end
