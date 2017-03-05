@@ -4,9 +4,9 @@ describe 'Noodle' do
   it "should noodle site=" do
     hostname = HappyHelper::randomhostname
     noodlin = "create -s mars -i host -p hr -P prod #{hostname}"
-    assert_output(stdout="\n"){puts %x{bin/noodlin #{noodlin}}}
+    assert_output("\n"){puts %x{bin/noodlin #{noodlin}}}
 
     noodle = "site= #{hostname}"
-    assert_output(stdout="#{hostname} site=mars\n"){puts %x{bin/noodle #{noodle}}}
+    assert_output("#{hostname} site=mars\n"){puts %x{bin/noodle #{noodle}}}
   end
 end
