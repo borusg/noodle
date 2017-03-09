@@ -434,7 +434,7 @@ class Noodle::Node
     def self.get_bareword_hash
       h = {}
       Noodle::Option.get.bareword_terms.each do |term|
-        Noodle::Search.new(Noodle::Option).paramvalues(term).each do |value|
+        Noodle::Search.new(Noodle::Node).paramvalues(term).each do |value|
           h[value] = term
         end
       end
