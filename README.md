@@ -9,8 +9,8 @@ and server database that we [use at work](http://bit.ly/noodlerockeagle2013).
 * Relationships, including enough to define network config for an entire stack (from IPs to firewall and load balancer, etc)
 
 ## Requirements
-* [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)  It's easy to install, too powerful to ignore.  Plus you get an [awesome UI named Kibana](http://www.elasticsearch.org/overview/kibana/) for free.
-* Ruby.  travis-ci.org says it works with versions 1.9, 2.0, 2.1 and 2.2.
+* [Elasticsearch 5](http://www.elasticsearch.org/overview/elkdownloads/)  It's easy to install, too powerful to ignore.  Plus you get an [awesome UI named Kibana](http://www.elasticsearch.org/overview/kibana/) for free.
+* Ruby.  travis-ci.org says it works with versions 2.2, 2.3.0, and 2.4.0.
 
 ## Running it
 * Remember to install and start [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)
