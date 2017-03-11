@@ -45,10 +45,10 @@ class Noodle < Sinatra::Base
   # Create the indexes if they don't already exist
   Noodle::Node.gateway.create_index! force_or_not
   Noodle::Node.gateway.refresh_index!
+
   Noodle::Option.gateway.create_index! force_or_not
-  # TODO: Only call .save no options to ensure that at least some default options exist
-  Noodle::Option.new.save refresh: true # TODO Why save here but not above?
-  Noodle::Option.gateway.refresh_index!
+  # If no default options exist, create them:
+  Noodle::Option.new.save refresh: true if Noodle::Option.search(query: {match: {name: 'defaults'}}).size == 0
 
   get '/help' do
     body "Noodle helps!\n"
