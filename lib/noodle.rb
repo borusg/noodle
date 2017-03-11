@@ -24,6 +24,7 @@ class Noodle < Sinatra::Base
   Noodle::Option.gateway.client = Elasticsearch::Client.new host: "#{ENV['OPENSHIFT_RUBY_IP']}:29200" if ENV['OPENSHIFT_RUBY_IP']
 
   # TODO: Production :)
+  force_or_not = {}
   configure :development do
     register Sinatra::Reloader
   end
@@ -38,12 +39,13 @@ class Noodle < Sinatra::Base
         number_of_shards: 1,
         number_of_replicas: 0,
     })
+    force_or_not = {force: true}
   end
 
   # Create the indexes if they don't already exist
-  Noodle::Node.gateway.create_index!
+  Noodle::Node.gateway.create_index! force_or_not
   Noodle::Node.gateway.refresh_index!
-  Noodle::Option.gateway.create_index!
+  Noodle::Option.gateway.create_index! force_or_not
   # TODO: Only call .save no options to ensure that at least some default options exist
   Noodle::Option.new.save refresh: true # TODO Why save here but not above?
   Noodle::Option.gateway.refresh_index!
