@@ -3,8 +3,6 @@
 * Order:
 - ilk/status should be params everywhere
 - finish /options/
-- Only use 1 shard, 0 replicas for running tests
-- Make tests use a phony index again
 - docs
 
 * API: Everything should support bulk operations (GET,POST,PUT,PATCH,DELETE)
