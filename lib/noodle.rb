@@ -10,11 +10,43 @@ require 'elasticsearch/persistence'
 require 'multi_json'
 require 'oj'
 
+# Super debug logging
+#Noodle::Node.gateway.client.transport.logger = Logger.new(STDERR)
+
 class Noodle < Sinatra::Base
+  require_relative 'noodle/node'
+  require_relative 'noodle/search'
+  require_relative 'noodle/option'
+
+  # If OPENSHIFT_RUBY_IP is set, change ES port because can't use
+  # default ES port at OpenShift
+  Noodle::Node.gateway.client   = Elasticsearch::Client.new host: "#{ENV['OPENSHIFT_RUBY_IP']}:29200" if ENV['OPENSHIFT_RUBY_IP']
+  Noodle::Option.gateway.client = Elasticsearch::Client.new host: "#{ENV['OPENSHIFT_RUBY_IP']}:29200" if ENV['OPENSHIFT_RUBY_IP']
+
   # TODO: Production :)
   configure :development do
     register Sinatra::Reloader
   end
+  configure :test do
+    Noodle::Node.gateway.index   = 'this-is-for-running-noodle-elasticsearch-tests-only-nodes'
+    Noodle::Option.gateway.index = 'this-is-for-running-noodle-elasticsearch-tests-only-options'
+    Noodle::Node.settings({
+      number_of_shards: 1,
+      number_of_replicas: 0,
+    })
+    Noodle::Option.settings({
+        number_of_shards: 1,
+        number_of_replicas: 0,
+    })
+  end
+
+  # Create the indexes if they don't already exist
+  Noodle::Node.gateway.create_index!
+  Noodle::Node.gateway.refresh_index!
+  Noodle::Option.gateway.create_index!
+  # TODO: Only call .save no options to ensure that at least some default options exist
+  Noodle::Option.new.save refresh: true # TODO Why save here but not above?
+  Noodle::Option.gateway.refresh_index!
 
   get '/help' do
     body "Noodle helps!\n"
@@ -162,32 +194,3 @@ class Noodle < Sinatra::Base
   delete '/options' do
   end
 end
-
-require_relative 'noodle/node'
-require_relative 'noodle/search'
-require_relative 'noodle/option'
-
-# If OPENSHIFT_RUBY_IP is set, change ES port because can't use
-# default ES port at OpenShift
-#
-# TODO: This seems like a stupid spot for this stuff.
-# Plus should only do it if they don't exist.
-#Noodle::Node.gateway.client.transport.logger = Logger.new(STDERR)
-Noodle::Node.settings({
-    number_of_shards: 1,
-    number_of_replicas: 0,
-})
-Noodle::Node.gateway.client = Elasticsearch::Client.new host: "#{ENV['OPENSHIFT_RUBY_IP']}:29200" if ENV['OPENSHIFT_RUBY_IP']
-Noodle::Node.gateway.create_index!
-Noodle::Node.gateway.refresh_index!
-#
-# Make sure at least some default options exist
-Noodle::Option.settings({
-    number_of_shards: 1,
-    number_of_replicas: 0,
-})
-Noodle::Option.gateway.client = Elasticsearch::Client.new host: "#{ENV['OPENSHIFT_RUBY_IP']}:29200" if ENV['OPENSHIFT_RUBY_IP']
-Noodle::Option.gateway.create_index!
-Noodle::Option.new.save refresh: true # TODO Why save here but not above?
-Noodle::Option.gateway.refresh_index!
-
