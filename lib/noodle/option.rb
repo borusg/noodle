@@ -65,6 +65,7 @@ class Noodle::Option
     # TODO: Shirley, these could be classes instead of strings.
     'role'       => 'array',
     'stack'      => 'array',
+    'gum'        => 'hash',
     'site'       => %w{jupiter mars moon neptune pluto uranus},
     'ilk'        => %w{host esx ucschassis ucsfi},
     'status'     => %w{disabled enabled future surplus},

@@ -7,8 +7,8 @@ class Noodle::Node
 
   attribute :name,   String,       mapping: { index: 'not_analyzed' }
   attribute :fqdn,   String, default: :name
-  attribute :facts,  Hashie::Mash, mapping: { type: 'object' }, default: {}
-  attribute :params, Hashie::Mash, mapping: { type: 'object' }, default: {}
+  attribute :facts,  Hashie::Mash, mapping: { type: 'object', dynamic: true }, default: {}
+  attribute :params, Hashie::Mash, mapping: { type: 'object', dynamic: true }, default: {}
 
   validates_each :params do |record, attr, value|
     # TODO: Don't get options every single time
@@ -350,8 +350,17 @@ class Noodle::Node
             when '='
               # If param must be an array split value on ,
               value = [value.split(',')].flatten if Noodle::Option.get.limits[name] == 'array'
+              # If param must be a hash, create a has based on name,value
+              first_key_part,rest_key_parts = name.split('.',2)
+              value = hash_it(rest_key_parts,value) if Noodle::Option.get.limits[first_key_part] == 'hash'
               found.each do |node|
-                node.send(which)[name] = value
+                # If param must be a hash, merge hash created above into existing (or not) value for node
+                  if Noodle::Option.get.limits[first_key_part] == 'hash'
+                  node.send(which)[first_key_part] = Hash.new if node.send(which)[first_key_part].nil?
+                  node.send(which)[first_key_part].deep_merge!(value)
+                else
+                  node.send(which)[name] = value
+                end
                 node.save refresh: true
                 body << node.errors?(silent_if_none: true).to_s
               end
@@ -439,5 +448,29 @@ class Noodle::Node
         end
       end
       h
+    end
+
+    # hash_it: Recusrively turn key=value into a hash. Each . in key
+    # indicates another level of the hash. For example:
+    #
+    # noodlin param gecos.firstname=mark
+    # noodlin param gecos.lastname=plaksin
+    # noodlin param gecos.address.street='110 orchard knob ln'
+    # noodlin param gecos.address.city='athens'
+    # noodlin param gecos.address.state='ga'
+    # noodlin param gecos.address.zipcode='30605'
+    #
+    # OR
+    #
+    # TODO: noodlin param gecos={JSON}
+    def self.hash_it(name,value,hash=Hash.new)
+        unless name.match('[.]')
+            hash[name] = value
+            return hash
+        end
+
+        key,rest = name.split('.',2)
+        hash[key] = hash_it(rest,value)
+        return hash
     end
 end
