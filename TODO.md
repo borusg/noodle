@@ -1,4 +1,7 @@
 # TODO
+add noodlin hash via json
+
+add noodlin hash tests
 
 * Order:
 - ilk/status should be params everywhere
