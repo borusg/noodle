@@ -3,6 +3,17 @@ add noodlin hash via json
 
 add noodlin hash tests
 
+doc noodlin hash. Samples:
+
+    # noodlin param gum.firstname=mark
+    # noodlin param gum.lastname=plaksin
+    # noodlin param gum.address.street='110 orchard knob ln'
+    # noodlin param gum.address.city='athens'
+    # noodlin param gum.address.state='ga'
+    # noodlin param gum.address.zipcode='30605'
+
+Um, better hash sample in options. (gum?!)
+
 * Order:
 - ilk/status should be params everywhere
 - finish /options/
