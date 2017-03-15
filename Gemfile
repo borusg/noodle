@@ -14,3 +14,4 @@ gem 'hashie'
 gem 'coveralls', require: false
 gem 'trollop'
 gem 'pry', require: false
+gem 'rest-client'
