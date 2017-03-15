@@ -17,8 +17,13 @@ and server database that we [use at work](http://bit.ly/noodlerockeagle2013).
 * `git clone https://github.com/happymcplaksin/noodle.git`
 * `cd noodle`
 * `bundle install --path vendor/bundle`
-* Run tests: `bundle exec rake`
+* Run tests: `bundle exec rake test`
 * Start app: `bundle exec rackup`
+* Make some nodes: `util/make-1000-random-nodes.rb
+* See what you got: `bin/noodle fqdn=`
+* See what you got: `bin/noodle prodlevel=`
+* See what you got: `bin/noodle prodlevel=prod`
+* See what you got: `bin/noodle site=mars`
 
 Perhaps the [travis-ci.org steps](https://travis-ci.org/happymcplaksin/noodle) are helpful and/or a decent alternative :)
 
