@@ -54,10 +54,22 @@ class Noodle
 
   # Delete node named @name from server
   def delete
+    begin
+      r = RestClient.delete "http://#{Noodle.server}/nodes/#{@name}"
+    rescue => e
+      puts e
+      puts r
+    end
   end
 
   # Create node on server
   def create
+    begin
+      r = RestClient.put "http://#{Noodle.server}/nodes/#{@name}", self.to_json, :content_type => 'application/json'
+    rescue => e
+      puts e
+      puts r
+    end
   end
 
   # Find a node and return it in in JSON
