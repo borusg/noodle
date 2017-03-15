@@ -78,6 +78,8 @@ https://hub.openshift.com/quickstarts/125-elasticsearch
 
 * Set content type and return JSON by default.  Support returning "pretty" output as text/plain and make it match what existing Noodle returns
 
+* Looks like ES limits simple search to 10000
+
 # Maybe
 * Put API under /api/v1, but have a convenience /_/ alias for searching
 
