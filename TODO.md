@@ -86,6 +86,8 @@ https://hub.openshift.com/quickstarts/125-elasticsearch
    nodes to json (noodle fqdn=~. json). Somewhat faster than
    "dirty-room" Noodle which takes close to a minute to dump 1500
    nodes to json.
+3. And about 50 seconsd to dump 1000 nodes to json.
+4. No doubt it can be faster!
 
 # Maybe
 * Put API under /api/v1, but have a convenience /_/ alias for searching
