@@ -80,6 +80,13 @@ https://hub.openshift.com/quickstarts/125-elasticsearch
 
 * Looks like ES limits simple search to 10000
 
+# Perf notes
+1. On a random machine It takes about 3 minutes to make 1000 nodes each with a basic set of facts. Slow!
+2. On the same random machine it takes about 10 seconds to dump 2000
+   nodes to json (noodle fqdn=~. json). Somewhat faster than
+   "dirty-room" Noodle which takes close to a minute to dump 1500
+   nodes to json.
+
 # Maybe
 * Put API under /api/v1, but have a convenience /_/ alias for searching
 
