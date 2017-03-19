@@ -281,7 +281,8 @@ class Noodle::Node
       pairs << rest.delete(elem) if elem.match('=')
     end
     nodes = rest
-
+    return ["Oops! No nodes specified.\n",400] if nodes.empty?
+ 
     # Unless creating, must be able to find all nodes
     return false unless command == 'create' or found =
                                                Noodle::Search.new(Noodle::Node).match_names(nodes).go({:minimum => nodes.size})
