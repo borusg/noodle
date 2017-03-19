@@ -55,15 +55,7 @@ class Noodle::Node
   # TODO: Referring to myself must be wrong?
   def update(options)
     options.each_pair do |key,value|
-      # TODO: Yuck?
-      # TODO: Elsewhere isn't status a param?
-      if [:status, :ilk].include?(key)
-        # ilk and status are just strings,
-        self.send("#{key}=", value)
-      else
-        # facts and params are Hashie::Mash
-        self.send("#{key}=", self.send(key).deep_merge(value))
-      end 
+      self.send("#{key}=", self.send(key).deep_merge(value))
       self.save refresh: true
     end
     self.errors?

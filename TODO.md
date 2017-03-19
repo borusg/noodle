@@ -1,4 +1,8 @@
 # TODO
+id (or uniqueness) should be name + ilk
+
+Puppet module
+
 add noodlin hash via json
 
 add noodlin hash tests
@@ -14,8 +18,6 @@ doc noodlin hash. Samples:
 
 Um, better hash sample in options. (gum?!)
 
-* Order:
-- ilk/status should be params everywhere
 - finish /options/
 - docs
 
