@@ -58,18 +58,20 @@ class Noodle::Option
   # limits = {role: Array}
   #
   # says that the role param must be an array.
-  attribute :limits,           Hashie::Mash, mapping: { type: 'object' },
-  default: {
-    'project'   => %w{hr financials lms registration warehouse},
-    'prodlevel' => %w{dev preprod prod test},
-    # TODO: Shirley, these could be classes instead of strings.
-    'role'       => 'array',
-    'stack'      => 'array',
-    'gum'        => 'hash',
-    'site'       => %w{jupiter mars moon neptune pluto uranus},
-    'ilk'        => %w{host esx ucschassis ucsfi},
-    'status'     => %w{disabled enabled future surplus},
-  }
+  attribute :limits,
+            Hashie::Mash,
+            mapping: { type: 'object' },
+            default: {
+              'project'   => %w{hr financials lms registration warehouse},
+              'prodlevel' => %w{dev preprod prod test},
+              # TODO: Shirley, these could be classes instead of strings.
+              'role'       => 'array',
+              'stack'      => 'array',
+              'gum'        => 'hash',
+              'site'       => %w{jupiter mars moon neptune pluto uranus},
+              'ilk'        => %w{host esx ucschassis ucsfi},
+              'status'     => %w{disabled enabled future surplus},
+            }
 
   # Get option set named options[:name]
   def self.get(options={})

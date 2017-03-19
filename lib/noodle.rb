@@ -31,14 +31,16 @@ class Noodle < Sinatra::Base
   configure :test do
     Noodle::Node.gateway.index   = 'this-is-for-running-noodle-elasticsearch-tests-only-nodes'
     Noodle::Option.gateway.index = 'this-is-for-running-noodle-elasticsearch-tests-only-options'
-    Noodle::Node.settings({
-      number_of_shards: 1,
-      number_of_replicas: 0,
-    })
-    Noodle::Option.settings({
+    Noodle::Node.settings(
+      {
         number_of_shards: 1,
         number_of_replicas: 0,
-    })
+      })
+    Noodle::Option.settings(
+      {
+        number_of_shards: 1,
+        number_of_replicas: 0,
+      })
     force_or_not = {force: true}
   end
 
@@ -87,8 +89,8 @@ class Noodle < Sinatra::Base
     end
 
     args = {
-        'name' => params[:name],
-        'id'   => params[:name]
+      'name' => params[:name],
+      'id'   => params[:name]
     }
     args['facts']  = options['facts'] unless options['facts'].nil?
     args['params'] = options['params'] unless options['params'].nil?
