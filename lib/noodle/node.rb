@@ -244,7 +244,7 @@ class Noodle::Node
   # project-level settings to override the defaults, and finally host-level
   # settings have the last laugh.
   #
-  # For example, give these 3 nodes nodes:
+  # For example, given these 3 nodes nodes:
   #
   # 1) defaults.example.com ilk=defaults dns_servers=8.8.8.8,8.8.4.4
   # (You default to using Google DNS servers)
@@ -277,7 +277,7 @@ class Noodle::Node
   # So the result of the query is:
   # web07.example.com dns_servers=216.146.35.35,216.146.36.36 # The Dyn servers
   #
-  # b) Same thing but for a web node with a dns_servers param:
+  # b) Same thing but for a web node without a dns_servers param:
   #
   # noodle magic merge dns_servers= defaults.example.com webservers.projects.example.com web01.example.com
   #
