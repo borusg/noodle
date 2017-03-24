@@ -110,17 +110,13 @@ class Noodle::Node
   #   - And bare words are highest (or tunable?)
   # - Make order explicit?  Needed?
   # - ~x=y  That is, regexp on the fact/param name
-  # - barewords=paramname1[,paramname2,factname1,...] (needs better name)
-  #   Allow a list of fact/param names the values of which can be used 
-  #   as bare words in queries.
-  #
-  #   For example, if 'prodlevel' were in the list then 'prod'
-  #   could be used in a search to mean prodlevel=prod
   def self.magic(query)
-    search = Noodle::Search.new(Noodle::Node)
-    show   = []
-    format = :default
-    list   = false
+    search    = Noodle::Search.new(Noodle::Node)
+    show      = []
+    format    = :default
+    list      = false
+    merge     = false
+    hostnames = []
 
     # NOTE: Order below should be preserved in case statement
     bareword_hash               = get_bareword_hash
@@ -175,10 +171,14 @@ class Noodle::Node
       when 'json'
         format = :json
 
+      when 'merge'
+        merge = true
+
       else
         # Assume everything else is a hostname (or partial hostname)
         # TODO: Maybe this is a bit awkward when bare words are used with
         # other magic operators?
+        hostnames.push(part)
         search.match_names(part)
       end
     end
@@ -198,6 +198,8 @@ class Noodle::Node
 
     status = 200
     found = search.go
+    found = merge(found,hostnames,show) if merge
+
     case format
     when :json
       body = found.results.to_json + "\n"
@@ -226,6 +228,83 @@ class Noodle::Node
       body = body.sort.join
     end
     [body,status]
+  end
+
+  ## merge
+  #
+  # Merge results into a single synthesized node, precedence
+  # determined by the order in hostnames.
+  #
+  # That is, given a set of NODES, merge them into a single NODE by
+  # merging the NODES' PARAMS. And return the NODE. HOSTNAMES
+  # determines the order of the merge.
+  #
+  # We leave it up to the user to specify a sane order of
+  # HOSTNAMES. you probably want high-level defaults to apply first,
+  # project-level settings to override the defaults, and finally host-level
+  # settings have the last laugh.
+  #
+  # For example, give these 3 nodes nodes:
+  #
+  # 1) defaults.example.com ilk=defaults dns_servers=8.8.8.8,8.8.4.4
+  # (You default to using Google DNS servers)
+  #
+  # 2) webservers.projects.example.com dns_servers=209.244.0.3,209.244.0.4
+  # (But for some reason need web servers to use Level3's public DNS servers)
+  #
+  # 3) web07.example.com dns_servers=216.146.35.35,216.146.36.36
+  # (And for even stranger reasons web07 needs to use Dyn's public DNS servers)
+  #
+  # Here's how three different merges would work:
+  #
+  # a) Assume you want to know the value of the dns_servers param
+  # after merging. And since you don't know whether the server in
+  # question has host-specific settings, you ask to merge the default
+  # settings, the settings for the webservers project, and the
+  # settings for the web server at hand:
+  #
+  # noodle magic merge dns_servers= defaults.example.com webservers.projects.example.com web07.example.com
+  #
+  # Internally Noodle find 3 nodes, one for each FQDN. And then merges
+  # the param value you requested to return a single value for the
+  # param. Something like this:
+  #
+  # i)   value = ''
+  # ii)  value = value of default.example.com's dns_servers param, if present
+  # iii) value = value of webserver.projects.example.com's dns_servers param, if present
+  # iv)  value = value of web07.example.com's dns_servers param, if present
+  #
+  # So the result of the query is:
+  # web07.example.com dns_servers=216.146.35.35,216.146.36.36 # The Dyn servers
+  #
+  # b) Same thing but for a web node with a dns_servers param:
+  #
+  # noodle magic merge dns_servers= defaults.example.com webservers.projects.example.com web01.example.com
+  #
+  # Result:
+  # web01.example.com dns_servers=209.244.0.3,209.244.0.4  # The Level3 servers
+  #
+  # c) Same thing but for a node in a different project:
+  #
+  # noodle magic merge dns_servers= defaults.example.com payments.example.com
+  #
+  # Result:
+  # payments.example.com dns_servers=8.8.8.8,8.8.4.4 # Google's servers
+  #
+  # The MERGE method assumes NODES contains the nodes to merge,
+  # HOSTNAMES contains the order, and PARAMS contains the param(s) to
+  # merge. And the caller is responsible for displaying the results.
+  def self.merge(nodes,hostnames,params)
+    hash = {}
+    params.map{|param| hash[param] = 'defaultUGLY'}
+    nodes.sort_by{|node| hostnames.index(node.name)}.each do |node|
+      params.each do |param|
+        hash[param] = node.params[param] unless node.params[param].nil?
+      end
+    end
+    puts "merge hash is:"
+    puts hash
+    []
   end
 
   ## noodlin
