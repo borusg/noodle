@@ -14,16 +14,20 @@
 #
 # TODO: Bulk
 
-require 'rest-client'
+# Don't use rest-client because Puppetserver is still using JRuby
+# based on Ruby 1.9. And rest-client requires mime-types-data which
+# requires Ruby 2.0+. So use net/http instead. Reasons!
+require 'net/http'
 require 'json' # TODO: Any need for oj/multi_json?
 
 class Noodle
-  @server  = 'localhost:9292'
+  @server  = 'localhost'
+  @port    = '9292'
   @noodles = []
   attr_accessor :params, :facts, :name
 
   class << self
-    attr_accessor :server, :noodles
+    attr_accessor :server, :port, :noodles
     include Enumerable
 
     def each
@@ -45,7 +49,7 @@ class Noodle
   # the server.
   def update
     begin
-      r = RestClient.patch "http://#{Noodle.server}/nodes/#{@name}", self.to_json, :content_type => 'application/json'
+      r = Net.HTTP.patch "http://#{Noodle.server}/nodes/#{@name}", self.to_json, :content_type => 'application/json'
     rescue => e
       puts e
       puts r
@@ -55,7 +59,7 @@ class Noodle
   # Delete node named @name from server
   def delete
     begin
-      r = RestClient.delete "http://#{Noodle.server}/nodes/#{@name}"
+      r = Net.HTTP.delete "http://#{Noodle.server}/nodes/#{@name}"
     rescue => e
       puts e
       puts r
@@ -65,7 +69,7 @@ class Noodle
   # Create node on server
   def create
     begin
-      r = RestClient.put "http://#{Noodle.server}/nodes/#{@name}", self.to_json, :content_type => 'application/json'
+      r = Net.HTTP.put "http://#{Noodle.server}/nodes/#{@name}", self.to_json, :content_type => 'application/json'
     rescue => e
       puts e
       puts r
@@ -92,10 +96,11 @@ class Noodle
     Noodle.server = server if server
     # TODO: Switch to value-only query when magic supports that
     begin
-      r = RestClient.get(URI.encode("http://#{Noodle.server}/nodes/_/#{host} #{param}="))
+      uri = URI(URI.encode("http://#{@server}:#{@port}/nodes/_/#{host} #{param}="))
+      r = Net::HTTP.get(uri)
     rescue => e
       # TODO: Fancier :)
-      return ''
+      return "#{e}"
     end
     r.match(/=/) ? r.to_str.sub(/.*=/,'').strip : ''
   end
@@ -105,7 +110,7 @@ class Noodle
   def self.magic(query,server=false)
     Noodle.server = server if server
     begin
-      r = RestClient.get(URI.encode("http://#{Noodle.server}/nodes/_/#{query}"))
+      r = Net.HTTP.get(URI.encode("http://#{Noodle.server}/nodes/_/#{query}"))
     rescue
       # TODO: Fancier :)
       return ''
