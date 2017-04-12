@@ -96,13 +96,14 @@ class Noodle
     Noodle.server = server if server
     # TODO: Switch to value-only query when magic supports that
     begin
-      uri = URI(URI.encode("http://#{@server}:#{@port}/nodes/_/#{host} #{param}="))
-      r = Net::HTTP.get(uri)
+      uri = URI(URI.encode("http://#{@server}:#{@port}/nodes/_/#{host} json"))
+      r = JSON.load(Net::HTTP.get(uri))
     rescue => e
       # TODO: Fancier :)
       return "#{e}"
     end
-    r.match(/=/) ? r.to_str.sub(/.*=/,'').strip : ''
+    # TODO: .first is dumb
+    r.first['params'][param]
   end
 
   # Return the result of Noodle magic QUERY as a string.  Optional
