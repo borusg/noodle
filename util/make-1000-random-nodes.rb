@@ -28,7 +28,7 @@ facts = JSON.load(File.read('facts.json'))
     node.params['status']    = 'enabled' #status[rand(status.size)]
 
     s = node.create
-    unless s.code == 201
+    unless s.code == '201'
         puts "Gack, bad status creating #{fqdn}: #{s}"
         exit 1
     end
