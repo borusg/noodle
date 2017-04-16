@@ -89,8 +89,7 @@ class Noodle < Sinatra::Base
     end
 
     args = {
-      'name' => params[:name],
-      'id'   => params[:name]
+      'name' => params[:name]
     }
     args['facts']  = options['facts'] unless options['facts'].nil?
     args['params'] = options['params'] unless options['params'].nil?
