@@ -9,6 +9,7 @@ class Noodle::Option
   include Elasticsearch::Persistence::Model
 
   attribute :name,             String, default: 'defaults'
+  attribute :uniqueness,       Array,  default: %w{ilk}   # name is always part of uniqueness
   attribute :allowed_statuses, Array,  default: %w{enabled disabled future surplus}
   attribute :required_params,  Array,  default: %w{ilk prodlevel project site status}
   attribute :default_ilk,      String, default: 'host'    # ilk returned by queries that don't specify an ilk
