@@ -37,3 +37,6 @@ end
 # 3/14/2017: Ran all tests 3 times without this and only once did a single test fail:
 # sleep(1) # wait a sec for the server to be booted
 # So, um, I'll leave it out for a while.
+# 4/16/2017: Welp, today tests fail without this sleep :(
+# One day I'll track it down!
+sleep 1
