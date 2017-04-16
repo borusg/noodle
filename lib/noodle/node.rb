@@ -3,12 +3,55 @@ require 'hashie'
 require 'trollop'
 
 class Noodle::Node
+  class NodeUniqueValidator < ActiveModel::Validator
+    # Make sure new node is, or existing node remains, unique.
+    #
+    # NOTE: There is a race condition. Fix later! The race condition
+    # can be triggered when simultaneous node creates or param updates
+    # are made. This is a rare situation (at least for us) so
+    # postponing the fix seems OK.
+    #
+    # There is a race condition because the uniqueness check does
+    # *not* insert anything into the backend store (Elasticsearch). So
+    # two simultaneous uniqueness checks can decide it's OK to insert
+    # identical nodes. Both uniqueness checks can succeed. After the
+    # uniqueness checks, the nodes are added to Elasticsearch.
+    def validate(record)
+      # TODO: Don't get options every single time
+      # Get default options
+      options = Noodle::Option.get
+      record.errors.add :base, 'Nope! Node is not unique' unless unique?(record,options['uniqueness'])
+    end
+
+    private
+    def unique?(record,uniqueness_params)
+      # name is always part of uniqueness
+      search = Noodle::Search.new(Noodle::Node).match_names(record['name'])
+      # Add uniqueness_params to search
+      uniqueness_params.each do |param|
+        search.equals(param,record.params[param])
+      end
+      # Search!
+      r = search.go.results
+
+      # Remove record itself from the results to handle cases where
+      # record is getting *updated*
+      r.delete_if{|node| node.id == record.id}
+
+      # It's unique if no results remain
+      r.empty?
+    end
+  end
+
   include Elasticsearch::Persistence::Model
 
   attribute :name,   String,       mapping: { index: 'not_analyzed' }
   attribute :fqdn,   String, default: :name
   attribute :facts,  Hashie::Mash, mapping: { type: 'object', dynamic: true }, default: {}
   attribute :params, Hashie::Mash, mapping: { type: 'object', dynamic: true }, default: {}
+
+  # Validate node uniqueness (by default ilk+name must be unique
+  validates_with NodeUniqueValidator
 
   validates_each :params do |record, attr, value|
     # TODO: Don't get options every single time
@@ -63,7 +106,6 @@ class Noodle::Node
 
   # If node has errors, return hash containing errors and node.
   # If no errors and ! args[:silent_if_none], return node
-  # Otherwise return node
   # Otherwise return node
   def errors?(args={:silent_if_none => false})
     unless self.valid?
@@ -379,7 +421,6 @@ class Noodle::Node
       nodes.each do |name|
         args = {
           name:    name,
-          id:      name,
         }
         facts  = Hash.new
         params = Hash.new
@@ -487,15 +528,21 @@ class Noodle::Node
   end
 
   def self.create_one(args)
-    node = Noodle::Node.create(args,refresh: true)
+    node = Noodle::Node.new(args)
 
+    # TODO: This is probably bogus:
     # Set default FQDN fact in case none provided
     if node.facts[:fqdn].nil?
       node.facts[:fqdn] = node.name
-      node.save refresh: true
     end
 
-    node.errors?
+    r = node.errors?
+    #puts "r is #{r}"
+    if r.class == Noodle::Node
+      #puts 'saving'
+      node.save refresh: true
+    end
+    r
   end
 
   def self.maybe2array(name,value)
