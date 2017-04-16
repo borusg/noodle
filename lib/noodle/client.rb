@@ -14,9 +14,9 @@
 #
 # TODO: Bulk
 
-# Don't use rest-client because Puppetserver is still using JRuby
-# based on Ruby 1.9. And rest-client requires mime-types-data which
-# requires Ruby 2.0+. So use net/http instead. Reasons!
+# NOTE: Don't use rest-client because Puppetserver is still using
+# JRuby based on Ruby 1.9. And rest-client requires mime-types-data
+# which requires Ruby 2.0+. So use net/http instead. Reasons!
 require 'net/http'
 require 'json' # TODO: Any need for oj/multi_json?
 
@@ -48,8 +48,12 @@ class Noodle
   # contents of this object.  Raises error if node doesn't exist on
   # the server.
   def update
+    http = Net::HTTP.new(Noodle.server,Noodle.port)
+    request = Net::HTTP::Update.new("/nodes/#{@name}")
+    request.body = self.to_json
+    request.content_type = 'application/json'
     begin
-      r = Net.HTTP.patch "http://#{Noodle.server}/nodes/#{@name}", self.to_json, :content_type => 'application/json'
+      r = http.request(request)
     rescue => e
       puts e
       puts r
@@ -58,8 +62,10 @@ class Noodle
 
   # Delete node named @name from server
   def delete
+    http = Net::HTTP.new(Noodle.server,Noodle.port)
+    request = Net::HTTP.delete "/nodes/#{@name}"
     begin
-      r = Net.HTTP.delete "http://#{Noodle.server}/nodes/#{@name}"
+      r = http.request(request)
     rescue => e
       puts e
       puts r
@@ -68,8 +74,12 @@ class Noodle
 
   # Create node on server
   def create
+    http = Net::HTTP.new(Noodle.server,Noodle.port)
+    request = Net::HTTP::Put.new("/nodes/#{@name}")
+    request.body = self.to_json
+    request.content_type = 'application/json'
     begin
-      r = Net.HTTP.put "http://#{Noodle.server}/nodes/#{@name}", self.to_json, :content_type => 'application/json'
+      r = http.request(request)
     rescue => e
       puts e
       puts r
@@ -108,10 +118,11 @@ class Noodle
 
   # Return the result of Noodle magic QUERY as a string.  Optional
   # second argument specifies Noodle server:port to query
-  def self.magic(query,server=false)
-    Noodle.server = server if server
+  def self.magic(query)
+    http = Net::HTTP.new(Noodle.server,Noodle.port)
+    request = Net::HTTP::Get.new("/nodes/_/#{query}")
     begin
-      r = Net.HTTP.get(URI.encode("http://#{Noodle.server}/nodes/_/#{query}"))
+      r = http.request(request)
     rescue
       # TODO: Fancier :)
       return ''
