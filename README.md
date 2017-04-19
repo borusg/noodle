@@ -5,26 +5,64 @@ Clean-room implementation of the [Puppet External Node Classifier](http://docs.p
 and server database that we [use at work](http://bit.ly/noodlerockeagle2013).
 
 ## Future dreamland
-* Magicaly templated Heira backend
 * Relationships, including enough to define network config for an entire stack (from IPs to firewall and load balancer, etc)
 
 ## Requirements
 * [Elasticsearch 5](http://www.elasticsearch.org/overview/elkdownloads/)  It's easy to install, too powerful to ignore.  Plus you get an [awesome UI named Kibana](http://www.elasticsearch.org/overview/kibana/) for free.
 * Ruby.  travis-ci.org says it works with versions 2.2, 2.3.0, and 2.4.0.
 
-## Running it
+## Installing and running it via Puppet
+
+Use the [Puppet
+module](https://github.com/happymcplaksin/happymcplaksin-noodle) to
+install and configure the whole stack. This includes Noodle,
+Elasticsearch, Kibana for visualization. And Grafana too because it
+will be an alternative dashboarding tool RSN.
+
+By Noodle 1.0 the Puppet module will have documentation. For now this works:
+
+```
+class{'noodle:' }
+```
+
+## Installing and running by hand.
+
 * Remember to install and start [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)
 * `git clone https://github.com/happymcplaksin/noodle.git`
 * `cd noodle`
 * `bundle install --path vendor/bundle`
 * Run tests: `bundle exec rake test`
 * Start app: `bundle exec rackup`
-* Make some nodes: `util/make-1000-random-nodes.rb
-* See what you got: `bin/noodle fqdn=`
-* See what you got: `bin/noodle prodlevel=`
-* See what you got: `bin/noodle prodlevel=prod`
-* See what you got: `bin/noodle site=mars`
 
+## Play!
+
+### Create some dummy nodes to play with
+```
+util/make-1000-random-nodes.rb
+```
+
+### Install the Kibana dashboard
+```
+util/install-kibana-boardboard
+```
+
+### Viddy Kibana dashboard
+
+Visit http://localhost:5601/app/kibana#/dashboard and view the "Noodle
+Pie" dashboard.
+
+![Sample Noodle dashboard in Kibana](https://raw.githubusercontent.com/happymcplaksin/noodle/master/sample-noodle-dashboard-in-kibana.png)
+
+### See what you got via the command-line:
+```bin/noodle fqdn=```
+
+```bin/noodle prodlevel=```
+
+```bin/noodle prodlevel=prod```
+
+```bin/noodle site=mars```
+
+## Pre version 0.5 info is below
 Perhaps the [travis-ci.org steps](https://travis-ci.org/happymcplaksin/noodle) are helpful and/or a decent alternative :)
 
 ## Examples
