@@ -25,6 +25,8 @@ By Noodle 1.0 the Puppet module will have documentation. For now this works:
 class{'noodle:' }
 ```
 
+This module includes a [basic Hiera 5 backend](https://github.com/happymcplaksin/happymcplaksin-noodle/blob/master/lib/puppet/functions/noodle_lookup_key.rb) and sample [hiera.yaml](https://github.com/happymcplaksin/happymcplaksin-noodle/blob/master/hiera.yaml)
+
 ## Installing and running by hand.
 
 * Remember to install and start [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)
