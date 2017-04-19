@@ -1,0 +1,3 @@
+#!/bin/bash
+
+curl -XPUT http://localhost:9200/kibana-int/dashboard/noodle --data @kibana-noodle-viz-and-dashboard.json
