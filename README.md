@@ -49,7 +49,7 @@ util/install-kibana-boardboard
 ### Viddy Kibana dashboard
 
 Visit http://localhost:5601/app/kibana#/dashboard and view the "Noodle
-Pie" dashboard.
+Pie" dashboard. Here's a sample after creating some random nodes:
 
 ![Sample Noodle dashboard in Kibana](https://raw.githubusercontent.com/happymcplaksin/noodle/master/sample-noodle-dashboard-in-kibana.png)
 
