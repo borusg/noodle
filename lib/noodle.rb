@@ -95,8 +95,13 @@ class Noodle < Sinatra::Base
     args['params'] = options['params'] unless options['params'].nil?
 
     node = Noodle::Node.create_one(args)
-    body node.to_json + "\n"
-    status 201
+    if node.class == Noodle::Node
+      body node.to_json + "\n"
+      status 201
+    else
+      body node[:errors]
+      status 400
+    end
   end
 
   patch '/nodes/:name' do
