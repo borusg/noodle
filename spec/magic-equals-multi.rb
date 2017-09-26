@@ -9,7 +9,7 @@ describe 'Noodle' do
 
     Noodle::Node.gateway.refresh_index!
 
-    get "/nodes/_/site=jupiter#{URI.escape(' ')}prodlevel=prod"
+    get '/nodes/_/site=jupiter%20prodlevel=prod'
     assert_equal last_response.status, 200
     assert_equal last_response.body, "coco.example.com\n"
   end

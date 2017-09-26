@@ -10,11 +10,11 @@ describe 'Noodle' do
     assert_equal last_response.status, 201
     Noodle::Node.gateway.refresh_index!
 
-    get "/nodes/_/@site=jupiter#{URI.escape(' ')}justfora=test"
+    get '/nodes/_/@site=jupiter%20justfora=test'
     assert_equal last_response.status, 200
     assert_equal last_response.body, "oooo.example.com\n"
 
-    get "/nodes/_/-site=jupiter#{URI.escape(' ')}justfora=test"
+    get '/nodes/_/-site=jupiter%20justfora=test'
     assert_equal last_response.status, 200
     assert_equal last_response.body, "oooo.example.com\n"
   end
