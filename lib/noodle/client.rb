@@ -13,6 +13,7 @@
 # Noodle.map{|n| n.update}
 #
 # TODO: Bulk
+# TODO: DRY
 
 # NOTE: Don't use rest-client because Puppetserver is still using
 # JRuby based on Ruby 1.9. And rest-client requires mime-types-data
@@ -87,7 +88,17 @@ class Noodle
   end
 
   # Find a node and return it in in JSON
-  def find
+  def find(node)
+    Noodle.server = server if server
+    # TODO: Switch to value-only query when magic supports that
+    begin
+      uri = URI(URI.encode("http://#{@server}:#{@port}/nodes/_/#{node} json"))
+      r = JSON.load(Net::HTTP.get(uri))
+    rescue => e
+      # TODO: Fancier :)
+      return "#{e}"
+    end
+    r
   end
 
   # Does node *look* valid for creation?  Makes assumptions, doesn't
@@ -103,15 +114,7 @@ class Noodle
   # Return the value of one PARAM for HOST.  Optional third argument
   # specifies Noodle server:port to query
   def self.paramvalue(host,param,server=false)
-    Noodle.server = server if server
-    # TODO: Switch to value-only query when magic supports that
-    begin
-      uri = URI(URI.encode("http://#{@server}:#{@port}/nodes/_/#{host} json"))
-      r = JSON.load(Net::HTTP.get(uri))
-    rescue => e
-      # TODO: Fancier :)
-      return "#{e}"
-    end
+    r = self.find(host)
     # TODO: .first is dumb
     r.first['params'][param]
   end
