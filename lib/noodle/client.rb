@@ -21,7 +21,7 @@
 require 'net/http'
 require 'json' # TODO: Any need for oj/multi_json?
 
-class Noodle
+class Noodle::Client
   @server  = 'localhost'
   @port    = '9292'
   @noodles = []

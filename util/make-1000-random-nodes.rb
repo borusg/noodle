@@ -15,7 +15,7 @@ facts = JSON.load(File.read('facts.json'))
 
 1000.times do
     fqdn = SecureRandom.uuid.gsub('-','') + '.example.com'
-    node = Noodle.new(fqdn)
+    node = Noodle::Client.new(fqdn)
     node.facts = facts
     node.facts['fqdn']           = fqdn
     node.facts['processorcount'] = rand(16) + 1
