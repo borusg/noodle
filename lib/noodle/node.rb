@@ -1,3 +1,4 @@
+require_relative 'option'
 require 'elasticsearch/persistence/model'
 require 'hashie'
 require 'trollop'
@@ -19,7 +20,7 @@ class Noodle::Node
     def validate(record)
       # TODO: Don't get options every single time
       # Get default options
-      record.errors.add :base, 'Nope! Node is not unique' unless unique?(record,options['uniqueness'])
+      record.errors.add :base, 'Nope! Node is not unique' unless unique?(record,Noodle::Option.option(record.params['ilk'],'uniqueness'))
     end
 
     private
@@ -54,17 +55,16 @@ class Noodle::Node
 
   validates_each :params do |record, attr, value|
     # Check for required params
-    options.required_params.each do |param|
+    Noodle::Option.option(record.params['ilk'],'required_params').each do |param|
       record.errors.add attr, "#{param} must be provided but is not." if value[param].nil?
     end
 
     # Check per-param liits
-    options.limits.each do |param,limit|
+    Noodle::Option.option(record.params['ilk'],'limits').each do |param,limit|
       case limit.class.to_s
       when 'Array'
         record.errors.add attr, "#{param} is not one of these: #{limit.join(',')}.  It is #{value[param]}." unless
           limit.include?(value[param])
-      # cf TODO in option.rb
       when 'String'
         record.errors.add attr, "#{param} is not a(n) #{limit}" unless
           value[param].nil? or value[param].class.to_s.downcase == limit
@@ -227,8 +227,8 @@ class Noodle::Node
       format = list ? :default : :yaml
     end
 
-    search.equals('ilk',   options.default_ilk)    unless search.search_terms.include?('ilk')
-    search.equals('status',options.default_status) unless search.search_terms.include?('status')
+    search.equals('ilk',   Noodle::Option.option('default','default_ilk'))    unless search.search_terms.include?('ilk')
+    search.equals('status',Noodle::Option.option('default','default_status')) unless search.search_terms.include?('status')
 
     status = 200
     found = search.go
@@ -251,7 +251,7 @@ class Noodle::Node
           if !hit.params.nil?   and hit.params[term]
             value = hit.params[term]
             # TODO: Join arrays for facts too?  What about hashes?
-            value = value.sort.join(',') if Noodle::Option.get.limits[term] == 'array'
+            value = value.sort.join(',') if value.class == Array
             add << " #{term}=#{value}"
           elsif !hit.facts.nil? and hit.facts[term]
             add << " #{term}=#{hit.facts[term]}"
@@ -400,7 +400,7 @@ class Noodle::Node
     return false unless command == 'create' or found =
                                                Noodle::Search.new(Noodle::Node).match_names(nodes).go({:minimum => nodes.size})
 
-    allowed_statuses = Noodle::Option.get.allowed_statuses
+    allowed_statuses = Noodle::Option.option('default','allowed_statuses')
     # TODO: default_ilk = 'host'
     default_status = 'enabled'
 
@@ -426,7 +426,7 @@ class Noodle::Node
         # Merge in the rest
         # TODO: Can facts have required type?
         opts[:fact].map {|pair| name,value = pair.split(/=/); facts[name]  = value}
-        opts[:param].map{|pair| name,value = pair.split(/=/); params[name] = maybe2array(name,value)}
+        opts[:param].map{|pair| name,value = pair.split(/=/); params[name] = maybe2array(params['ilk'],name,value)}
 
         args[:facts]  = facts
         args[:params] = params
@@ -452,14 +452,14 @@ class Noodle::Node
           # TODO: Do something with the error strings below :)
           case op
           when '='
-            # If param must be an array split value on ,
-            value = [value.split(',')].flatten if Noodle::Option.get.limits[name] == 'array'
-            # If param must be a hash, create a has based on name,value
-            first_key_part,rest_key_parts = name.split('.',2)
-            value = hash_it(rest_key_parts,value) if Noodle::Option.get.limits[first_key_part] == 'hash'
             found.each do |node|
-              # If param must be a hash, merge hash created above into existing (or not) value for node
-              if Noodle::Option.get.limits[first_key_part] == 'hash'
+              # If param must be an array split value on ,
+              value = [value.split(',')].flatten if Noodle::Option.option_limit(node.params['ilk'],name) == 'array'
+              # If param must be a hash, create a has based on name,value
+              first_key_part,rest_key_parts = name.split('.',2)
+              value = hash_it(rest_key_parts,value) if Noodle::Option.option_limit(node.params['ilk'],first_key_part) == 'hash'
+                # If param must be a hash, merge hash created above into existing (or not) value for node
+              if Noodle::Option.option_limit(node.params['ilk'],first_key_part) == 'hash'
                 node.send(which)[first_key_part] = Hash.new if node.send(which)[first_key_part].nil?
                 node.send(which)[first_key_part].deep_merge!(value)
               else
@@ -536,8 +536,8 @@ class Noodle::Node
     r
   end
 
-  def self.maybe2array(name,value)
-    return [value.split(',')].flatten if Noodle::Option.get.limits[name] == 'array'
+  def self.maybe2array(ilk,name,value)
+    return [value.split(',')].flatten if Noodle::Option.option_limit(ilk,name) == 'array'
     return value
   end
 
@@ -552,7 +552,7 @@ class Noodle::Node
   # Convoluted?  Maybe but makes magic easier
   def self.get_bareword_hash
     h = {}
-    Noodle::Option.get.bareword_terms.each do |term|
+    Noodle::Option.option('default','bareword_terms').each do |term|
       Noodle::Search.new(Noodle::Node).paramvalues(term).each do |value|
         h[value] = term
       end
