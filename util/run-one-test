@@ -1,1 +1,1 @@
-ruby -Ilib:spec spec/cli-noodlin-create.rb 
+ruby -Ilib:spec spec/cli-noodlin-create.rb
