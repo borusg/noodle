@@ -19,7 +19,6 @@ class Noodle::Node
     def validate(record)
       # TODO: Don't get options every single time
       # Get default options
-      options = Noodle::Option.get
       record.errors.add :base, 'Nope! Node is not unique' unless unique?(record,options['uniqueness'])
     end
 
@@ -54,10 +53,6 @@ class Noodle::Node
   validates_with NodeUniqueValidator
 
   validates_each :params do |record, attr, value|
-    # TODO: Don't get options every single time
-    # Get default options
-    options = Noodle::Option.get
-
     # Check for required params
     options.required_params.each do |param|
       record.errors.add attr, "#{param} must be provided but is not." if value[param].nil?
@@ -232,9 +227,6 @@ class Noodle::Node
       format = list ? :default : :yaml
     end
 
-    # TODO: Don't get options every single time
-    # Get default options
-    options = Noodle::Option.get
     search.equals('ilk',   options.default_ilk)    unless search.search_terms.include?('ilk')
     search.equals('status',options.default_status) unless search.search_terms.include?('status')
 
@@ -408,7 +400,6 @@ class Noodle::Node
     return false unless command == 'create' or found =
                                                Noodle::Search.new(Noodle::Node).match_names(nodes).go({:minimum => nodes.size})
 
-    # TODO: Cache options
     allowed_statuses = Noodle::Option.get.allowed_statuses
     # TODO: default_ilk = 'host'
     default_status = 'enabled'

@@ -16,12 +16,10 @@ require 'oj'
 class Noodle < Sinatra::Base
   require_relative 'noodle/node'
   require_relative 'noodle/search'
-  require_relative 'noodle/option'
 
   # If OPENSHIFT_RUBY_IP is set, change ES port because can't use
   # default ES port at OpenShift
   Noodle::Node.gateway.client   = Elasticsearch::Client.new host: "#{ENV['OPENSHIFT_RUBY_IP']}:29200" if ENV['OPENSHIFT_RUBY_IP']
-  Noodle::Option.gateway.client = Elasticsearch::Client.new host: "#{ENV['OPENSHIFT_RUBY_IP']}:29200" if ENV['OPENSHIFT_RUBY_IP']
 
   # TODO: Production :)
   force_or_not = {}
@@ -30,13 +28,7 @@ class Noodle < Sinatra::Base
   end
   configure :test do
     Noodle::Node.gateway.index   = 'this-is-for-running-noodle-elasticsearch-tests-only-nodes'
-    Noodle::Option.gateway.index = 'this-is-for-running-noodle-elasticsearch-tests-only-options'
     Noodle::Node.settings(
-      {
-        number_of_shards: 1,
-        number_of_replicas: 0,
-      })
-    Noodle::Option.settings(
       {
         number_of_shards: 1,
         number_of_replicas: 0,
@@ -47,10 +39,6 @@ class Noodle < Sinatra::Base
   # Create the indexes if they don't already exist
   Noodle::Node.gateway.create_index! force_or_not
   Noodle::Node.gateway.refresh_index!
-
-  Noodle::Option.gateway.create_index! force_or_not
-  # If no default options exist, create them:
-  Noodle::Option.new.save refresh: true if Noodle::Option.search(query: {match: {name: 'defaults'}}).size == 0
 
   get '/help' do
     body "Noodle helps!\n"
@@ -175,30 +163,5 @@ class Noodle < Sinatra::Base
     b,s = Noodle::Node.noodlin(changes)
     body   b
     status s
-  end
-
-  # TODO: Separate options from magic/noodlin and from the rest?
-  get '/options/:name' do
-    options = Noodle::Option.search(query: { match: { name: params[:name] } })
-    body options.first.to_json + "\n" unless options.empty?
-    status 200
-  end
-
-  patch '/options/:name' do
-  end
-
-  put '/options/:name' do
-  end
-
-  post '/options/:name' do
-  end
-
-  delete '/options/:name' do
-  end
-
-  get '/options' do
-  end
-
-  delete '/options' do
   end
 end
