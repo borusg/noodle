@@ -8,7 +8,7 @@ require_relative 'client'
 # ilk=option target_ilk=samlcert uniqueness=fqdn,component_type (component_type would be shibboleth|asimba)
 class Noodle::Option
   def self.get(ilk)
-    options = Noodle::Client.magic("ilk=option target_ilk#{ilk}")
+    options = NoodleClient.magic("ilk=option target_ilk#{ilk}")
     unless options.empty?
       return JSON.load()
     else

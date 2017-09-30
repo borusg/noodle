@@ -21,7 +21,7 @@
 require 'net/http'
 require 'json' # TODO: Any need for oj/multi_json?
 
-class Noodle::Client
+class NoodleClient
   @server  = 'localhost'
   @port    = '9292'
   @noodles = []
@@ -32,7 +32,7 @@ class Noodle::Client
     include Enumerable
 
     def each
-      Noodle.noodles.map{|n| yield n}
+      NoodleClient.noodles.map{|n| yield n}
     end
   end
 
@@ -41,7 +41,7 @@ class Noodle::Client
     @name   = name
     @params = Hash.new
     @facts  = Hash.new
-    Noodle.noodles << self
+    NoodleClient.noodles << self
     self
   end
 
@@ -49,7 +49,7 @@ class Noodle::Client
   # contents of this object.  Raises error if node doesn't exist on
   # the server.
   def update
-    http = Net::HTTP.new(Noodle.server,Noodle.port)
+    http = Net::HTTP.new(NoodleClient.server,NoodleClient.port)
     request = Net::HTTP::Update.new("/nodes/#{@name}")
     request.body = self.to_json
     request.content_type = 'application/json'
@@ -63,7 +63,7 @@ class Noodle::Client
 
   # Delete node named @name from server
   def delete
-    http = Net::HTTP.new(Noodle.server,Noodle.port)
+    http = Net::HTTP.new(NoodleClient.server,NoodleClient.port)
     request = Net::HTTP.delete "/nodes/#{@name}"
     begin
       r = http.request(request)
@@ -75,7 +75,7 @@ class Noodle::Client
 
   # Create node on server
   def create
-    http = Net::HTTP.new(Noodle.server,Noodle.port)
+    http = Net::HTTP.new(NoodleClient.server,NoodleClient.port)
     request = Net::HTTP::Put.new("/nodes/#{@name}")
     request.body = self.to_json
     request.content_type = 'application/json'
@@ -89,7 +89,7 @@ class Noodle::Client
 
   # Find a node and return it in in JSON
   def find(node)
-    Noodle.server = server if server
+    NoodleClient.server = server if server
     # TODO: Switch to value-only query when magic supports that
     begin
       uri = URI(URI.encode("http://#{@server}:#{@port}/nodes/_/#{node} json"))
@@ -122,7 +122,7 @@ class Noodle::Client
   # Return the result of Noodle magic QUERY as a string.  Optional
   # second argument specifies Noodle server:port to query
   def self.magic(query)
-    http = Net::HTTP.new(Noodle.server,Noodle.port)
+    http = Net::HTTP.new(NoodleClient.server,NoodleClient.port)
     request = Net::HTTP::Get.new("/nodes/_/#{query}")
     begin
       r = http.request(request)
