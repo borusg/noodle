@@ -15,21 +15,20 @@ class Noodle::Option
       # Hard-code some default options!
       return {
         'uniqueness'       => %w(ilk),
-        'allowed_statuses' => %w{enabled disabled future surplus},
         'required_params'  => %w{ilk prodlevel project site status},
         'default_ilk'      => 'host',
         'default_status'   => 'enabled',
         'bareword_terms'   => %w{prodlevel project site},
         'limits'           => {
+          'status'    => %w{enabled disabled future surplus},
           'project'   => %w{hr financials lms registration warehouse},
           'prodlevel' => %w{dev preprod prod test},
-          # TODO: Shirley, these could be classes instead of strings.
-          'role'       => 'array',
-          'stack'      => 'array',
-          'gum'        => 'hash',
-          'site'       => %w{jupiter mars moon neptune pluto uranus},
-          'ilk'        => %w{host esx ucschassis ucsfi},
-          'status'     => %w{disabled enabled future surplus},
+          'role'      => 'array',
+          'stack'     => 'array',
+          'gum'       => 'hash',
+          'site'      => %w{jupiter mars moon neptune pluto uranus},
+          'ilk'       => %w{host esx ucschassis ucsfi},
+          'status'    => %w{disabled enabled future surplus},
         }
       }
     end
@@ -39,7 +38,7 @@ class Noodle::Option
     return self.get(ilk)[option]
   end
 
-  def self.option_limit(ilk,thing)
+  def self.limit(ilk,thing)
     return self.get(ilk)['limits'][thing]
   end
 end

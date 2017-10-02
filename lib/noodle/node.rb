@@ -400,7 +400,7 @@ class Noodle::Node
     return false unless command == 'create' or found =
                                                Noodle::Search.new(Noodle::Node).match_names(nodes).go({:minimum => nodes.size})
 
-    allowed_statuses = Noodle::Option.option('default','allowed_statuses')
+    allowed_statuses = Noodle::Option.limit('default','status')
     # TODO: default_ilk = 'host'
     default_status = 'enabled'
 
@@ -454,12 +454,12 @@ class Noodle::Node
           when '='
             found.each do |node|
               # If param must be an array split value on ,
-              value = [value.split(',')].flatten if Noodle::Option.option_limit(node.params['ilk'],name) == 'array'
+              value = [value.split(',')].flatten if Noodle::Option.limit(node.params['ilk'],name) == 'array'
               # If param must be a hash, create a has based on name,value
               first_key_part,rest_key_parts = name.split('.',2)
-              value = hash_it(rest_key_parts,value) if Noodle::Option.option_limit(node.params['ilk'],first_key_part) == 'hash'
+              value = hash_it(rest_key_parts,value) if Noodle::Option.limit(node.params['ilk'],first_key_part) == 'hash'
                 # If param must be a hash, merge hash created above into existing (or not) value for node
-              if Noodle::Option.option_limit(node.params['ilk'],first_key_part) == 'hash'
+              if Noodle::Option.limit(node.params['ilk'],first_key_part) == 'hash'
                 node.send(which)[first_key_part] = Hash.new if node.send(which)[first_key_part].nil?
                 node.send(which)[first_key_part].deep_merge!(value)
               else
@@ -537,7 +537,7 @@ class Noodle::Node
   end
 
   def self.maybe2array(ilk,name,value)
-    return [value.split(',')].flatten if Noodle::Option.option_limit(ilk,name) == 'array'
+    return [value.split(',')].flatten if Noodle::Option.limit(ilk,name) == 'array'
     return value
   end
 
