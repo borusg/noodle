@@ -455,7 +455,7 @@ class Noodle::Node
             found.each do |node|
               # If param must be an array split value on ,
               value = [value.split(',')].flatten if Noodle::Option.limit(node.params['ilk'],name) == 'array'
-              # If param must be a hash, create a has based on name,value
+              # If param must be a hash, create a hash based on name,value
               first_key_part,rest_key_parts = name.split('.',2)
               value = hash_it(rest_key_parts,value) if Noodle::Option.limit(node.params['ilk'],first_key_part) == 'hash'
                 # If param must be a hash, merge hash created above into existing (or not) value for node
