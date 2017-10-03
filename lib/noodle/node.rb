@@ -20,7 +20,7 @@ class Noodle::Node
     def validate(record)
       # TODO: Don't get options every single time
       # Get default options
-      record.errors.add :base, 'Nope! Node is not unique' unless unique?(record,Noodle::Option.option(record.params['ilk'],'uniqueness'))
+      record.errors.add :base, 'Nope! Node is not unique' unless unique?(record,Noodle::Option.option(record.params['ilk'],'uniqueness_params'))
     end
 
     private
