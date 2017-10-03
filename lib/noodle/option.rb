@@ -14,20 +14,19 @@ class Noodle::Option
     else
       # Hard-code some default options!
       return {
-        'uniqueness'       => %w(ilk),
-        'required_params'  => %w{ilk prodlevel project site status},
-        'default_ilk'      => 'host',
-        'default_status'   => 'enabled',
-        'bareword_terms'   => %w{prodlevel project site},
-        'limits'           => {
-          'status'    => %w{enabled disabled future surplus},
-          'project'   => %w{hr financials lms registration warehouse},
-          'prodlevel' => %w{dev preprod prod test},
-          'role'      => 'array',
-          'stack'     => 'array',
+        'uniqueness_params' => %w(ilk),
+        'required_params'   => %w{ilk prodlevel project site status},
+        'default_ilk'       => 'host',
+        'default_status'    => 'enabled',
+        'bareword_terms'    => %w{prodlevel project site},
+        'limits'            => {
           'gum'       => 'hash',
-          'site'      => %w{jupiter mars moon neptune pluto uranus},
           'ilk'       => %w{host esx ucschassis ucsfi},
+          'prodlevel' => %w{dev preprod prod test},
+          'project'   => %w{hr financials lms registration warehouse},
+          'role'      => 'array',
+          'site'      => %w{jupiter mars moon neptune pluto uranus},
+          'stack'     => 'array',
           'status'    => %w{disabled enabled future surplus},
         }
       }
