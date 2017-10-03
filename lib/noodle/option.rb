@@ -21,9 +21,9 @@ class Noodle::Option
         'bareword_terms'    => %w{prodlevel project site},
         'limits'            => {
           'gum'       => 'hash',
-          'ilk'       => %w{host esx ucschassis ucsfi},
+          'ilk'       => %w{host option esx ucschassis ucsfi},
           'prodlevel' => %w{dev preprod prod test},
-          'project'   => %w{hr financials lms registration warehouse},
+          'project'   => %w{hr financials lms noodle registration warehouse},
           'role'      => 'array',
           'site'      => %w{jupiter mars moon neptune pluto uranus},
           'stack'     => 'array',
