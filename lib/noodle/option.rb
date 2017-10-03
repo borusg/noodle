@@ -15,18 +15,18 @@ class Noodle::Option
       'default_status'    => 'enabled',
       'bareword_terms'    => %w{prodlevel project site},
       'limits'            => {
-        'gum'              => 'hash',
-        'ilk'              => %w{host option esx ucschassis ucsfi},
-        'prodlevel'        => %w{dev preprod prod test},
-        'project'          => %w{hr financials lms noodle registration warehouse},
-        'role'             => 'array',
-        'site'             => %w{jupiter mars moon neptune pluto uranus},
-        'stack'            => 'array',
-        'status'           => %w{disabled enabled future surplus},
+        'gum'               => 'hash',
+        'ilk'               => %w{host option esx ucschassis ucsfi},
+        'prodlevel'         => %w{dev preprod prod test},
+        'project'           => %w{hr financials lms noodle registration warehouse},
+        'role'              => 'array',
+        'site'              => %w{jupiter mars moon neptune pluto uranus},
+        'stack'             => 'array',
+        'status'            => %w{disabled enabled future surplus},
         # Not in alphabetical order because they match 3 above from outside the limits hash
-        'bareword_terms'   => 'array',
-        'required_parms'   => 'array',
-        'uniqueness_parms' => 'array',
+        'bareword_terms'    => 'array',
+        'required_parms'    => 'array',
+        'uniqueness_params' => 'array',
       }
     }
     options = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk',target_ilk).go.results
