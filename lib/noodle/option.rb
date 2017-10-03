@@ -10,7 +10,7 @@ class Noodle::Option
   def self.get(target_ilk='default')
     options = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk',target_ilk).go
     unless options.empty?
-      return JSON.load(options)
+      return JSON.load(options.results.to_json)
     else
       # Hard-code some default options!
       return {
