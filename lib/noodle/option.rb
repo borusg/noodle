@@ -25,6 +25,7 @@ class Noodle::Option
         'status'            => %w{disabled enabled future surplus},
         # Not in alphabetical order because they match 3 above from outside the limits hash
         'bareword_terms'    => 'array',
+        'limits'            => 'hash',
         'required_parms'    => 'array',
         'uniqueness_params' => 'array',
       }
