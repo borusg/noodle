@@ -575,7 +575,10 @@ class Noodle::Node
   # TODO: noodlin param gecos={JSON}
   def self.hash_it(name,value,hash=Hash.new)
     unless name.match('[.]')
-      hash[name] = value
+      # Inside hashes, make , in the value mean "split on , and turn this string into an array"
+      # TODO: Make this a setting?
+      # TODO: Or is there a less-ugly way of doing this?
+      hash[name] = value.match(',') ? value.split(',') : value
       return hash
     end
 
