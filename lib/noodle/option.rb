@@ -9,29 +9,34 @@ require_relative 'client'
 class Noodle::Option
   def self.get(target_ilk='default')
     # Determine default options
+    # TODO: Prettier
     default_options = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk','default').go.results.first
-    default_options = {
-      'uniqueness_params' => %w(ilk),
-      'required_params'   => %w{ilk prodlevel project site status},
-      'default_ilk'       => 'host',
-      'default_status'    => 'enabled',
-      'bareword_terms'    => %w{prodlevel project site},
-      'limits'            => {
-        'gum'               => 'hash',
-        'ilk'               => %w{host option esx ucschassis ucsfi},
-        'prodlevel'         => %w{dev preprod prod test},
-        'project'           => %w{hr financials lms noodle registration warehouse},
-        'role'              => 'array',
-        'site'              => %w{jupiter mars moon neptune pluto uranus},
-        'stack'             => 'array',
-        'status'            => %w{disabled enabled future surplus},
-        # Not in alphabetical order because they match 3 above from outside the limits hash
-        'bareword_terms'    => 'array',
-        'limits'            => 'hash',
-        'required_parms'    => 'array',
-        'uniqueness_params' => 'array',
+    if default_options.nil?
+      default_options = {
+        'uniqueness_params' => %w(ilk),
+        'required_params'   => %w{ilk prodlevel project site status},
+        'default_ilk'       => 'host',
+        'default_status'    => 'enabled',
+        'bareword_terms'    => %w{prodlevel project site},
+        'limits'            => {
+          'gum'               => 'hash',
+          'ilk'               => %w{host option esx ucschassis ucsfi},
+          'prodlevel'         => %w{dev preprod prod test},
+          'project'           => %w{hr financials lms noodle registration warehouse},
+          'role'              => 'array',
+          'site'              => %w{jupiter mars moon neptune pluto uranus},
+          'stack'             => 'array',
+          'status'            => %w{disabled enabled future surplus},
+          # Not in alphabetical order because they match the ones above outside the limits hash
+          'bareword_terms'    => 'array',
+          'limits'            => 'hash',
+          'required_parms'    => 'array',
+          'uniqueness_params' => 'array',
+        }
       }
-    } if default_options.nil?
+    else
+      default_options = JSON.load(default_options.to_json)
+    end
 
     # Find target_ilk options
     options = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk',target_ilk).go.results
