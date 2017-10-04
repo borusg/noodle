@@ -560,7 +560,7 @@ class Noodle::Node
     h
   end
 
-  # hash_it: Recusrively turn key=value into a hash. Each . in key
+  # hash_it: Recursively turn key=value into a hash. Each . in key
   # indicates another level of the hash. For example:
   #
   # noodlin param gecos.firstname=mark
