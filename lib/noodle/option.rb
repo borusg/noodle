@@ -9,7 +9,7 @@ require_relative 'client'
 class Noodle::Option
   def self.get(target_ilk='default')
     # Determine default options
-    default_options = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk','default').go.results
+    default_options = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk','default').go.results.first
     default_options = {
       'uniqueness_params' => %w(ilk),
       'required_params'   => %w{ilk prodlevel project site status},
@@ -31,7 +31,7 @@ class Noodle::Option
         'required_parms'    => 'array',
         'uniqueness_params' => 'array',
       }
-    } if default_options.empty?
+    } if default_options.nil?
 
     # Find target_ilk options
     options = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk',target_ilk).go.results
