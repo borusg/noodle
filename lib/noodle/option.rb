@@ -39,14 +39,13 @@ class Noodle::Option
       }
     else
       default_options = JSON.load(default_options.to_json)['params']
-      default_options = JSON.load(default_options.to_json)
     end
 
     # Find target_ilk options
     options = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk',target_ilk).go.results
     # Return target_ilk options merged with defaults, or defaults if no target_ilk options found
     unless options.empty?
-      return JSON.load(default_options.merge(options.first).to_json)
+      return JSON.load(default_options.merge(options.first['params']).to_json)
     else
       return default_options
     end
