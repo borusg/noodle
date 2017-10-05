@@ -1,5 +1,8 @@
 require_relative 'client'
 
+# TODO: Bootstrapping options into ilk=option, emptyness, etc etc is
+# far too finicky. Rework this whole thing
+
 # TODO: Is a separate class for this premature optimization?
 # TODO: Bubble up to target_ilk=default if not defined in the requested target_ilk?
 
@@ -35,6 +38,7 @@ class Noodle::Option
         }
       }
     else
+      default_options = JSON.load(default_options.to_json)['params']
       default_options = JSON.load(default_options.to_json)
     end
 
@@ -44,16 +48,27 @@ class Noodle::Option
     unless options.empty?
       return JSON.load(default_options.merge(options.first).to_json)
     else
-      # Hard-code some default options!
       return default_options
     end
   end
 
   def self.option(ilk,option)
-    return self.get(ilk)[option]
+    r = self.get(ilk)[option]
+    return self.emptyness(ilk,option) if r.nil?
+    return r
   end
 
   def self.limit(ilk,thing)
-    return self.get(ilk)['limits'][thing]
+    limits = self.get(ilk)['limits']
+    return '' if limits.nil?
+    limit = limits[thing]
+    return '' if limit.nil?
+    return limit
+  end
+
+  def self.emptyness(ilk,option)
+    return [] if self.limit(ilk,option) == 'array'
+    return {} if self.limit(ilk,option) == 'hash'
+    return ''
   end
 end
