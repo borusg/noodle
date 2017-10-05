@@ -29,6 +29,7 @@ class Noodle::Node
       search = Noodle::Search.new(Noodle::Node).match_names(record['name'])
       # Add uniqueness_params to search
       uniqueness_params.each do |param|
+        return false if record.params[param].nil?
         search.equals(param,record.params[param])
       end
       # Search!
