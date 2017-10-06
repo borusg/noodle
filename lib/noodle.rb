@@ -35,6 +35,13 @@ class Noodle < Sinatra::Base
       })
     force_or_not = {force: true}
   end
+  configure :production do
+    Noodle::Node.settings(
+      {
+        number_of_shards: 1,
+        number_of_replicas: 1,
+      })
+  end
 
   # Create the indexes if they don't already exist
   Noodle::Node.gateway.create_index! force_or_not
