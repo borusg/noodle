@@ -57,11 +57,12 @@ class Noodle::Option
     return r
   end
 
+  # TODO: need .empty? because who knows if caller wants string or array, etc
   def self.limit(ilk,thing)
     limits = self.get(ilk)['limits']
-    return '' if limits.nil?
+    return [] if limits.nil?
     limit = limits[thing]
-    return '' if limit.nil?
+    return [] if limit.nil?
     return limit
   end
 
