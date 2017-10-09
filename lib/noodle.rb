@@ -40,6 +40,7 @@ class Noodle < Sinatra::Base
       {
         number_of_shards: 1,
         number_of_replicas: 1,
+        index: {mapping: {total_fields: {limit: "20000"}}},
       })
   end
 
