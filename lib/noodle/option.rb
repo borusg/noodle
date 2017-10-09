@@ -56,14 +56,15 @@ class Noodle::Option
     # We're done if target_ilk is 'default'
     return default_options if target_ilk == 'default'
 
-    # Otherwise, Find target_ilk options just like above:
-    target_options = builtin_options
+    # Otherwise, Find target_ilk options like above but start with
+    # default_options
+    target_options = default_options
     # Let target_ilk options from Noodle database override built-ins:
     target_options_from_db = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk',target_ilk).go.results.first
 
     unless target_options_from_db.nil?
         target_options = Hashie::Mash.new(target_options)
-        from_db         = Hashie::Mash.new(target_options_from_db['params'])
+        from_db        = Hashie::Mash.new(target_options_from_db['params'])
         target_options.merge!(from_db)
     end
     return target_options
