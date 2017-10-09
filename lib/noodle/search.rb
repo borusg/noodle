@@ -36,6 +36,11 @@ class Noodle::Search
     self
   end
 
+  def match_names_exact(names)
+    [names].flatten.map{|name| @node_names << "(name:/#{name}/)"}
+    self
+  end
+
   def not_equal(term,value)
     @search_terms << term
     @query << "-(params.#{term}:#{value} AND -facts.#{term}:#{value})"
