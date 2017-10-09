@@ -60,7 +60,12 @@ class Noodle::Option
     target_options = builtin_options
     # Let target_ilk options from Noodle database override built-ins:
     target_options_from_db = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk',target_ilk).go.results.first
-    target_options.merge(target_options_from_db['params']) unless target_options_from_db.nil?
+
+    unless target_options_from_db.nil?
+        target_options = Hashie::Mash.new(target_options)
+        from_db         = Hashie::Mash.new(target_options_from_db['params'])
+        target_options.merge!(from_db)
+    end
     return target_options
   end
 
