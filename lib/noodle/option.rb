@@ -49,8 +49,8 @@ class Noodle::Option
     # built-in options. Use Hashie for deep merge
     default_options_from_db = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk','default').go.results.first
     unless default_options_from_db.nil?
-        default = Hashie::Mash.new(default_options)
-        from_db = Hashie::Mash.new(default_options_from_db['params'])
+        default_options = Hashie::Mash.new(default_options)
+        from_db         = Hashie::Mash.new(default_options_from_db['params'])
         default_options.merge!(from_db)
     end
     # We're done if target_ilk is 'default'
