@@ -1,3 +1,4 @@
+require 'hashie'
 require_relative 'client'
 
 # TODO: Bootstrapping options into ilk=option, emptyness, etc etc is
@@ -45,9 +46,13 @@ class Noodle::Option
     # First, set default_options to built-in options
     default_options = builtin_options
     # Then let any defaults from the Noodle database override the
-    # built-in options:
+    # built-in options. Use Hashie for deep merge
     default_options_from_db = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk','default').go.results.first
-    default_options.merge(default_options_from_db['params']) unless default_options_from_db.nil?
+    unless default_options_from_db.nil?
+        default = Hashie::Mash.new(default_options)
+        from_db = Hashie::Mash.new(default_options_from_db['params'])
+        default_options.merge!(from_db)
+    end
     # We're done if target_ilk is 'default'
     return default_options if target_ilk == 'default'
 
