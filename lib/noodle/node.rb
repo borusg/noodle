@@ -46,7 +46,7 @@ class Noodle::Node
 
   include Elasticsearch::Persistence::Model
 
-  attribute :name,   String,       mapping: { index: 'not_analyzed' }
+  attribute :name,   String,       mapping: { index: 'not_analyzed', fields: { keyword: { type: 'keyword'}}}
   attribute :fqdn,   String, default: :name
   attribute :facts,  Hashie::Mash, mapping: { type: 'object', dynamic: true }, default: {}
   attribute :params, Hashie::Mash, mapping: { type: 'object', dynamic: true }, default: {}
