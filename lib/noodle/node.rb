@@ -514,7 +514,7 @@ class Noodle::Node
 
   def self.delete_one(name)
     return false unless node =
-                        Noodle::Search.new(Noodle::Node).match_names(name).go({:justone => true})
+                        Noodle::Search.new(Noodle::Node).match_names_exact(name).go({:justone => true})
     node.destroy
     return true
   end
