@@ -60,6 +60,9 @@ class Noodle::Node
       record.errors.add attr, "#{param} must be provided but is not." if value[param].nil?
     end
 
+    record.errors.add attr, "nil value not allowed." if value.nil?
+    record.errors.add attr, "Empty value not allowed." if value.empty?
+
     # Check per-param liits
     Noodle::Option.option(record.params['ilk'],'limits').each do |param,limit|
       case limit.class.to_s
