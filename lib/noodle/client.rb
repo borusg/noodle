@@ -50,7 +50,7 @@ class NoodleClient
   # the server.
   def update
     http = Net::HTTP.new(NoodleClient.server,NoodleClient.port)
-    request = Net::HTTP::Update.new("/nodes/#{@name}")
+    request = Net::HTTP::Put.new("/nodes/#{@name}")
     request.body = self.to_json
     request.content_type = 'application/json'
     begin
