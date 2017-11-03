@@ -14,6 +14,8 @@ require 'oj'
 #Noodle::Node.gateway.client.transport.logger = Logger.new(STDERR)
 
 class Noodle < Sinatra::Base
+  enable :logging
+
   require_relative 'noodle/node'
   require_relative 'noodle/search'
 
