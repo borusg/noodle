@@ -1,0 +1,80 @@
+#!/usr/bin/ruby
+
+require 'trollop'
+require 'open-uri'
+require 'json'
+require 'multi_json'
+require 'oj'
+require '/usr/local/noodle/lib/noodle/client'
+require 'td/lock'
+
+STDOUT.sync = true
+
+opts = Trollop::options do
+  opt :puppetdb_servers, "PuppetDB server(s) if multiple, duplicate facts get stomped by subsequent PuppetDB server facts", :type => :string,  :default => 'localhost', :required => true, :multi => true
+  opt :puppetdb_port,   "PuppetDB port",   :type => :integer, :default => 8080,       :short => '-P'
+  opt :noodle_server,   "Noodle server",   :type => :string,  :default => 'localhost'
+  opt :retrieve_limit,  "Maximum facts to retrieve at once",        :type => :integer, :default => 1000
+  opt :retrieve_delay,  "Delay between fact retrievals in seconds", :type => :float,   :default => 0.01
+  opt :debug, "Debug!"
+end
+
+lock = TdLock.new("/var/tmp/puppetdbs2noodle.lock.#{opts[:puppetdb]}")
+unless lock.lock
+    Syslog.open('puppetdb2noodle', Syslog::LOG_PID, Syslog::LOG_LOCAL5) { |log| log.send(:crit, 'puppetdb2noodle could not get lock.  Skipping this run.') }
+    exit 1
+end
+
+facts = Hash.new{|k,v| k[v] = Hash.new}
+
+# noodle_nodes = all nodes in *Noodle*,
+noodle_nodes = NoodleClient.node_names.split("\n")
+puts "Local Noodle entries: #{noodle_nodes.size}" if opts[:debug]
+
+# For all puppet_dbservers (by convention for us, SSS Puppet will be the winner)
+opts[:puppetdb_servers].each do |puppetdb|
+    puts "Hitting #{puppetdb}" if opts[:debug]
+    base_url = "http://#{puppetdb}:#{opts[:puppetdb_port]}"
+    url = "#{base_url}/pdb/query/v4/nodes"
+    db_nodes = JSON.load(open(URI.escape(url))).collect{|n| n['certname']}
+    puts "Got #{db_nodes.size} entries from PuppetDB" if opts[:debug]
+    noodle_nodes.each do |noodle|
+        puts "Checking for #{noodle} in db_nodes..." if opts[:debug]
+        db_facts = {}
+        next unless db_nodes.member?(noodle)
+
+        puts "Getting facts for #{noodle}" if opts[:debug]
+        url = "#{base_url}/pdb/query/v4/nodes/#{noodle}/facts"
+        # The result will be a JSON array, with one entry per fact. Each entry is of the form:
+        # {
+        #   "certname": <node name>,
+        #   "name": <fact name>,
+        #   "value": <fact value>,
+        #   "environment": <facts environment>
+        # }
+        r = JSON.load(open(URI.escape(url)))
+        r.each do |facthash|
+            # Hmm, only in v5?
+            # next unless facthash['environment'] == 'production'
+            db_facts[facthash['name']] = facthash['value']
+        end
+        puts "Facts from #{puppetdb} for #{noodle} are: #{db_facts}" if opts[:debug]
+        facts[noodle].merge!(db_facts)
+    end
+end
+
+facts.each do |fqdn,facts|
+    puts "#{fqdn} facts are:"
+    require 'pp'; pp facts
+    puts
+    node = NoodleClient.findone(fqdn)
+    if node.nil?
+        puts "Um, I didn't find #{hostname}."
+        next
+    end
+    node['facts'] = facts
+    s = NoodleClient.updateone(fqdn,node)
+    unless s.code == '200'
+        puts "Oops, bad status for #{fqdn}, status = #{s} #{s.code}, body = #{s.body}"
+    end
+end
