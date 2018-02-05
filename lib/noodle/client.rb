@@ -48,10 +48,10 @@ class NoodleClient
   # Assume Noodle entry exists on the server and update it with
   # contents of this object.  Raises error if node doesn't exist on
   # the server.
-  def update
+  def self.updateone(name,node)
     http = Net::HTTP.new(NoodleClient.server,NoodleClient.port)
-    request = Net::HTTP::Put.new("/nodes/#{@name}")
-    request.body = self.to_json
+    request = Net::HTTP::Put.new("/nodes/#{name}")
+    request.body = node.to_json
     request.content_type = 'application/json'
     begin
       r = http.request(request)
@@ -88,11 +88,24 @@ class NoodleClient
   end
 
   # Find a node and return it in in JSON
-  def find(node)
+  def self.findone(node)
     NoodleClient.server = server if server
     # TODO: Switch to value-only query when magic supports that
     begin
-      uri = URI(URI.encode("http://#{@server}:#{@port}/nodes/_/#{node} json"))
+      uri = URI(URI.encode("http://#{@server}:#{@port}/nodes/#{node} json"))
+      r = JSON.load(Net::HTTP.get(uri))
+    rescue => e
+      # TODO: Fancier :)
+      return "#{e}"
+    end
+    r
+  end
+
+  def self.node_names
+    NoodleClient.server = server if server
+    # TODO: Switch to value-only query when magic supports that
+    begin
+      uri = URI(URI.encode("http://#{@server}:#{@port}/nodes"))
       r = JSON.load(Net::HTTP.get(uri))
     rescue => e
       # TODO: Fancier :)
