@@ -1,3 +1,5 @@
+TODO: Check all statuses :)
+
 # Noodle client library
 #
 # Talks to the Noodle API
@@ -48,10 +50,10 @@ class NoodleClient
   # Assume Noodle entry exists on the server and update it with
   # contents of this object.  Raises error if node doesn't exist on
   # the server.
-  def self.updateone(name,node)
+  def self.updateone(name,options)
     http = Net::HTTP.new(NoodleClient.server,NoodleClient.port)
     request = Net::HTTP::Patch.new("/nodes/#{name}")
-    request.body = node.to_json
+    request.body = options.to_json
     request.content_type = 'application/json'
     begin
       r = http.request(request)
