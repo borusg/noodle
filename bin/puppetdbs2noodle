@@ -56,7 +56,9 @@ opts[:puppetdb_servers].each do |puppetdb|
         r.each do |facthash|
             # Hmm, only in v5?
             # next unless facthash['environment'] == 'production'
-            db_facts[facthash['name']] = facthash['value']
+            value = facthash['value']
+            value = value.strip if value.class == String
+            db_facts[facthash['name']] = value
         end
         puts "Facts from #{puppetdb} for #{noodle} are: #{db_facts}" if opts[:debug]
         facts[noodle].merge!(db_facts)
@@ -64,17 +66,20 @@ opts[:puppetdb_servers].each do |puppetdb|
 end
 
 facts.each do |fqdn,facts|
-    puts "#{fqdn} facts are:"
-    require 'pp'; pp facts
-    puts
     node = NoodleClient.findone(fqdn)
     if node.nil?
         puts "Um, I didn't find #{hostname}."
         next
     end
-    node['facts'] = facts
-    s = NoodleClient.updateone(fqdn,node)
-    unless s.code == '200'
-        puts "Oops, bad status for #{fqdn}, status = #{s} #{s.code}, body = #{s.body}"
+
+    s = NoodleClient.updateone(fqdn,{'facts' => facts})
+    if s.nil?
+      puts "Werid, got nil. TODO: Fix bug which prevents ES error from bubbling up here"
+      next
+    end
+    if s.code == '200'
+      puts "OK"
+    else
+      puts "Oops, bad status for #{fqdn}, status = #{s} #{s.code}, body = #{s.body}"
     end
 end
