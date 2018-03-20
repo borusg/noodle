@@ -32,7 +32,7 @@ class Noodle::Search
   end
 
   def match_names(names)
-    [names].flatten.map{|name| @node_names << "(name:#{name} OR name:#{name}.*)"}
+    [names].flatten.map{|name| @node_names << "(name.keyword:#{name} OR name.keyword:#{name}.*)"}
     self
   end
 
