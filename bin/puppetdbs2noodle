@@ -27,12 +27,19 @@ end
 
 facts = Hash.new{|k,v| k[v] = Hash.new}
 
+def stamp(s)
+    puts "#{Time.now.strftime("%T.%L")}: #{s}"
+end
 # noodle_nodes = all nodes in *Noodle*,
+stamp('Start') if opts[:debug]
 noodle_nodes = NoodleClient.node_names.split("\n")
+stamp('got nodes') if opts[:debug]
 puts "Local Noodle entries: #{noodle_nodes.size}" if opts[:debug]
 
 # For all puppet_dbservers (by convention for us, SSS Puppet will be the winner)
 opts[:puppetdb_servers].each do |puppetdb|
+    stamp("Start ing #{puppetdb}") if opts[:debug]
+
     puts "Hitting #{puppetdb}" if opts[:debug]
     base_url = "http://#{puppetdb}:#{opts[:puppetdb_port]}"
     url = "#{base_url}/pdb/query/v4/nodes"
@@ -64,15 +71,20 @@ opts[:puppetdb_servers].each do |puppetdb|
         facts[noodle].merge!(db_facts)
     end
 end
+stamp('Done readying from PuppetDB') if opts[:debug]
 
 facts.each do |fqdn,facts|
+    stamp("Finding #{fqdn}") if opts[:debug]
     node = NoodleClient.findone(fqdn)
+    stamp("Found #{fqdn}") if opts[:debug]
     if node.nil?
         puts "Um, I didn't find #{hostname}."
         next
     end
 
+    stamp("Updating #{fqdn}") if opts[:debug]
     s = NoodleClient.updateone(fqdn,{'facts' => facts})
+    stamp("Done Updating #{fqdn}") if opts[:debug]
     if s.nil?
       puts "Werid, got nil. TODO: Fix bug which prevents ES error from bubbling up here"
       next
@@ -83,3 +95,4 @@ facts.each do |fqdn,facts|
       puts "Oops, bad status for #{fqdn}, status = #{s} #{s.code}, body = #{s.body}"
     end
 end
+stamp('all done') if opts[:debug]
