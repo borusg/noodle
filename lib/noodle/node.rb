@@ -159,6 +159,7 @@ class Noodle::Node
     list      = false
     merge     = false
     hostnames = []
+    thing2unique = nil
 
     # NOTE: Order below should be preserved in case statement
     bareword_hash               = get_bareword_hash
@@ -168,6 +169,7 @@ class Noodle::Node
     term_show_value             = Regexp.new '=$'
     term_matches_regexp         = Regexp.new '=~'
     term_equals                 = Regexp.new '='
+    term_unique_values          = Regexp.new '^:'
 
     query.split(/\s+/).each do |part|
       case part
@@ -206,6 +208,9 @@ class Noodle::Node
         list = true
         term,value = part.split(/=/,2)
         search.equals(term,value)
+      when term_unique_values
+        thing2unique = part.sub(term_unique_values,'')
+        format = :unique
 
       when 'full'
         format = :full
@@ -228,7 +233,7 @@ class Noodle::Node
     # TODO: Not pretty
     # If list is true, just list nodes, otherwise output in YAML.
     # Unless, or course, json or full was specified
-    if format != :json and format != :full
+    if format != :json and format != :full and format != :unique
       format = list ? :default : :yaml
     end
 
@@ -240,6 +245,8 @@ class Noodle::Node
     found = merge(found,hostnames,show) if merge
 
     case format
+    when :unique
+      body = found.results.collect{|one| one.params[thing2unique]}.uniq.sort.join("\n") + "\n"
     when :json
       body = found.results.to_json + "\n"
     when :yaml
