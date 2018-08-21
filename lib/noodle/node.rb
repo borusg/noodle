@@ -153,13 +153,14 @@ class Noodle::Node
   # - Make order explicit?  Needed?
   # - ~x=y  That is, regexp on the fact/param name
   def self.magic(query)
-    search    = Noodle::Search.new(Noodle::Node)
-    show      = []
-    format    = :default
-    list      = false
-    merge     = false
-    hostnames = []
-    thing2unique = nil
+    search          = Noodle::Search.new(Noodle::Node)
+    show            = []
+    format          = :default
+    list            = false
+    merge           = false
+    just_one_value  = false
+    hostnames       = []
+    thing2unique    = nil
 
     # NOTE: Order below should be preserved in case statement
     bareword_hash               = get_bareword_hash
@@ -221,6 +222,9 @@ class Noodle::Node
       when 'merge'
         merge = true
 
+      when 'justonevalue,json'
+        format = :justonevalue
+
       else
         # Assume everything else is a hostname (or partial hostname)
         # TODO: Maybe this is a bit awkward when bare words are used with
@@ -233,7 +237,7 @@ class Noodle::Node
     # TODO: Not pretty
     # If list is true, just list nodes, otherwise output in YAML.
     # Unless, or course, json or full was specified
-    if format != :json and format != :full and format != :unique
+    if format != :json and format != :full and format != :unique and format != :justonevalue
       format = list ? :default : :yaml
     end
 
@@ -253,6 +257,28 @@ class Noodle::Node
       body = found.results.map{|one| one.to_puppet}.join("\n") + "\n"
     when :full
       body = found.results.map{|one| one.full}.join("\n") + "\n"
+    when :justonevalue
+      # Super-special case:
+      # 1. Errors if there is more than one search result
+      # 2. Errors if more than one param to show
+      # 3. Returns JSON for the value for easy consumption
+      # 4. Should probably be implemented in some other way!
+      unless found.results.size == 1 and show.size == 1
+        status = 500
+        body   = 'More than one result found but you specified just_one_value'
+      else
+        hit = found.results.first
+        # TODO There should be a fact_or_param helper or something!
+        # Was it a param?
+        if !hit.params.nil? and hit.params[show.first]
+          body = hit.params[show.first].to_json + "\n"
+        elsif !hit.facts.nil? and hit.facts[show.first]
+          body = hit.facts[show.first].to_json + "\n"
+        else
+          status = 500
+          body = 'Nothing found'
+        end
+      end
     else
       ['',200] if found.response.hits.empty?
       # Always show name. Show term=value pairs for anything in 'show'
@@ -260,7 +286,7 @@ class Noodle::Node
       found.results.each do |hit|
         add = hit.name
         show.each do |term|
-          if !hit.params.nil?   and hit.params[term]
+          if !hit.params.nil? and hit.params[term]
             value = hit.params[term]
             # TODO: Join arrays for facts too?  What about hashes?
             value = value.sort.join(',') if value.class == Array
