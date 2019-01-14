@@ -496,7 +496,7 @@ class Noodle::Node
               # If param must be a hash, create a hash based on name,value
               first_key_part,rest_key_parts = name.split('.',2)
               value = hash_it(rest_key_parts,value) if Noodle::Option.limit(node.params['ilk'],first_key_part) == 'hash'
-                # If param must be a hash, merge hash created above into existing (or not) value for node
+              # If param must be a hash, merge hash created above into existing (or not) value for node
               if Noodle::Option.limit(node.params['ilk'],first_key_part) == 'hash'
                 node.send(which)[first_key_part] = Hash.new if node.send(which)[first_key_part].nil?
                 node.send(which)[first_key_part].deep_merge!(value)
