@@ -1,5 +1,8 @@
 before_install:
+  - apt search openjdk
   - sudo apt install -y openjdk-11-jre-headless
+  - sudo apt install -y openjdk-12-jre-headless
+  - sudo apt install -y openjdk-13-jre-headless
   - sudo service elasticsearch stop
   - sudo apt-get remove elasticsearch
   - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.16.deb && sudo dpkg -i --force-confnew elasticsearch-5.16.1.deb && sudo service elasticsearch restart
