@@ -1,7 +1,5 @@
-addons:
-  apt:
-    packages:
-      - oracle-java8-set-default
+jdk:
+  - openjdk11
 before_install:
   - sudo service elasticsearch stop
   - sudo apt-get remove elasticsearch
