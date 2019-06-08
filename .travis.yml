@@ -3,14 +3,14 @@ jdk:
 before_install:
   - sudo service elasticsearch stop
   - sudo apt-get remove elasticsearch
-  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.1.deb && sudo dpkg -i --force-confnew elasticsearch-5.6.1.deb && sudo service elasticsearch restart
+  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.16.deb && sudo dpkg -i --force-confnew elasticsearch-5.16.1.deb && sudo service elasticsearch restart
 before_script:
   - sleep 10
   - curl localhost:9200
 language: ruby
 rvm:
+  - 2.6.3
   - 2.4.0
-  - 2.3.0
 services:
   - elasticsearch
 
