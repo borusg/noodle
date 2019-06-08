@@ -13,4 +13,6 @@ rvm:
   - 2.4.0
 services:
   - elasticsearch
-
+notifications:
+  email:
+    - happy@mcplaksin.org
