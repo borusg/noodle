@@ -77,6 +77,7 @@ GEM
     mustermann (1.0.3)
     netrc (0.11.0)
     oj (3.7.12)
+    optimist (3.0.0)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -133,7 +134,6 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.9)
     tins (1.20.2)
-    trollop (2.9.9)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     unf (0.1.4)
@@ -156,6 +156,7 @@ DEPENDENCIES
   minitest-reporters
   multi_json
   oj
+  optimist
   pry
   rack-test
   rake
@@ -165,7 +166,6 @@ DEPENDENCIES
   sinatra
   sinatra-contrib
   thin
-  trollop
 
 BUNDLED WITH
    1.17.3

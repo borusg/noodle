@@ -1,7 +1,7 @@
 require_relative 'option'
 require 'elasticsearch/persistence/model'
 require 'hashie'
-require 'trollop'
+require 'optimist'
 
 class Noodle::Node
   class NodeUniqueValidator < ActiveModel::Validator
@@ -411,7 +411,7 @@ class Noodle::Node
     command,rest = changes.split(/\s+/,2)
     rest = rest.split(/\s+/)
 
-    p = Trollop::Parser.new do
+    p = Optimist::Parser.new do
       opt :remove,   "thing to remove (used with fact, param)", :type => :string
       opt :param,    "Add param paramname=value",               :type => :string, :multi => true, :short => 'a'
       opt :fact,     "Add fact  factname=value",                :type => :string, :multi => true

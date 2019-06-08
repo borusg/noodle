@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require 'trollop'
+require 'optimist'
 require 'open-uri'
 require 'json'
 require 'multi_json'
@@ -10,7 +10,7 @@ require 'td/lock'
 
 STDOUT.sync = true
 
-opts = Trollop::options do
+opts = Optimist::options do
   opt :puppetdb_servers, "PuppetDB server(s) if multiple, duplicate facts get stomped by subsequent PuppetDB server facts", :type => :string,  :default => 'localhost', :required => true, :multi => true
   opt :puppetdb_port,   "PuppetDB port",   :type => :integer, :default => 8080,       :short => '-P'
   opt :noodle_server,   "Noodle server",   :type => :string,  :default => 'localhost'

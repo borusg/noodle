@@ -13,6 +13,6 @@ gem 'rspec'
 gem 'rspec_rake'
 gem 'hashie'
 gem 'coveralls', require: false
-gem 'trollop'
+gem 'optimist'
 gem 'pry', require: false
 gem 'rest-client'
