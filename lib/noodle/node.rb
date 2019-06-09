@@ -158,7 +158,6 @@ class Noodle::Node
     format          = :default
     list            = false
     merge           = false
-    just_one_value  = false
     hostnames       = []
     thing2unique    = nil
 
@@ -267,13 +266,13 @@ class Noodle::Node
         status = 500
         body   = 'More than one result found but you specified just_one_value'
       else
-        hit = found.results.first
+        it = found.results.first
         # TODO There should be a fact_or_param helper or something!
         # Was it a param?
-        if !hit.params.nil? and hit.params[show.first]
-          body = hit.params[show.first].to_json + "\n"
-        elsif !hit.facts.nil? and hit.facts[show.first]
-          body = hit.facts[show.first].to_json + "\n"
+        if !it.params.nil? and it.params[show.first]
+          body = it.params[show.first].to_json + "\n"
+        elsif !it.facts.nil? and it.facts[show.first]
+          body = it.facts[show.first].to_json + "\n"
         else
           status = 500
           body = 'Nothing found'
