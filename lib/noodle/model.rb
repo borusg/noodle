@@ -61,9 +61,10 @@ class Noodle::Node
 
   # TODO: Intentionally skipping :fqdn
   def initialize(attrs={})
-    name   = attrs[:name]                     unless attrs[:name].nil?
-    facts  = Hashie::Mash.new(attrs[:facts])  unless attrs[:facts].nil?
-    params = Hashie::Mash.new(attrs[:params]) unless attrs[:params].nil?
+    @name = attrs[:name] unless attrs[:name].nil?
+    # Force facts and params to be hashes
+    attrs[:facts].nil?  ? @facts  = Hashie::Mash.new : @facts  = Hashie::Mash.new(attrs[:facts])
+    attrs[:params].nil? ? @params = Hashie::Mash.new : @params = Hashie::Mash.new(attrs[:params])
   end
 
   # Validate node uniqueness (by default ilk+name must be unique
