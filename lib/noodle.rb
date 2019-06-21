@@ -21,36 +21,43 @@ class Noodle < Sinatra::Base
   require_relative 'noodle/repository'
   require_relative 'noodle/search'
 
-  # If OPENSHIFT_RUBY_IP is set, change ES port because can't use
-  # default ES port at OpenShift
-  Noodle::Node.gateway.client   = Elasticsearch::Client.new host: "#{ENV['OPENSHIFT_RUBY_IP']}:29200" if ENV['OPENSHIFT_RUBY_IP']
-
-  # TODO: Production :)
-  force_or_not = {}
+  client = Elasticsearch::Client.new(url: ENV['ELASTICSEARCH_URL'], log: true)
   configure :development do
     register Sinatra::Reloader
   end
+
+  index = nil
+  index_settings = nil
+
   configure :test do
-    Noodle::Node.gateway.index   = 'this-is-for-running-noodle-elasticsearch-tests-only-nodes'
-    Noodle::Node.settings(
-      {
-        number_of_shards: 1,
-        number_of_replicas: 0,
-      })
-    force_or_not = {force: true}
+    index = 'this-is-for-running-noodle-elasticsearch-tests-only-nodes'
+    index_settings = {
+      number_of_shards: 1,
+      number_of_replicas: 0,
+      index: {mapping: {total_fields: {limit: "20000"}}},
+    }
   end
   configure :production do
-    Noodle::Node.settings(
-      {
-        number_of_shards: 1,
-        number_of_replicas: 1,
-        index: {mapping: {total_fields: {limit: "20000"}}},
-      })
+    index = 'noodle-nodes'
+    index_settings = {
+      number_of_shards: 1,
+      number_of_replicas: 1,
+      index: {mapping: {total_fields: {limit: "20000"}}},
+    }
   end
 
-  # Create the indexes if they don't already exist
-  Noodle::Node.gateway.create_index! force_or_not
-  Noodle::Node.gateway.refresh_index!
+  repository = Noodle::NodeRepository.new(client: client, index_name: index)
+  repository.settings index_settings
+  # Create the index if it doesn't't already exist
+  repository.create_index! force: true
+  repository.client.cluster.health wait_for_status: 'yellow'
+
+  # TODO:
+  # Ahem, this is maybe the right way to do it:
+  set :repository, repository
+  # But I'm cheating for now because passing repository into NodeController and such is unweildy
+  Noodle::NodeRepository.set_repository(repository)
+  # Or maybe *this* is the right way: https://github.com/elastic/rails-app-music/blob/migrate-to-repository-pattern-ref-commits/config/initializers/elasticsearch.rb
 
   get '/help' do
     body "Noodle helps!\n"
