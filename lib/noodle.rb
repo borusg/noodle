@@ -94,7 +94,7 @@ class Noodle < Sinatra::Base
     args['facts']  = options['facts'] unless options['facts'].nil?
     args['params'] = options['params'] unless options['params'].nil?
 
-    node = Noodle::Node.create_one(args)
+    node = Noodle::NodeController.create_one(args)
     if node.class == Noodle::Node
       body node.to_json + "\n"
       status 201
@@ -116,7 +116,7 @@ class Noodle < Sinatra::Base
       halt 500
     end
 
-    node.update(options)
+    Noodle::NodeController.update(node,options)
     body node.to_json
     status 200
   end

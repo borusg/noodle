@@ -345,7 +345,7 @@ class Noodle::Controller
 
         args[:facts]  = facts
         args[:params] = params
-        node = Noodle::Node.create_one(args)
+        node = create_one(args)
 
         if defined?(node.keys) and node.keys.member?(:errors)
           body = node[:errors]
@@ -357,7 +357,7 @@ class Noodle::Controller
       if opts[:remove]
         found.each do |node|
           node.send(which).delete(opts[:remove])
-          node.save refresh: true
+          Noodle::NodeRepository.repository.save(node, refresh: true)
         end
       else
         [opts[command.to_sym] + pairs].flatten.each do |change|
@@ -380,7 +380,7 @@ class Noodle::Controller
               else
                 node.send(which)[name] = value
               end
-              node.save refresh: true
+              Noodle::NodeRepository.repository.save(node, refresh: true)
               body << node.errors?(silent_if_none: true).to_s
             end
           when '+=','-='
@@ -388,7 +388,7 @@ class Noodle::Controller
             found.each do |node|
               if node.send(which)[name].kind_of?(Array)
                 node.send(which)[name].send(method,value)
-                node.save refresh: true
+                Noodle::NodeRepository.repository.save(node, refresh: true)
                 body << node.errors?(silent_if_none: true)
               else
                 body << "#{name} is not an array for #{node.name}"
@@ -402,7 +402,7 @@ class Noodle::Controller
     when *allowed_statuses
       found.each do |node|
         node.params['status'] = command
-        node.save refresh: true
+        Noodle::NodeRepository.repository.save(node, refresh: true)
         body << node.errors?(silent_if_none: true).to_s
       end
     when 'remove'
@@ -416,14 +416,13 @@ class Noodle::Controller
   end
 
   # Update a node based on options.
-  # TODO: Catch errors
-  # TODO: Referring to myself must be wrong?
-  def update(options)
+  def update(node,options)
     options.each_pair do |key,value|
-      self.send("#{key}=", self.send(key).deep_merge(value))
-      self.save refresh: true
+      node.send("#{key}=", node.send(key).deep_merge(value))
     end
-    self.errors?
+    # TODO: is this order and being outside the loop correct?
+    node.errors?
+    NodeRepository.repository.save(node, refresh: true)
   end
 
   # TODO: Catch errors
@@ -457,7 +456,7 @@ class Noodle::Controller
     #puts "r is #{r}"
     if r.class == Noodle::Node
       #puts 'saving'
-      node.save refresh: true
+      Noodle::NodeRepository.repository.save(node, refresh: true)
     end
     r
   end
