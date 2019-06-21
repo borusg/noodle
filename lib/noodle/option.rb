@@ -47,7 +47,7 @@ class Noodle::Option
     default_options = builtin_options
     # Then let any defaults from the Noodle database override the
     # built-in options. Use Hashie for deep merge
-    default_options_from_db = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk','default').go.results.first
+    default_options_from_db = Noodle::Search.new(Noodle::NodeRepository.repository).equals('ilk','option').equals('target_ilk','default').go.results.first
     unless default_options_from_db.nil?
         default_options = Hashie::Mash.new(default_options)
         from_db         = Hashie::Mash.new(default_options_from_db['params'])
@@ -60,7 +60,7 @@ class Noodle::Option
     # default_options
     target_options = default_options
     # Let target_ilk options from Noodle database override built-ins:
-    target_options_from_db = Noodle::Search.new(Noodle::Node).equals('ilk','option').equals('target_ilk',target_ilk).go.results.first
+    target_options_from_db = Noodle::Search.new(Noodle::NodeRepository.repository).equals('ilk','option').equals('target_ilk',target_ilk).go.results.first
 
     unless target_options_from_db.nil?
         target_options = Hashie::Mash.new(target_options)

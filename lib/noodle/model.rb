@@ -28,7 +28,7 @@ class Noodle::Node
     private
     def unique?(record,uniqueness_params)
       # name is always part of uniqueness
-      search = Noodle::Search.new(Noodle::Node).match_names_exact(record['name'])
+      search = Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(record['name'])
       # Add uniqueness_params to search
       uniqueness_params.each do |param|
         return false if record.params[param].nil?
