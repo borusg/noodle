@@ -1,12 +1,12 @@
-# Build up a Node.search query and execute with .go
+# Build up a search query and execute with .go
 #
 # The default is AND.  .node is the only exception.  .node adds to a
 # list of nodes.  .go searches for (QUERY) OR (NODES)
 class Noodle::Search
   attr_accessor :query, :search_terms
 
-  def initialize(theclass)
-    @theclass     = theclass
+  def initialize(repository)
+    @repository   = repository
     @query        = []
     # TODO: unused
     @search_terms = []
@@ -57,7 +57,7 @@ class Noodle::Search
     @query = {}
     @query[:aggs] = {}
     @query[:aggs][term.to_s] = {terms: {field: "params.#{term}.keyword"}}
-    results = @theclass.search(@query)
+    results = @repository.search(@query)
     return results.response.aggregations.send(term).buckets.collect{|x| x['key']}
   end
 
@@ -82,7 +82,7 @@ class Noodle::Search
     # puts query
 
     # Execute search, return results
-    results = @theclass.search(query)
+    results = @repository.search(query)
 
     # TODO: Add debug that shows results
     # puts results
