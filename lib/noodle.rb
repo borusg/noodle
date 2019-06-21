@@ -16,7 +16,9 @@ require 'oj'
 class Noodle < Sinatra::Base
   enable :logging
 
-  require_relative 'noodle/node'
+  require_relative 'noodle/model'
+  require_relative 'noodle/controller'
+  require_relative 'noodle/repository'
   require_relative 'noodle/search'
 
   # If OPENSHIFT_RUBY_IP is set, change ES port because can't use
