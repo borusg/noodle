@@ -11,7 +11,8 @@ require_relative 'client'
 # ilk=option target_ilk=sslcert uniqueness=fqdn
 # ilk=option target_ilk=samlcert uniqueness=fqdn,component_type (component_type would be shibboleth|asimba)
 class Noodle::Option
-  def self.get(target_ilk='default')
+  def self.get(target_ilk=nil)
+    target_ilk = 'default' if target_ilk.nil?
     # See above notes about making this better. Until then:
 
     # *Always* merge with built-in options, regardless of
