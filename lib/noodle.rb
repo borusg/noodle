@@ -55,7 +55,7 @@ class Noodle < Sinatra::Base
   # TODO:
   # Ahem, this is maybe the right way to do it:
   set :repository, repository
-  # But I'm cheating for now because passing repository into NodeController and such is unweildy
+  # But I'm cheating for now because passing repository into Node::Controller and such is unweildy
   Noodle::NodeRepository.set_repository(repository)
   # Or maybe *this* is the right way: https://github.com/elastic/rails-app-music/blob/migrate-to-repository-pattern-ref-commits/config/initializers/elasticsearch.rb
 
@@ -82,7 +82,7 @@ class Noodle < Sinatra::Base
     # TODO: Refuse to stomp an existing node?
 
     # Delete it if it exists
-    Noodle::Node.delete_one(params[:name])
+    Noodle::Controller.delete_one(params[:name])
 
     # TODO: DRY with patch
     # TODO: Delete this line?
@@ -101,7 +101,7 @@ class Noodle < Sinatra::Base
     args['facts']  = options['facts'] unless options['facts'].nil?
     args['params'] = options['params'] unless options['params'].nil?
 
-    node = Noodle::NodeController.create_one(args)
+    node = Noodle::Controller.create_one(args)
     if node.class == Noodle::Node
       body node.to_json + "\n"
       status 201
@@ -123,7 +123,7 @@ class Noodle < Sinatra::Base
       halt 500
     end
 
-    Noodle::NodeController.update(node,options)
+    Noodle::Controller.update(node,options)
     body node.to_json
     status 200
   end
@@ -141,7 +141,7 @@ class Noodle < Sinatra::Base
   end
 
   delete '/nodes/:name' do
-    if Noodle::Node.delete_one(params[:name])
+    if Noodle::Controller.delete_one(params[:name])
       body "Deleted #{params[:name]}\n"
       status 200
     else
