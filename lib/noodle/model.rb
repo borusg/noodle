@@ -28,7 +28,7 @@ class Noodle::Node
     private
     def unique?(record,uniqueness_params)
       # name is always part of uniqueness
-      search = Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(record['name'])
+      search = Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(record.name)
       # Add uniqueness_params to search
       uniqueness_params.each do |param|
         return false if record.params[param].nil?
@@ -61,10 +61,10 @@ class Noodle::Node
 
   # TODO: Intentionally skipping :fqdn
   def initialize(attrs={})
-    @name = attrs[:name] unless attrs[:name].nil?
+    @name = attrs['name'] unless attrs['name'].nil?
     # Force facts and params to be hashes
-    attrs[:facts].nil?  ? @facts  = Hashie::Mash.new : @facts  = Hashie::Mash.new(attrs[:facts])
-    attrs[:params].nil? ? @params = Hashie::Mash.new : @params = Hashie::Mash.new(attrs[:params])
+    attrs['facts'].nil?  ? @facts  = Hashie::Mash.new : @facts  = Hashie::Mash.new(attrs['facts'])
+    attrs['params'].nil? ? @params = Hashie::Mash.new : @params = Hashie::Mash.new(attrs['params'])
   end
 
   # Validate node uniqueness (by default ilk+name must be unique
