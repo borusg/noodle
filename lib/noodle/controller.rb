@@ -436,14 +436,14 @@ class Noodle::Controller
     Noodle::Node.gateway.refresh_index!
   end
 
-  def delete_one(name)
+  def self.delete_one(name)
     return false unless node =
                         Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(name).go({:justone => true})
-    node.destroy
+    Noodle::NodeRepository.repository.destroy(node)
     return true
   end
 
-  def create_one(args)
+  def self.create_one(args)
     node = Noodle::Node.new(args)
 
     # TODO: This is probably bogus:
@@ -453,9 +453,7 @@ class Noodle::Controller
     end
 
     r = node.errors?
-    #puts "r is #{r}"
     if r.class == Noodle::Node
-      #puts 'saving'
       Noodle::NodeRepository.repository.save(node, refresh: true)
     end
     r
