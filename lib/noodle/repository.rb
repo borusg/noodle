@@ -13,10 +13,6 @@ class Noodle::NodeRepository
       indexes :facts,  { type: 'object', dynamic: true }
   end
 
-  def serialize(node)
-      node.validate!
-  end
-
   def deserialize(document)
     node = super
     node.id = document['_id']
