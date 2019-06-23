@@ -8,9 +8,9 @@ class Noodle::NodeRepository
   klass Noodle::Node
 
   mapping do
-      indexes :name,   { index: 'not_analyzed' }
-      indexes :params, { type: 'object', dynamic: true, default: {} }
-      indexes :facts,  { type: 'object', dynamic: true, default: {} }
+      indexes :name
+      indexes :params, { type: 'object', dynamic: true }
+      indexes :facts,  { type: 'object', dynamic: true }
   end
 
   def serialize(node)
