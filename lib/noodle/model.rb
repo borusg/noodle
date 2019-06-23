@@ -92,6 +92,14 @@ class Noodle::Node
     end
   end
 
+  def to_hash
+    {
+      name:   self.name,
+      facts:  self.facts,
+      params: self.params,
+    }
+  end
+
   def to_puppet
     r = {}
     # TODO: Get class list from node/options
