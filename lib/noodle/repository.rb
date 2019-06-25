@@ -3,8 +3,6 @@ class Noodle::NodeRepository
   include Elasticsearch::Persistence::Repository::DSL
 
   index_name 'noodle'
-  # TODO: ?
-  #document_type 'Noodle::Node'.to_sym
   klass Noodle::Node
 
   mapping do
