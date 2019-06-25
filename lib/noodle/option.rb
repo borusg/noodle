@@ -51,7 +51,7 @@ class Noodle::Option
     default_options_from_db = Noodle::Search.new(Noodle::NodeRepository.repository).equals('ilk','option').equals('target_ilk','default').go.results.first
     unless default_options_from_db.nil?
         default_options = Hashie::Mash.new(default_options)
-        from_db         = Hashie::Mash.new(default_options_from_db['params'])
+        from_db         = Hashie::Mash.new(default_options_from_db.params)
         default_options.merge!(from_db)
     end
     # We're done if target_ilk is 'default'
@@ -65,7 +65,7 @@ class Noodle::Option
 
     unless target_options_from_db.nil?
         target_options = Hashie::Mash.new(target_options)
-        from_db        = Hashie::Mash.new(target_options_from_db['params'])
+        from_db        = Hashie::Mash.new(target_options_from_db.params)
         target_options.merge!(from_db)
     end
     return target_options
