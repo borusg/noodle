@@ -5,7 +5,7 @@ describe 'Noodle' do
   it "should allow finding and showing with TERM?=" do
     put '/nodes/lolo.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter", "funky":"town","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
-    Noodle::Node.gateway.refresh_index!
+    Noodle::NodeRepository.repository.refresh_index!
 
     get "/nodes/_/funky#{CGI.escape('?=')}"
     assert_equal last_response.status, 200

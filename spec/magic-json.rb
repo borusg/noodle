@@ -4,7 +4,7 @@ describe 'Noodle' do
   it "should allow output in JSON format" do
     put '/nodes/fofo.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter","output":"json","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
-    Noodle::Node.gateway.refresh_index!
+    Noodle::NodeRepository.repository.refresh_index!
 
     get '/nodes/_/output=json%20json'
     assert_equal last_response.status, 200

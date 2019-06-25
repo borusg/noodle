@@ -4,7 +4,7 @@ describe 'Noodle' do
   it "should delete a node" do
     post '/nodes/soso.example.com', '{"params":{"ilk":"host","status":"surplus","site":"moon","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status,201
-    Noodle::Node.gateway.refresh_index!
+    Noodle::NodeRepository.repository.refresh_index!
 
     delete '/nodes/soso.example.com'
     assert_equal last_response.status,200

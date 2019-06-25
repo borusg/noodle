@@ -9,7 +9,7 @@ describe 'Noodle' do
     put '/nodes/zzy.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter", "funky":"town","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
 
-    Noodle::Node.gateway.refresh_index!
+    Noodle::NodeRepository.repository.refresh_index!
 
     get "/nodes/_/yyz.example.com%20zzy.example.com"
     assert_equal last_response.status, 200

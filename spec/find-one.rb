@@ -5,7 +5,7 @@ describe 'Noodle' do
   it "should allow finding by FQDN" do
     put '/nodes/zyyz.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter", "funky":"town","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
-    Noodle::Node.gateway.refresh_index!
+    Noodle::NodeRepository.repository.refresh_index!
 
     get "/nodes/_/zyyz.example.com"
     assert_equal last_response.status, 200

@@ -7,7 +7,7 @@ describe 'Noodle' do
     put '/nodes/cici.example.com', '{"params":{"ilk":"host","status":"enabled","site":"pluto","prodlevel":"prod","project":"hr"}}'
     assert_equal last_response.status, 201
 
-    Noodle::Node.gateway.refresh_index!
+    Noodle::NodeRepository.repository.refresh_index!
 
     get '/nodes/_/?site=pluto%20prodlevel=prod'
     assert_equal last_response.status, 200
