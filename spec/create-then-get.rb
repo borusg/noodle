@@ -17,7 +17,8 @@ describe 'Noodle' do
     assert_equal last_response.status, 200
 
     # TODO: DRY
-    r = MultiJson.load last_response.body
+    # TODO: Should fix body so ternary isn't needed here:
+    r = last_response.body.empty? ? Hash.new : MultiJson.load(last_response.body)
     assert_equal r['name'],             'gogo.example.com'
     assert_equal r['params']['ilk'],    'host'
     assert_equal r['params']['status'], 'surplus'
