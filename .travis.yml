@@ -1,10 +1,9 @@
 before_install:
-  - apt show elasticsearch
-  - #sudo service elasticsearch stop
-  - #sudo apt-get remove elasticsearch
-  - #sudo curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.1.deb
-  - #sudo dpkg -i --force-confnew                                      elasticsearch-6.8.1.deb
-  - #sudo service elasticsearch restart
+  - sudo service elasticsearch stop
+  - sudo apt-get remove elasticsearch
+  - sudo curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.1.deb
+  - sudo dpkg -i --force-confnew                                      elasticsearch-6.8.1.deb
+  - sudo service elasticsearch restart
 before_script:
   - sleep 10
   - curl localhost:9200
