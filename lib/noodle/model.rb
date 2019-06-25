@@ -87,7 +87,8 @@ class Noodle::Node
           limit.include?(value[param])
       when 'String'
         record.errors.add attr, "#{param} is not a(n) #{limit}" unless
-          value[param].nil? or value[param].class.to_s.downcase == limit
+          value[param].nil? or value[param].class.to_s.downcase.match?(/#{limit}/i)
+          # ^^ Use .match so that "array" matches "Hashie::Array" :)
       end
     end
   end
@@ -97,14 +98,22 @@ class Noodle::Node
       name:   self.name,
       facts:  self.facts,
       params: self.params,
+      id:     self.id
     }
+  end
+
+  # TODO: Do all to_json methods accept args? This only seemed to
+  # matter when to_json was called on an array of Noodle::Node
+  # objects. Grok me, Amadeus?
+  def to_json(options=nil)
+    self.to_hash.to_json
   end
 
   def to_puppet
     r = {}
     # TODO: Get class list from node/options
     r['classes']    = ['baseclass']
-    r['parameters'] = @params
+    r['parameters'] = @params.to_hash # TODO: .to_hash is only to avoid having "Hashie::Mash" show up in YAML output?!
     r.to_yaml.strip
   end
 
@@ -126,10 +135,5 @@ class Noodle::Node
     else
       return args[:silent_if_none] ? '' : self
     end
-  end
-
-  def self.all_names
-    body = Noodle::NodeRepository.repository.all.results.collect{|hit| hit.name}.sort.join("\n")
-    [body, 200]
   end
 end
