@@ -30,7 +30,7 @@ class Noodle::Controller
   #   - And bare words are highest (or tunable?)
   # - Make order explicit?  Needed?
   # - ~x=y  That is, regexp on the fact/param name
-  def magic(query)
+  def self.magic(query)
     search          = Noodle::Search.new(Noodle::NodeRepository.repository)
     show            = []
     format          = :default
@@ -166,7 +166,7 @@ class Noodle::Controller
           if !hit.params.nil? and hit.params[term]
             value = hit.params[term]
             # TODO: Join arrays for facts too?  What about hashes?
-            value = value.sort.join(',') if value.class == Array
+            value = value.sort.join(',') if value.class == Hashie::Array
             add << " #{term}=#{value}"
           elsif !hit.facts.nil? and hit.facts[term]
             add << " #{term}=#{hit.facts[term]}"
@@ -243,7 +243,7 @@ class Noodle::Controller
   # The MERGE method assumes NODES contains the nodes to merge,
   # HOSTNAMES contains the order, and PARAMS contains the param(s) to
   # merge. And the caller is responsible for displaying the results.
-  def merge(nodes,hostnames,params)
+  def self.merge(nodes,hostnames,params)
     hash = {}
     params.map{|param| hash[param] = 'defaultUGLY'}
     nodes.sort_by{|node| hostnames.index(node.name)}.each do |node|
@@ -279,7 +279,7 @@ class Noodle::Controller
   # noodlin create -i ILK -s STATUS -p PROJECT -P PRODLEVEL -s SITE [-a PARAM=VALUE ...] [-f FACT=VALUE ...] FQDN
   #
   # What else?
-  def noodlin(changes)
+  def self.noodlin(changes)
     # Default to success
     status = 200
     body = ''
@@ -326,7 +326,7 @@ class Noodle::Controller
       # TODO: Create more than one at a time?
       nodes.each do |name|
         args = {
-          name:    name,
+          'name' => name,
         }
         facts  = Hash.new
         params = Hash.new
@@ -343,10 +343,9 @@ class Noodle::Controller
         opts[:fact].map {|pair| name,value = pair.split(/=/); facts[name]  = value}
         opts[:param].map{|pair| name,value = pair.split(/=/); params[name] = maybe2array(params['ilk'],name,value)}
 
-        args[:facts]  = facts
-        args[:params] = params
+        args['facts']  = facts
+        args['params'] = params
         node = create_one(args)
-
         if defined?(node.keys) and node.keys.member?(:errors)
           body = node[:errors]
           status = 444
@@ -406,7 +405,7 @@ class Noodle::Controller
         body << node.errors?(silent_if_none: true).to_s
       end
     when 'remove'
-      found.map{|node| node.destroy refresh: true}
+      found.map{|node| Noodle::NodeRepository.repository.delete(node, refresh: true)}
     # TODO: Error check
     else
       status = 400
@@ -416,30 +415,28 @@ class Noodle::Controller
   end
 
   # Update a node based on options.
-  def update(node,options)
+  def self.update(node,options)
     options.each_pair do |key,value|
       node.send("#{key}=", node.send(key).deep_merge(value))
     end
     # TODO: is this order and being outside the loop correct?
     node.errors?
-    NodeRepository.repository.save(node, refresh: true)
+    Noodle::NodeRepository.repository.save(node, refresh: true)
   end
 
   # TODO: Catch errors
-  def delete_everything
-    index_name = Noodle::Node.gateway.index
-    Noodle::Node.gateway.delete_index!
-    Noodle::Node.gateway.index = index_name
-    Noodle::Node.gateway.create_index!
+  def self.delete_everything
+    Noodle::NodeRepository.repository.delete_index!
+    Noodle::NodeRepository.repository.create_index!
     # TODO: This seems to work around the 503-causing race condition
     sleep 5
-    Noodle::Node.gateway.refresh_index!
+    Noodle::NodeRepository.repository.refresh_index!
   end
 
   def self.delete_one(name)
     return false unless node =
                         Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(name).go({:justone => true})
-    Noodle::NodeRepository.repository.destroy(node)
+    Noodle::NodeRepository.repository.delete(node, refresh: true)
     return true
   end
 
@@ -459,7 +456,12 @@ class Noodle::Controller
     r
   end
 
-  def maybe2array(ilk,name,value)
+  def self.all_names
+    body = Noodle::NodeRepository.repository.all.results.collect{|hit| hit.name}.sort.join("\n")
+    [body, 200]
+  end
+
+  def self.maybe2array(ilk,name,value)
     return [value.split(',')].flatten if Noodle::Option.limit(ilk,name) == 'array'
     return value
   end
@@ -473,7 +475,7 @@ class Noodle::Controller
   #   'financials' => 'project'
   # }
   # Convoluted?  Maybe but makes magic easier
-  def get_bareword_hash
+  def self.get_bareword_hash
     h = {}
     Noodle::Option.option('default','bareword_terms').each do |term|
       Noodle::Search.new(Noodle::NodeRepository.repository).paramvalues(term).each do |value|
@@ -496,7 +498,7 @@ class Noodle::Controller
   # OR
   #
   # TODO: noodlin param gecos={JSON}
-  def hash_it(name,value,hash=Hash.new)
+  def self.hash_it(name,value,hash=Hash.new)
     unless name.match('[.]')
       # Inside hashes, make , in the value mean "split on , and turn this string into an array"
       # TODO: Make this a setting?
