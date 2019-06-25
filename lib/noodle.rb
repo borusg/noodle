@@ -66,14 +66,14 @@ class Noodle < Sinatra::Base
 
   get '/nodes' do
     # TODO: Support JSON output too
-    b,s = Noodle::Node.all_names
+    b,s = Noodle::Controller.all_names
     body   b
     status s
   end
 
   delete '/nodes' do
     # TODO: perhaps this should require confirmation
-    Noodle::Node.delete_everything
+    Noodle::Controller.delete_everything
     body ''
     status 200
   end
@@ -134,8 +134,14 @@ class Noodle < Sinatra::Base
     call! env.merge("REQUEST_METHOD" => 'PUT')
   end
 
+  # TODO: This is flawed since we now allow the same name to exist
+  # twice in different ilks.  Either this should require ilk (and any
+  # other uniqueness params) or it should return all matches for name
+  # and let the caller sort it out
+  #
+  # TODO: This same problem applies to various searched above too.
   get '/nodes/:name' do
-    nodes = Noodle::Node.search(query: { match: { name: params[:name] } })
+    nodes = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go
     body nodes.first.to_json + "\n" unless nodes.empty?
     status 200
   end
@@ -159,7 +165,7 @@ class Noodle < Sinatra::Base
   #
   # "Magic" search
   get '/nodes/_/:search' do
-    b,s = Noodle::Node.magic(params[:search])
+    b,s = Noodle::Controller.magic(params[:search])
     body   b
     status s
   end
@@ -169,7 +175,7 @@ class Noodle < Sinatra::Base
     # TODO: This can't be the way to do this!
     query = String.new(params.keys.first)
     query << "=#{params.values.first}" unless params.values.first.nil?
-    b,s = Noodle::Node.magic(query)
+    b,s = Noodle::Controller.magic(query)
     body   b
     status s
   end
@@ -179,7 +185,7 @@ class Noodle < Sinatra::Base
     # TODO: This can't be the way to do this!
     changes = String.new(params.keys.first)
     changes << "=#{params.values.first}" unless params.values.first.nil?
-    b,s = Noodle::Node.noodlin(changes)
+    b,s = Noodle::Controller.noodlin(changes)
     body   b
     status s
   end
