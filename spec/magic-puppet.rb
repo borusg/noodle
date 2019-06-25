@@ -5,7 +5,7 @@ describe 'Noodle' do
   it "should allow finding by hostname or FQDN and give Puppet ENC YAML output" do
     put '/nodes/ioio.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter", "funky":"town","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 201
-    Noodle::Node.gateway.refresh_index!
+    Noodle::NodeRepository.repository.refresh_index!
 
     get "/nodes/_/ioio.example.com"
     assert_equal last_response.status, 200
@@ -17,6 +17,8 @@ parameters:
   status: enabled
   site: jupiter
   funky: town
+  project: hr
+  prodlevel: dev
 '
   end
 end
