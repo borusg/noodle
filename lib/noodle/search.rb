@@ -32,12 +32,12 @@ class Noodle::Search
   end
 
   def match_names(names)
-    [names].flatten.map{|name| @node_names << "(name.keyword:#{name} OR name.keyword:#{name}.*)"}
+    [names].flatten.map{|name| @node_names << "(name:#{name} OR name:#{name}.*)"}
     self
   end
 
   def match_names_exact(names)
-    [names].flatten.map{|name| @node_names << "(name.keyword:#{name})"}
+    [names].flatten.map{|name| @node_names << "(name:#{name})"}
     self
   end
 
@@ -79,14 +79,13 @@ class Noodle::Search
     query[:query][:query_string][:minimum_should_match] = options[:minimum] if options[:minimum]
 
     # TODO: Add debug that shows query
-    # puts query
+    # puts "The query is:\n#{query}\n"
 
     # Execute search, return results
     results = @repository.search(query)
 
     # TODO: Add debug that shows results
     # puts results
-
     return results.first if options[:justone]
     return results
   end
