@@ -5,10 +5,49 @@ class Noodle::NodeRepository
   index_name 'noodle'
   klass Noodle::Node
 
-  mapping do
-      indexes :name
-      indexes :params, { type: 'object', dynamic: true }
-      indexes :facts,  { type: 'object', dynamic: true }
+  # https://github.com/elastic/elasticsearch-rails/tree/master/elasticsearch-persistence#the-dsl-mixin
+  #
+  # https://rubydoc.info/gems/elasticsearch-model/Elasticsearch/Model/Indexing/ClassMethods
+  #
+  # https://github.com/elastic/elasticsearch-rails/tree/master/elasticsearch-model#index-configuration
+  #
+  # https://iridakos.com/tutorials/2017/12/03/elasticsearch-and-rails-tutorial.html
+
+  # Name the analyzer "default" and it's, well, the default!
+  # Viddy: https://www.elastic.co/guide/en/elasticsearch/reference/current/analyzer.html
+  noodle_settings = {
+      analysis: {
+          analyzer: {
+              default: {
+                  tokenizer: 'my_pattern_tokenizer'
+              }
+          },
+          tokenizer: {
+              my_pattern_tokenizer: {
+                  type: 'pattern'
+              }
+          }
+      }
+  }
+  noodle_mapping = {
+      properties: {
+          name: {
+              type: 'text',
+              fields: {
+                  raw: {
+                      type: 'keyword'
+                  }
+              }
+          }
+      }
+  }
+
+  settings noodle_settings do
+      mapping noodle_mapping do
+        indexes :name
+        indexes :facts,  { type: 'object' }
+        indexes :params, { type: 'object' }
+      end
   end
 
   def deserialize(document)
