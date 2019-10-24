@@ -37,7 +37,7 @@ class Noodle::Search
   end
 
   def match_names_exact(names)
-    [names].flatten.map{|name| @node_names << "(name:#{name})"}
+    [names].flatten.map{|name| @node_names << "(name:\"#{name}\")"}
     self
   end
 
