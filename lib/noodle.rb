@@ -49,7 +49,7 @@ class Noodle < Sinatra::Base
   repository = Noodle::NodeRepository.new(client: client, index_name: index)
   repository.settings index_settings
   # Create the index if it doesn't already exist
-  repository.create_index! force: true
+  repository.create_index! # TODO: Why did this have "force: true"?!
   repository.client.cluster.health wait_for_status: 'yellow'
 
   # TODO:
