@@ -388,7 +388,11 @@ class Noodle::Controller
             method = op == '+=' ? :push : :delete
             found.each do |node|
               if node.send(which)[name].kind_of?(Array)
-                node.send(which)[name].send(method,value)
+                # Handle the case where they want to add multiple new elements to the array
+                # as in: noodlin param role+=app,db,web
+                value.split(',').each do |one_value|
+                  node.send(which)[name].send(method,one_value)
+                end
                 Noodle::NodeRepository.repository.save(node, refresh: true)
                 body << node.errors?(silent_if_none: true)
               else
