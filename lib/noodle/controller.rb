@@ -288,6 +288,12 @@ class Noodle::Controller
 
     # TODO prettier?
     command,rest = changes.split(/\s+/,2)
+    # TODO: TEMPORARY HACK: This is ugly and will only refresh options on a single node in the cluster!
+    if command == 'optionrefresh'
+      Noodle::Option.refresh
+      return ['Your options had a nap and they are nicely refreshed.',200]
+    end
+
     rest = rest.split(/\s+/)
 
     p = Optimist::Parser.new do
@@ -482,13 +488,12 @@ class Noodle::Controller
   # }
   # Convoluted?  Maybe but makes magic easier
   def self.get_bareword_hash
-    h = {}
-    Noodle::Option.option('default','bareword_terms').each do |term|
-      Noodle::Search.new(Noodle::NodeRepository.repository).paramvalues(term).each do |value|
-        h[value] = term
-      end
-    end
-    h
+    # TODO: Clearly this def should go away but baby steps for testing!
+    # TODO: Woe! For voodoo to be effective, this is needed effectively all the time!
+    #       I suppose it is best done by refreshing a cache on a timer
+    #       instead of for every single Noodle query.
+    Noodle::Option.refresh
+    Noodle::Option.class_variable_get(:@@bareword_hash)
   end
 
   # hash_it: Recursively turn key=value into a hash. Each . in key

@@ -29,6 +29,8 @@ class Noodle < Sinatra::Base
   index = nil
   index_settings = nil
 
+  # Only force create Elasticsearch index when running tests
+  maybe_force_create_index = false
   configure :test do
     index = 'this-is-for-running-noodle-elasticsearch-tests-only-nodes'
     index_settings = {
@@ -36,6 +38,7 @@ class Noodle < Sinatra::Base
       number_of_replicas: 0,
       index: {mapping: {total_fields: {limit: "20000"}}},
     }
+    maybe_force_create_index = true
   end
   configure :production do
     index = 'noodle-nodes'
@@ -49,7 +52,7 @@ class Noodle < Sinatra::Base
   repository = Noodle::NodeRepository.new(client: client, index_name: index)
   repository.settings index_settings
   # Create the index if it doesn't already exist
-  repository.create_index! # TODO: Why did this have "force: true"?!
+  repository.create_index! force: maybe_force_create_index
   repository.client.cluster.health wait_for_status: 'yellow'
 
   # TODO:
@@ -58,6 +61,8 @@ class Noodle < Sinatra::Base
   # But I'm cheating for now because passing repository into Node::Controller and such is unweildy
   Noodle::NodeRepository.set_repository(repository)
   # Or maybe *this* is the right way: https://github.com/elastic/rails-app-music/blob/migrate-to-repository-pattern-ref-commits/config/initializers/elasticsearch.rb
+
+  Noodle::Option.refresh
 
   get '/help' do
     body "Noodle helps!\n"
