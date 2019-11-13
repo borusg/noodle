@@ -42,7 +42,7 @@ class Noodle::Controller
     thing2unique    = nil
 
     # NOTE: Order below should be preserved in case statement
-    bareword_hash               = get_bareword_hash
+    # TODO TEMP SPEED TEST: Disable voodoo: bareword_hash               = get_bareword_hash
     term_present                = Regexp.new '\?$'
     term_present_and_show_value = Regexp.new '\?=$'
     term_does_not_equal         = Regexp.new '^[-@][^=]+=.+'
@@ -53,11 +53,11 @@ class Noodle::Controller
 
     query.split(/\s+/).each do |part|
       case part
-      when *bareword_hash.keys
-        list  = true
-        value = part
-        term  = bareword_hash[value]
-        search.equals(term,value)
+      # TODO TEMP SPEED TEST: Disable voodoo: when *bareword_hash.keys
+      # TODO TEMP SPEED TEST: Disable voodoo:   list  = true
+      # TODO TEMP SPEED TEST: Disable voodoo:   value = part
+      # TODO TEMP SPEED TEST: Disable voodoo:   term  = bareword_hash[value]
+      # TODO TEMP SPEED TEST: Disable voodoo:   search.equals(term,value)
 
       when term_present
         list = true
@@ -294,6 +294,7 @@ class Noodle::Controller
       return ['Your options had a nap and they are nicely refreshed.',200]
     end
 
+    # TODO: Handle the case where rest is nil (how is it I haven't encountered that before?!)
     rest = rest.split(/\s+/)
 
     p = Optimist::Parser.new do
