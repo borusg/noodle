@@ -426,8 +426,11 @@ class Noodle::Controller
       node.send("#{key}=", node.send(key).deep_merge(value))
     end
     # TODO: is this order and being outside the loop correct?
-    node.errors?
-    Noodle::NodeRepository.repository.save(node, refresh: true)
+    r = node.errors?
+    if r.class == Noodle::Node
+      Noodle::NodeRepository.repository.save(node, refresh: true)
+    end
+    r
   end
 
   # TODO: Catch errors
@@ -455,6 +458,7 @@ class Noodle::Controller
       node.facts[:fqdn] = node.name
     end
 
+    # TODO: This is both ugly and repeated :(
     r = node.errors?
     if r.class == Noodle::Node
       Noodle::NodeRepository.repository.save(node, refresh: true)
