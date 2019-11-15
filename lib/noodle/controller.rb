@@ -348,7 +348,7 @@ class Noodle::Controller
         args['facts']  = facts
         args['params'] = params
         node = create_one(args)
-        if defined?(node.keys) and node.keys.member?(:errors)
+        if node.class != Noodle::Node
           body = node[:errors]
           status = 444
         end
