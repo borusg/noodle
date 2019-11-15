@@ -128,9 +128,14 @@ class Noodle < Sinatra::Base
       halt 500
     end
 
-    Noodle::Controller.update(node,options)
-    body node.to_json
-    status 200
+    node = Noodle::Controller.update(node,options)
+    if node.class == Noodle::Node
+      body node.to_json + "\n"
+      status 200
+    else
+      body node[:errors]
+      status 400
+    end
   end
 
   post '/nodes/:name' do

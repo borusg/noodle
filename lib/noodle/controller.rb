@@ -355,7 +355,7 @@ class Noodle::Controller
         args['facts']  = facts
         args['params'] = params
         node = create_one(args)
-        if defined?(node.keys) and node.keys.member?(:errors)
+        if node.class != Noodle::Node
           body = node[:errors]
           status = 444
         end
@@ -388,8 +388,13 @@ class Noodle::Controller
               else
                 node.send(which)[name] = value
               end
-              Noodle::NodeRepository.repository.save(node, refresh: true)
-              body << node.errors?(silent_if_none: true).to_s
+
+              r = node.errors?
+              if r.class == Noodle::Node
+                Noodle::NodeRepository.repository.save(node, refresh: true)
+              else
+                body << node.errors?(silent_if_none: true).to_s
+              end
             end
           when '+=','-='
             method = op == '+=' ? :push : :delete
@@ -400,8 +405,12 @@ class Noodle::Controller
                 value.split(',').each do |one_value|
                   node.send(which)[name].send(method,one_value)
                 end
-                Noodle::NodeRepository.repository.save(node, refresh: true)
-                body << node.errors?(silent_if_none: true)
+                r = node.errors?
+                if r.class == Noodle::Node
+                  Noodle::NodeRepository.repository.save(node, refresh: true)
+                else
+                  body << node.errors?(silent_if_none: true).to_s
+                end
               else
                 body << "#{name} is not an array for #{node.name}"
               end
@@ -414,8 +423,12 @@ class Noodle::Controller
     when *allowed_statuses
       found.each do |node|
         node.params['status'] = command
-        Noodle::NodeRepository.repository.save(node, refresh: true)
-        body << node.errors?(silent_if_none: true).to_s
+        r = node.errors?
+        if r.class == Noodle::Node
+          Noodle::NodeRepository.repository.save(node, refresh: true)
+        else
+          body << node.errors?(silent_if_none: true).to_s
+        end
       end
     when 'remove'
       found.map{|node| Noodle::NodeRepository.repository.delete(node, refresh: true)}
@@ -433,8 +446,11 @@ class Noodle::Controller
       node.send("#{key}=", node.send(key).deep_merge(value))
     end
     # TODO: is this order and being outside the loop correct?
-    node.errors?
-    Noodle::NodeRepository.repository.save(node, refresh: true)
+    r = node.errors?
+    if r.class == Noodle::Node
+      Noodle::NodeRepository.repository.save(node, refresh: true)
+    end
+    r
   end
 
   # TODO: Catch errors
@@ -462,6 +478,7 @@ class Noodle::Controller
       node.facts[:fqdn] = node.name
     end
 
+    # TODO: This is both ugly and repeated :(
     r = node.errors?
     if r.class == Noodle::Node
       Noodle::NodeRepository.repository.save(node, refresh: true)
