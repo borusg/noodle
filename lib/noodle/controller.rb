@@ -381,8 +381,13 @@ class Noodle::Controller
               else
                 node.send(which)[name] = value
               end
-              Noodle::NodeRepository.repository.save(node, refresh: true)
-              body << node.errors?(silent_if_none: true).to_s
+
+              r = node.errors?
+              if r.class == Noodle::Node
+                Noodle::NodeRepository.repository.save(node, refresh: true)
+              else
+                body << node.errors?(silent_if_none: true).to_s
+              end
             end
           when '+=','-='
             method = op == '+=' ? :push : :delete
@@ -393,8 +398,12 @@ class Noodle::Controller
                 value.split(',').each do |one_value|
                   node.send(which)[name].send(method,one_value)
                 end
-                Noodle::NodeRepository.repository.save(node, refresh: true)
-                body << node.errors?(silent_if_none: true)
+                r = node.errors?
+                if r.class == Noodle::Node
+                  Noodle::NodeRepository.repository.save(node, refresh: true)
+                else
+                  body << node.errors?(silent_if_none: true).to_s
+                end
               else
                 body << "#{name} is not an array for #{node.name}"
               end
@@ -407,8 +416,12 @@ class Noodle::Controller
     when *allowed_statuses
       found.each do |node|
         node.params['status'] = command
-        Noodle::NodeRepository.repository.save(node, refresh: true)
-        body << node.errors?(silent_if_none: true).to_s
+        r = node.errors?
+        if r.class == Noodle::Node
+          Noodle::NodeRepository.repository.save(node, refresh: true)
+        else
+          body << node.errors?(silent_if_none: true).to_s
+        end
       end
     when 'remove'
       found.map{|node| Noodle::NodeRepository.repository.delete(node, refresh: true)}
