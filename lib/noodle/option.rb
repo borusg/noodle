@@ -53,18 +53,21 @@ class Noodle::Option
     # node.rb.
 
     # Start out the default options with built-in options:
-    @@options['default']['params'] = Hashie::Mash.new(@@builtin_options) # TODO: Does this need DeepDup::deep_dup? Probably not because Hashie?
+    @@options['default'] = Hashie::Mash.new(@@builtin_options) # TODO: Does this need DeepDup::deep_dup? Probably not because Hashie?
 
     # Find all ilk=option and loop
     Noodle::Search.new(Noodle::NodeRepository.repository).equals('ilk','option').go.results.each do |option_hash|
+      # NOTE: This is the only time we should reference .params! This is because the options are all Noodle *params* of the ilk=option entry
+      options = option_hash.params
+
       # Skip if target_ilk is nil
-      next if option_hash.params['target_ilk'].nil?
+      next if options['target_ilk'].nil?
 
       # If the target ilk is default, merge with the default options:
-      if option_hash.params['target_ilk'] = 'default'
-        @@options['default'].merge!(Hashie::Mash.new(option_hash.params))
+      if options['target_ilk'] = 'default'
+        @@options['default'].merge!(Hashie::Mash.new(options))
       else
-        @@options[option_hash['target_ilk']] = option_hash.params
+        @@options[option_hash['target_ilk']] = options
       end
     end
     #
@@ -95,15 +98,15 @@ class Noodle::Option
     target_ilk = 'default' if target_ilk.nil? or target_ilk.empty?
 
     # We're done if target_ilk is 'default'
-    return @@options['default']['params'] if target_ilk == 'default'
+    return @@options['default'] if target_ilk == 'default'
 
     # Also return default options if options for target_ilk don't exist:
-    return @@options['default']['params'] if @@options['target_ilk'].nil?
+    return @@options['default'] if @@options['target_ilk'].nil?
 
     # Otherwise, start with default options and then let target_ilk options override by merging:
     default_options = Hashie::Mash.new(@@options['default'])
     target_options = Hashie::Mash.new(@@options['target'])
-    return default_options.merge(target_options).params
+    return default_options.merge(target_options)
   end
 
   def self.option(ilk,option)
