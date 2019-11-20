@@ -8,7 +8,7 @@ describe 'Noodle' do
 
     delete '/nodes/soso.example.com'
     assert_equal last_response.status,200
-    assert last_response.body.must_include 'Deleted soso.example.com'
+    assert _(last_response.body).must_include 'Deleted soso.example.com'
   end
 end
 

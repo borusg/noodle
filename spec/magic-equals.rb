@@ -8,7 +8,7 @@ describe 'Noodle' do
 
     get '/nodes/_/site=jupiter'
     assert_equal last_response.status, 200
-    assert last_response.body.must_include 'roro.example.com'
+    assert _(last_response.body).must_include 'roro.example.com'
   end
 end
 

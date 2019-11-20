@@ -8,7 +8,7 @@ describe 'Noodle' do
 
     post '/nodes/zozo.example.com', '{"params":{"ilk":"yabba","status":"foo","site":"moon","project":"hr","prodlevel":"dev"}}'
     assert_equal last_response.status, 422, 'Second create'
-    assert last_response.body.must_include 'zozo.example.com already exists'
+    assert _(last_response.body).must_include 'zozo.example.com already exists'
   end
 end
 

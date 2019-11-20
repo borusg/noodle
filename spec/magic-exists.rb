@@ -9,7 +9,7 @@ describe 'Noodle' do
 
     get "/nodes/_/funky#{CGI.escape('?')}"
     assert_equal last_response.status, 200
-    assert last_response.body.must_include 'yoyo.example.com'
+    assert _(last_response.body).must_include 'yoyo.example.com'
   end
 end
 

@@ -9,7 +9,7 @@ describe 'Noodle' do
 
     get "/nodes/_/ioio.example.com"
     assert_equal last_response.status, 200
-    assert last_response.body.must_include '---
+    assert _(last_response.body).must_include '---
 classes:
 - baseclass
 parameters:
