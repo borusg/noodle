@@ -4,7 +4,7 @@
 
 - Remember to install and start
   [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)
-- `git clone https://github.com/happymcplaksin/noodle.git`
+- `git clone https://github.com/borusg/noodle.git`
 - `cd noodle`
 - `bundle install --path vendor/bundle`
 - Or perhaps `bundle exec rake test 2>&1 | grep -v

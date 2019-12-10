@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/happymcplaksin/noodle.svg?branch=master)](https://travis-ci.org/happymcplaksin/noodle) [![Coverage Status](https://coveralls.io/repos/github/happymcplaksin/noodle/badge.svg?branch=master)](https://coveralls.io/github/happymcplaksin/noodle?branch=master)
+[![Build Status](https://travis-ci.org/borusg/noodle.svg?branch=master)](https://travis-ci.org/borusg/noodle) [![Coverage Status](https://coveralls.io/repos/github/borusg/noodle/badge.svg?branch=master)](https://coveralls.io/github/borusg/noodle?branch=master)
 
 # noodle
 Clean-room implementation of the [Puppet External Node Classifier](http://docs.puppetlabs.com/guides/external_nodes.html)
@@ -30,7 +30,7 @@ This module includes a [basic Hiera 5 backend](https://github.com/happymcplaksin
 ## Installing and running by hand.
 
 * Remember to install and start [Elasticsearch](http://www.elasticsearch.org/overview/elkdownloads/)
-* `git clone https://github.com/happymcplaksin/noodle.git`
+* `git clone https://github.com/borusg/noodle.git`
 * `cd noodle`
 * `bundle install --path vendor/bundle`
 * Or perhaps `bundle exec rake test 2>&1 | grep -v '(elasticsearch-persistence|virtus).*: warning:'` because some of the Gems cause warnings (as of 9/2017)
@@ -55,7 +55,7 @@ util/install-kibana-boardboard
 Visit http://localhost:5601/app/kibana#/dashboard and view the "Noodle
 Pie" dashboard. Here's a sample after creating some random nodes:
 
-![Sample Noodle dashboard in Kibana](https://raw.githubusercontent.com/happymcplaksin/noodle/master/sample-noodle-dashboard-in-kibana.png)
+![Sample Noodle dashboard in Kibana](https://raw.githubusercontent.com/borusg/noodle/master/sample-noodle-dashboard-in-kibana.png)
 
 ### See what you got via the command-line:
 ```bin/noodle fqdn=```
@@ -67,7 +67,7 @@ Pie" dashboard. Here's a sample after creating some random nodes:
 ```bin/noodle site=mars```
 
 ## Pre version 0.5 info is below
-Perhaps the [travis-ci.org steps](https://travis-ci.org/happymcplaksin/noodle) are helpful and/or a decent alternative :)
+Perhaps the [travis-ci.org steps](https://travis-ci.org/borusg/noodle) are helpful and/or a decent alternative :)
 
 ## Examples
 ```bash
