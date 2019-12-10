@@ -17,3 +17,4 @@ services:
 notifications:
   email:
     - happy@mcplaksin.org
+    - sss-monty@usg.edu
