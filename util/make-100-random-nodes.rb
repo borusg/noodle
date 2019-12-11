@@ -13,7 +13,7 @@ ilk       = %w{host esx ucschassis ucsfi}
 
 facts = JSON.load(File.read("#{__dir__}/facts.json"))
 
-1000.times do
+100.times do
     fqdn = SecureRandom.uuid.gsub('-','') + '.example.com'
     node = NoodleClient.new(fqdn)
     node.facts = facts
