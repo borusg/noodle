@@ -11,7 +11,7 @@ GEM
       zeitwerk (~> 2.2)
     ansi (1.5.0)
     backports (3.15.0)
-    builder (3.2.3)
+    builder (3.2.4)
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
     coveralls (0.8.23)
@@ -44,7 +44,7 @@ GEM
       faraday
       multi_json
     eventmachine (1.2.7)
-    faraday (0.17.0)
+    faraday (0.17.1)
       multipart-post (>= 1.2, < 3)
     hashie (4.0.0)
     http-accept (1.7.0)
@@ -52,7 +52,7 @@ GEM
       domain_name (~> 0.5)
     i18n (1.7.0)
       concurrent-ruby (~> 1.0)
-    json (2.2.0)
+    json (2.3.0)
     method_source (0.9.2)
     mime-types (3.3)
       mime-types-data (~> 3.2015)
@@ -67,7 +67,7 @@ GEM
     multipart-post (2.1.1)
     mustermann (1.0.3)
     netrc (0.11.0)
-    oj (3.9.2)
+    oj (3.10.0)
     optimist (3.0.0)
     pry (0.12.2)
       coderay (~> 1.1.0)
@@ -131,7 +131,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.6)
-    zeitwerk (2.2.1)
+    zeitwerk (2.2.2)
 
 PLATFORMS
   ruby
