@@ -65,11 +65,13 @@ class Noodle < Sinatra::Base
   Noodle::Option.refresh
 
   get '/help' do
+    maybe_refresh(params)
     body "Noodle helps!\n"
     status 200
   end
 
   get '/nodes' do
+    maybe_refresh(params)
     # TODO: Support JSON output too
     b,s = Noodle::Controller.all_names
     body   b
@@ -84,6 +86,7 @@ class Noodle < Sinatra::Base
   end
 
   put '/nodes/:name' do
+    maybe_refresh(params)
     # TODO: Refuse to stomp an existing node?
 
     # Delete it if it exists
@@ -117,6 +120,7 @@ class Noodle < Sinatra::Base
   end
 
   patch '/nodes/:name' do
+    maybe_refresh(params)
     halt(422, "#{params[:name]} does not exist.\n") unless
       node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go({:justone => true})
 
@@ -139,6 +143,7 @@ class Noodle < Sinatra::Base
   end
 
   post '/nodes/:name' do
+    maybe_refresh(params)
     halt(422, "#{params[:name]} already exists.\n") if
       Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go({:justone => true})
     call! env.merge("REQUEST_METHOD" => 'PUT')
@@ -151,6 +156,7 @@ class Noodle < Sinatra::Base
   #
   # TODO: This same problem applies to various searched above too.
   get '/nodes/:name' do
+    maybe_refresh(params)
     nodes = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go
     body nodes.first.to_json + "\n" unless nodes.empty?
     status 200
@@ -166,6 +172,7 @@ class Noodle < Sinatra::Base
   end
 
   options '/nodes/:name' do
+    maybe_refresh(params)
     # TODO: Generate this list
     headers 'Allow' => 'DELETE, GET, OPTIONS, PATCH, POST, PUT'
     status 200
@@ -175,6 +182,7 @@ class Noodle < Sinatra::Base
   #
   # "Magic" search
   get '/nodes/_/:search' do
+    maybe_refresh(params)
     b,s = Noodle::Controller.magic(params[:search])
     body   b
     status s
@@ -182,6 +190,7 @@ class Noodle < Sinatra::Base
 
   # "Magic" search via query (so I can use 'curl -G --data-urlencode' :)
   get '/nodes/_/' do
+    maybe_refresh(params)
     # TODO: This can't be the way to do this!
     query = String.new(params.keys.first)
     query << "=#{params.values.first}" unless params.values.first.nil?
@@ -192,11 +201,18 @@ class Noodle < Sinatra::Base
 
   # Noodlin via query (so I can use 'curl -G --data-urlencode' :)
   get '/nodes/noodlin/' do
+    maybe_refresh(params)
     # TODO: This can't be the way to do this!
     changes = String.new(params.keys.first)
     changes << "=#{params.values.first}" unless params.values.first.nil?
     b,s = Noodle::Controller.noodlin(changes)
     body   b
     status s
+  end
+
+  helpers do
+    def maybe_refresh(params)
+      Noodle::Option.refresh if params.key?('refresh')
+    end
   end
 end
