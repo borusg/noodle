@@ -11,7 +11,10 @@ describe 'Noodle' do
     hostname_warehouse = HappyHelper::randomhostname
     noodlin = "create -s mars -i host -p warehouse -P prod -a voodoo=yes #{hostname_warehouse}"
     assert_output("\n"){puts %x{bin/noodlin #{noodlin}}}
-    
+
+    # refresh bareword_hash (and options but bareword_hash is what matters for voodoo)
+    get "/nodes/_/voodoo=yes?refresh"
+
     # Make sure noodle hr only returns the first one
     noodle = "hr voodoo=yes"
     assert_output("#{hostname_hr}\n"){puts %x{bin/noodle #{noodle}}}
