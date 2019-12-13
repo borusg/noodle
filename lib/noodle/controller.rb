@@ -42,7 +42,7 @@ class Noodle::Controller
     thing2unique    = nil
 
     # NOTE: Order below should be preserved in case statement
-    # TODO TEMP SPEED TEST: Disable voodoo: bareword_hash               = get_bareword_hash
+    bareword_hash               = Noodle::Option.class_variable_get(:@@bareword_hash)
     term_present                = Regexp.new '\?$'
     term_present_and_show_value = Regexp.new '\?=$'
     term_does_not_equal         = Regexp.new '^[-@][^=]+=.+'
@@ -53,11 +53,11 @@ class Noodle::Controller
 
     query.split(/\s+/).each do |part|
       case part
-      # TODO TEMP SPEED TEST: Disable voodoo: when *bareword_hash.keys
-      # TODO TEMP SPEED TEST: Disable voodoo:   list  = true
-      # TODO TEMP SPEED TEST: Disable voodoo:   value = part
-      # TODO TEMP SPEED TEST: Disable voodoo:   term  = bareword_hash[value]
-      # TODO TEMP SPEED TEST: Disable voodoo:   search.equals(term,value)
+      when *bareword_hash.keys
+        list  = true
+        value = part
+        term  = bareword_hash[value]
+        search.equals(term,value)
 
       when term_present
         list = true
@@ -494,24 +494,6 @@ class Noodle::Controller
   def self.maybe2array(ilk,name,value)
     return [value.split(',')].flatten if Noodle::Option.limit(ilk,name) == 'array'
     return value
-  end
-
-  # Return a hash of barewordvalue => paramname for use in magic
-  # For example:
-  # {
-  #   'mars'       => 'site'
-  #   'jupiter     => 'site'
-  #   'hr'         => 'project'
-  #   'financials' => 'project'
-  # }
-  # Convoluted?  Maybe but makes magic easier
-  def self.get_bareword_hash
-    # TODO: Clearly this def should go away but baby steps for testing!
-    # TODO: Woe! For voodoo to be effective, this is needed effectively all the time!
-    #       I suppose it is best done by refreshing a cache on a timer
-    #       instead of for every single Noodle query.
-    Noodle::Option.refresh
-    Noodle::Option.class_variable_get(:@@bareword_hash)
   end
 
   # hash_it: Recursively turn key=value into a hash. Each . in key
