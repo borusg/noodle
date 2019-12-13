@@ -39,4 +39,5 @@ end
 # So, um, I'll leave it out for a while.
 # 4/16/2017: Welp, today tests fail without this sleep :(
 # One day I'll track it down!
+# 12/13/2019: Still trouble with out this sleep
 sleep 1
