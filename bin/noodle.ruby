@@ -9,8 +9,9 @@
 
 require 'uri'
 require 'net/http'
+require 'optimist'
 
-ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].empty?
+ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].nil?
 
 query = URI.encode(ARGV.join(' '))
 uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/#{query}")
