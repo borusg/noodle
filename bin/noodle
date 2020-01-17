@@ -1,25 +1,28 @@
-#!/bin/bash
+#!/usr/bin/ruby
 
-[[ -z $NOODLE_SERVER ]] && NOODLE_SERVER=localhost:9292
-URL="http://${NOODLE_SERVER}/nodes"
+# 'noodle' script for systems with Curl < 7.18.0 when
+# --data-urlencode was added.  Or maybe you just prefer
+# Ruby to Curl?
+#
+# Unlike everything else, this is supposed to work with Ruby
+# 1.8.5 and higher so it works on RHEL5
 
-query="$*"
+require 'uri'
+require 'net/http'
+require 'optimist'
 
-if [[ $(basename $0) == 'noodlin' ]]
-then
-    URL="${URL}/noodlin/"
-else
-    URL="${URL}/_/"
-fi
+ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].nil?
 
-DEBUG='--trace-ascii /dev/stdout'
-DEBUG=
+opts = Optimist::options do
+    opt :refresh, 'Refresh Noodle options and bareword terms (AKA voodoo)'
+    opt :debug, 'Display debug info'
+end
 
-curl $DEBUG -s -X GET $URL --data-urlencode "=$query"
-status=$?
+maybe_refresh = opts[:refresh] ? '?refresh' : ''
 
-if [[ $status != 0 ]]
-then
-    echo "Oops!  Bad status: $status"
-fi
+noodle_query = URI.encode(ARGV.join(' '))
+uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/#{noodle_query}#{maybe_refresh}")
+
+puts "URI is #{uri}" if opts[:debug]
+puts Net::HTTP.get(uri)
 
