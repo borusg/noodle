@@ -42,7 +42,7 @@ class Noodle::Controller
     thing2unique    = nil
 
     # NOTE: Order below should be preserved in case statement
-    bareword_hash               = get_bareword_hash
+    bareword_hash               = Noodle::Option.class_variable_get(:@@bareword_hash)
     term_present                = Regexp.new '\?$'
     term_present_and_show_value = Regexp.new '\?=$'
     term_does_not_equal         = Regexp.new '^[-@][^=]+=.+'
@@ -288,6 +288,13 @@ class Noodle::Controller
 
     # TODO prettier?
     command,rest = changes.split(/\s+/,2)
+    # TODO: TEMPORARY HACK: This is ugly and will only refresh options on a single node in the cluster!
+    if command == 'optionrefresh'
+      Noodle::Option.refresh
+      return ['Your options had a nap and they are nicely refreshed.',200]
+    end
+
+    # TODO: Handle the case where rest is nil (how is it I haven't encountered that before?!)
     rest = rest.split(/\s+/)
 
     p = Optimist::Parser.new do
@@ -487,25 +494,6 @@ class Noodle::Controller
   def self.maybe2array(ilk,name,value)
     return [value.split(',')].flatten if Noodle::Option.limit(ilk,name) == 'array'
     return value
-  end
-
-  # Return a hash of barewordvalue => paramname for use in magic
-  # For example:
-  # {
-  #   'mars'       => 'site'
-  #   'jupiter     => 'site'
-  #   'hr'         => 'project'
-  #   'financials' => 'project'
-  # }
-  # Convoluted?  Maybe but makes magic easier
-  def self.get_bareword_hash
-    h = {}
-    Noodle::Option.option('default','bareword_terms').each do |term|
-      Noodle::Search.new(Noodle::NodeRepository.repository).paramvalues(term).each do |value|
-        h[value] = term
-      end
-    end
-    h
   end
 
   # hash_it: Recursively turn key=value into a hash. Each . in key

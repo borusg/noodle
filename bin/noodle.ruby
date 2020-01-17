@@ -9,11 +9,20 @@
 
 require 'uri'
 require 'net/http'
+require 'optimist'
 
-ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].empty?
+ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].nil?
 
-query = URI.encode(ARGV.join(' '))
-uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/#{query}")
+opts = Optimist::options do
+    opt :refresh, 'Refresh Noodle options and bareword terms (AKA voodoo)'
+    opt :debug, 'Display debug info'
+end
 
+maybe_refresh = opts[:refresh] ? '?refresh' : ''
+
+noodle_query = URI.encode(ARGV.join(' '))
+uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/#{noodle_query}#{maybe_refresh}")
+
+puts "URI is #{uri}" if opts[:debug]
 puts Net::HTTP.get(uri)
 

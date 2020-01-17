@@ -82,7 +82,7 @@ class Noodle::Node
     # Check per-param liits
     Noodle::Option.option(record.params['ilk'],'limits').each do |param,limit|
       case limit.class.to_s
-      when 'Array'
+      when 'Hashie::Array'
         record.errors.add attr, "#{param} is not one of these: #{limit.join(',')}.  It is #{value[param]}." unless
           limit.include?(value[param])
       when 'String'
