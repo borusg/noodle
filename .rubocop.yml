@@ -6,7 +6,7 @@
 # rubocop:disable Metrics/LineLength, Style/StringLiterals
 # [...]
 # rubocop:enable Metrics/LineLength, Style/StringLiterals
-Metrics/LineLength:
+Layout/LineLength:
   Enabled: true
 
 # Too short methods lead to extraction of single-use methods, which
@@ -34,7 +34,7 @@ Style/SymbolArray:
   Enabled: false
 
 # Most readable form.
-Layout/AlignHash:
+Layout/HashAlignment:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
 
@@ -84,7 +84,7 @@ Style/SignalException:
 # Suppressing exceptions can be perfectly fine, and be it to avoid to
 # explicitly type nil into the rescue since that's what you want to
 # return, or suppressing LoadError for optional dependencies
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Enabled: true
 
 Layout/SpaceInsideBlockBraces:
