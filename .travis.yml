@@ -5,18 +5,14 @@ before_install:
   - sudo dpkg -i --force-confnew                                      elasticsearch-7.5.2-amd64.deb
   - sudo chown elasticsearch:elasticsearch /etc/default/elasticsearch # Needed with (at least) 6.8.1 on 6/25/2019
   - sudo service elasticsearch restart
-  - gem install bundler
-  - gem list
 before_script:
   - sleep 10
   - curl localhost:9200
 language: ruby
 rvm:
   - 2.6.5
-  - 2.7.0
 install:
-  - bundle config set path 'vendor/bundle'
-  - bundle install
+  - bundle install --path vendor/bundle
 services:
   - elasticsearch
 notifications:
