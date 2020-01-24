@@ -5,9 +5,8 @@ before_install:
   - sudo dpkg -i --force-confnew                                      elasticsearch-7.5.2-amd64.deb
   - sudo chown elasticsearch:elasticsearch /etc/default/elasticsearch # Needed with (at least) 6.8.1 on 6/25/2019
   - sudo service elasticsearch restart
-  - sudo gem update --system
-  - sudo gem install bundler
-  - sudo gem list
+  - gem install bundler
+  - gem list
 before_script:
   - sleep 10
   - curl localhost:9200
