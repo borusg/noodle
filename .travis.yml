@@ -11,6 +11,7 @@ before_script:
 language: ruby
 rvm:
   - 2.6.5
+  - 2.5.7
 install:
   - bundle install --path vendor/bundle
 services:
