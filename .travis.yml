@@ -19,7 +19,7 @@ install:
   - bundle install
   - gem list
   - rvm gemdir
-  - ls $(rvm gemdir)
+  - ls $(rvm gemdir)/gems
 services:
   - elasticsearch
 notifications:
