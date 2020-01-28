@@ -20,6 +20,7 @@ install:
   - gem list
   - rvm gemdir
   - ls $(rvm gemdir)/gems
+  - ls /home/travis/build/borusg/noodle/vendor/bundle/ruby/2.5.0/gems
 services:
   - elasticsearch
 notifications:
