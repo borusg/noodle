@@ -15,7 +15,11 @@ rvm:
   - 2.6.5
   - 2.5.7
 install:
-  - bundle install --path vendor/bundle
+  - bundle config set deployment 'true'
+  - bundle install
+  - gem list
+  - rvm gemdir
+  - ls $(rvm gemdir)
 services:
   - elasticsearch
 notifications:
