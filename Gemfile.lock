@@ -46,7 +46,7 @@ GEM
     eventmachine (1.2.7)
     faraday (1.0.0)
       multipart-post (>= 1.2, < 3)
-    hashie (4.0.0)
+    hashie (4.1.0)
     http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
@@ -68,12 +68,12 @@ GEM
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     netrc (0.11.0)
-    oj (3.10.1)
+    oj (3.10.2)
     optimist (3.0.0)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
-    rack (2.1.1)
+    rack (2.1.2)
     rack-protection (2.0.8.1)
       rack
     rack-test (1.1.0)
@@ -160,4 +160,4 @@ DEPENDENCIES
   thin
 
 BUNDLED WITH
-   1.17.3
+   2.1.4

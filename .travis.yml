@@ -14,7 +14,8 @@ rvm:
   - 2.6.5
   - 2.5.7
 install:
-  - bundle install --path vendor/bundle
+  - bundle config set path 'vendor/bundle'
+  - bundle install
 services:
   - elasticsearch
 notifications:
