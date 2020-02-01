@@ -10,7 +10,9 @@ before_script:
   - curl localhost:9200
 language: ruby
 rvm:
+  - 2.7.0
   - 2.6.5
+  - 2.5.7
 install:
   - bundle install --path vendor/bundle
 services:
