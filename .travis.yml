@@ -15,8 +15,6 @@ rvm:
   - 2.6.5
   - 2.6.4
   - 2.5.7
-  - 2.4.9
-  - 2.3.8
 install:
   - bundle config set deployment 'true'
   - bundle install
