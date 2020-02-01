@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 
 # 'noodle' script for systems with Curl < 7.18.0 when
 # --data-urlencode was added.  Or maybe you just prefer
