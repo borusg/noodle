@@ -365,7 +365,13 @@ class Noodle::Controller
       if opts[:remove]
         found.each do |node|
           node.send(which).delete(opts[:remove])
-          Noodle::NodeRepository.repository.save(node, refresh: true)
+          # TODO: DRY this begin/rescue/end
+          begin
+            Noodle::NodeRepository.repository.save(node, refresh: true)
+          rescue => e
+            body << "#{e.to_s}\n"
+            status = 400
+          end
         end
       else
         [opts[command.to_sym] + pairs].flatten.each do |change|
@@ -391,7 +397,12 @@ class Noodle::Controller
 
               r = node.errors?
               if r.class == Noodle::Node
-                Noodle::NodeRepository.repository.save(node, refresh: true)
+                begin
+                  Noodle::NodeRepository.repository.save(node, refresh: true)
+                rescue => e
+                  body << "#{e.to_s}\n"
+                  status = 400
+                end
               else
                 body << node.errors?(silent_if_none: true).to_s
               end
@@ -407,7 +418,12 @@ class Noodle::Controller
                 end
                 r = node.errors?
                 if r.class == Noodle::Node
-                  Noodle::NodeRepository.repository.save(node, refresh: true)
+                  begin
+                    Noodle::NodeRepository.repository.save(node, refresh: true)
+                  rescue => e
+                    body << "#{e.to_s}\n"
+                    status = 400
+                  end
                 else
                   body << node.errors?(silent_if_none: true).to_s
                 end
@@ -425,7 +441,12 @@ class Noodle::Controller
         node.params['status'] = command
         r = node.errors?
         if r.class == Noodle::Node
-          Noodle::NodeRepository.repository.save(node, refresh: true)
+          begin
+            Noodle::NodeRepository.repository.save(node, refresh: true)
+          rescue => e
+            body << "#{e.to_s}\n"
+            status = 400
+          end
         else
           body << node.errors?(silent_if_none: true).to_s
         end
@@ -448,7 +469,12 @@ class Noodle::Controller
     # TODO: is this order and being outside the loop correct?
     r = node.errors?
     if r.class == Noodle::Node
-      Noodle::NodeRepository.repository.save(node, refresh: true)
+      begin
+        Noodle::NodeRepository.repository.save(node, refresh: true)
+      rescue => e
+        body << "#{e.to_s}\n"
+        status = 400
+      end
     end
     r
   end
@@ -481,7 +507,12 @@ class Noodle::Controller
     # TODO: This is both ugly and repeated :(
     r = node.errors?
     if r.class == Noodle::Node
-      Noodle::NodeRepository.repository.save(node, refresh: true)
+      begin
+        Noodle::NodeRepository.repository.save(node, refresh: true)
+      rescue => e
+        body << "#{e.to_s}\n"
+        status = 400
+      end
     end
     r
   end
