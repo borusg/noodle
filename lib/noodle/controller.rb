@@ -472,8 +472,7 @@ class Noodle::Controller
       begin
         Noodle::NodeRepository.repository.save(node, refresh: true)
       rescue => e
-        body << "#{e.to_s}\n"
-        status = 400
+        r = "#{e.to_s}\n"
       end
     end
     r
@@ -510,8 +509,7 @@ class Noodle::Controller
       begin
         Noodle::NodeRepository.repository.save(node, refresh: true)
       rescue => e
-        body << "#{e.to_s}\n"
-        status = 400
+        r = "#{e.to_s}\n"
       end
     end
     r
