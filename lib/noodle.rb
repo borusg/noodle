@@ -94,20 +94,16 @@ class Noodle < Sinatra::Base
 
     # TODO: DRY with patch
     # TODO: Delete this line?
-    options = nil
+    args = nil
     begin
-      options = MultiJson.load(request.body.read)
+      args = MultiJson.load(request.body.read)
     rescue MultiJson::ParseError => exception
       puts exception.data
       puts exception.cause
       halt 500
     end
 
-    args = {
-      'name' => params[:name]
-    }
-    args['facts']  = options['facts'] unless options['facts'].nil?
-    args['params'] = options['params'] unless options['params'].nil?
+    args['name'] = params[:name]
 
     node = Noodle::Controller.create_one(args, {now: params.key?('now')})
     if node.class == Noodle::Node
