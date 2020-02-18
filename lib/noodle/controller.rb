@@ -281,7 +281,7 @@ class Noodle::Controller
   # noodlin create -i ILK -s STATUS -p PROJECT -P PRODLEVEL -s SITE [-a PARAM=VALUE ...] [-f FACT=VALUE ...] FQDN
   #
   # What else?
-  def self.noodlin(changes)
+  def self.noodlin(changes, options)
     # Default to success
     status = 200
     body = ''
@@ -354,7 +354,7 @@ class Noodle::Controller
 
         args['facts']  = facts
         args['params'] = params
-        node = create_one(args)
+        node = create_one(args, options)
         if node.class != Noodle::Node
           body = node[:errors]
           status = 444
@@ -462,15 +462,15 @@ class Noodle::Controller
   end
 
   # Update a node based on options.
-  def self.update(node,options)
-    options.each_pair do |key,value|
+  def self.update(node,args,options = {now: false})
+    args.each_pair do |key,value|
       node.send("#{key}=", node.send(key).deep_merge(value))
     end
     # TODO: is this order and being outside the loop correct?
     r = node.errors?
     if r.class == Noodle::Node
       begin
-        Noodle::NodeRepository.repository.save(node, refresh: true)
+        Noodle::NodeRepository.repository.save(node, refresh: options[:now])
       rescue => e
         r = {errors: "#{e.to_s}\n"}
       end
@@ -494,7 +494,7 @@ class Noodle::Controller
     return true
   end
 
-  def self.create_one(args)
+  def self.create_one(args,options = {now: false})
     node = Noodle::Node.new(args)
 
     # TODO: This is probably bogus:
@@ -507,7 +507,7 @@ class Noodle::Controller
     r = node.errors?
     if r.class == Noodle::Node
       begin
-        Noodle::NodeRepository.repository.save(node, refresh: true)
+        Noodle::NodeRepository.repository.save(node, refresh: options[:now])
       rescue => e
         r = {errors: "#{e.to_s}\n"}
       end

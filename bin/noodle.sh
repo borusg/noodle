@@ -15,7 +15,8 @@ fi
 DEBUG='--trace-ascii /dev/stdout'
 DEBUG=
 
-curl $DEBUG -s -X GET $URL --data-urlencode "=$query"
+# Since noodlin is always run by a human, force the 'now' option so results are instant:
+curl $DEBUG -s -X GET "${URL}?now" --data-urlencode "=$query"
 status=$?
 
 if [[ $status != 0 ]]

@@ -109,7 +109,7 @@ class Noodle < Sinatra::Base
     args['facts']  = options['facts'] unless options['facts'].nil?
     args['params'] = options['params'] unless options['params'].nil?
 
-    node = Noodle::Controller.create_one(args)
+    node = Noodle::Controller.create_one(args, {now: params.key?('now')})
     if node.class == Noodle::Node
       body node.to_json + "\n"
       status 201
@@ -125,14 +125,14 @@ class Noodle < Sinatra::Base
       node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go({:justone => true})
 
     begin
-      options = MultiJson.load(request.body.read)
+      args = MultiJson.load(request.body.read)
     rescue MultiJson::ParseError => exception
       puts exception.data
       puts exception.cause
       halt 500
     end
 
-    node = Noodle::Controller.update(node,options)
+    node = Noodle::Controller.update(node,args,params)
     if node.class == Noodle::Node
       body node.to_json + "\n"
       status 200
@@ -199,13 +199,22 @@ class Noodle < Sinatra::Base
     status s
   end
 
+  # TODO: Really this old-style noodlin should go away in favor of a
+  # noodlin command which does a PUT
+  #
   # Noodlin via query (so I can use 'curl -G --data-urlencode' :)
   get '/nodes/noodlin/' do
+    # TODO: This is ugly but required because the noodlin command is
+    # also part of the hash and leaving "now" in there confuses
+    # noodlin parsing
+    now = params.key?('now')
+    params.delete('now')
+
     maybe_refresh(params)
     # TODO: This can't be the way to do this!
     changes = String.new(params.keys.first)
     changes << "=#{params.values.first}" unless params.values.first.nil?
-    b,s = Noodle::Controller.noodlin(changes)
+    b,s = Noodle::Controller.noodlin(changes, {now: now})
     body   b
     status s
   end
