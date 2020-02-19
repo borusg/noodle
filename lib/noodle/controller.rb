@@ -123,6 +123,7 @@ class Noodle::Controller
     search.equals('ilk',   Noodle::Option.option('default','default_ilk'))    unless search.search_terms.include?('ilk')
     search.equals('status',Noodle::Option.option('default','default_status')) unless search.search_terms.include?('status')
 
+    search.limit_fetch(show)
     status = 200
     found = search.go
     found = merge(found,hostnames,show) if merge

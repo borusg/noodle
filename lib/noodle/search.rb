@@ -6,11 +6,12 @@ class Noodle::Search
   attr_accessor :query, :search_terms
 
   def initialize(repository)
-    @repository   = repository
-    @query        = []
+    @repository        = repository
+    @query             = []
     # TODO: unused
-    @search_terms = []
-    @node_names   = []
+    @search_terms      = []
+    @node_names        = []
+    @only_these_fields = []
     self
   end
 
@@ -64,7 +65,17 @@ class Noodle::Search
   # Return true if any results found, false if none.
   # (Set size=0 so nodes are not returned which hopefully saves some processing)
   def any?
-      return(self.go(size: 0).total > 0)
+    return(self.go(size: 0).total > 0)
+  end
+
+  # This, combined with the _source bit in the 'go' method below limit
+  # the fields returned by Elasticsearch to just the ones we
+  # need. This should help with performance.
+  def limit_fetch(fields)
+    fields.each do |field|
+      @only_these_fields << "params.#{field}"
+      @only_these_fields << "facts.#{field}"
+    end
   end
 
   # Execute the search.  If minimum is specified, must find
@@ -83,6 +94,7 @@ class Noodle::Search
     # TODO: Allow option to limit size
     query = {size: size, query: {query_string: { default_operator: 'AND', query: q }}}
     query[:query][:query_string][:minimum_should_match] = minimum unless minimum == false
+    query[:_source] = ['name'] + @only_these_fields unless @only_these_fields.empty?
 
     # TODO: Add debug that shows query
     # puts "The query is:\n#{query}\n"
