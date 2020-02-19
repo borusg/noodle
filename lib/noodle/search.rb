@@ -61,9 +61,15 @@ class Noodle::Search
     return results.response.aggregations.send(term).buckets.collect{|x| x['key']}
   end
 
+  # Return true if any results found, false if none.
+  # (Set size=0 so nodes are not returned which hopefully saves some processing)
+  def any?
+      return(self.go(size: 0).total > 0)
+  end
+
   # Execute the search.  If minimum is specified, must find
   # at least that many (TODO: error if more than one found?)
-  def go(options = {minimum: false, justone: false})
+  def go(minimum: false, size: 10000)
     # Query starts empty or based on @query
     q = @query.empty? ? '' : "(#{query.join(' ')})"
 
@@ -75,8 +81,8 @@ class Noodle::Search
 
     # Finish contructing ES query
     # TODO: Allow option to limit size
-    query = {size: 10000, query: {query_string: { default_operator: 'AND', query: q }}}
-    query[:query][:query_string][:minimum_should_match] = options[:minimum] if options[:minimum]
+    query = {size: size, query: {query_string: { default_operator: 'AND', query: q }}}
+    query[:query][:query_string][:minimum_should_match] = minimum unless minimum == false
 
     # TODO: Add debug that shows query
     # puts "The query is:\n#{query}\n"
@@ -85,8 +91,7 @@ class Noodle::Search
     results = @repository.search(query)
 
     # TODO: Add debug that shows results
-    # puts results
-    return results.first if options[:justone]
+    return results.first if size == 1 # TODO: Hmm, this seems fishy/ugly
     return results
   end
 end

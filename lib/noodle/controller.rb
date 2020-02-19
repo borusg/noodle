@@ -322,7 +322,7 @@ class Noodle::Controller
  
     # Unless creating, must be able to find all nodes
     return false unless command == 'create' or found =
-                                               Noodle::Search.new(Noodle::NodeRepository.repository).match_names(nodes).go({:minimum => nodes.size})
+                                               Noodle::Search.new(Noodle::NodeRepository.repository).match_names(nodes).go(minimum: nodes.size)
 
     allowed_statuses = Noodle::Option.limit('default','status')
     # TODO: default_ilk = 'host'
@@ -489,7 +489,7 @@ class Noodle::Controller
 
   def self.delete_one(name)
     return false unless node =
-                        Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(name).go({:justone => true})
+                        Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(name).go(size: 1)
     Noodle::NodeRepository.repository.delete(node, refresh: true)
     return true
   end

@@ -118,7 +118,7 @@ class Noodle < Sinatra::Base
   patch '/nodes/:name' do
     maybe_refresh(params)
     halt(422, "#{params[:name]} does not exist.\n") unless
-      node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go({:justone => true})
+      node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go(size: 1)
 
     begin
       args = MultiJson.load(request.body.read)
@@ -141,7 +141,7 @@ class Noodle < Sinatra::Base
   post '/nodes/:name' do
     maybe_refresh(params)
     halt(422, "#{params[:name]} already exists.\n") if
-      Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go({:justone => true})
+      Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).any?
     call! env.merge("REQUEST_METHOD" => 'PUT')
   end
 
