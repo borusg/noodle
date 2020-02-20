@@ -13,12 +13,12 @@ describe 'Noodle' do
 classes:
 - baseclass
 parameters:
-  ilk: host
-  status: enabled
   site: jupiter
+  ilk: host
   funky: town
   project: hr
   prodlevel: dev
+  status: enabled
 '
   end
 end
