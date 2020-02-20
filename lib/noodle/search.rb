@@ -80,7 +80,7 @@ class Noodle::Search
 
   # Execute the search.  If minimum is specified, must find
   # at least that many (TODO: error if more than one found?)
-  def go(minimum: false, size: 10000)
+  def go(minimum: false, names_only: false, size: 10000)
     # Query starts empty or based on @query
     q = @query.empty? ? '' : "(#{query.join(' ')})"
 
@@ -94,7 +94,11 @@ class Noodle::Search
     # TODO: Allow option to limit size
     query = {size: size, query: {query_string: { default_operator: 'AND', query: q }}}
     query[:query][:query_string][:minimum_should_match] = minimum unless minimum == false
-    query[:_source] = ['name'] + @only_these_fields unless @only_these_fields.empty?
+    if names_only
+      query[:_source] = ['name']
+    else
+      query[:_source] = ['name'] + @only_these_fields unless @only_these_fields.empty?
+    end
 
     # TODO: Add debug that shows query
     # puts "The query is:\n#{query}\n"

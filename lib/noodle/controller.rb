@@ -125,7 +125,7 @@ class Noodle::Controller
 
     search.limit_fetch(show)
     status = 200
-    found = search.go
+    found = search.go(names_only: format == list)
     found = merge(found,hostnames,show) if merge
 
     case format
