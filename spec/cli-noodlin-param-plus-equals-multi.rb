@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 
 describe 'Noodle' do
-  it "should noodlin param role+=db" do
+  it "should noodlin param role+=app,web" do
     hostname = HappyHelper::randomhostname
 
     noodlin = "create -s mars -i host -p hr -P prod -a role=db #{hostname}"
