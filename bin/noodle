@@ -13,16 +13,25 @@ require 'optimist'
 
 ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].nil?
 
-opts = Optimist::options do
+if $0.match?(/noodlin/)
+  endpoint =  'noodlin/?now&'
+  maybe_refresh = ''
+else
+  endpoint = '_/'
+
+  opts = Optimist::options do
     opt :refresh, 'Refresh Noodle options and bareword terms (AKA voodoo)'
     opt :debug, 'Display debug info'
+  end
+  maybe_refresh = opts[:refresh] ? '?refresh' : ''
 end
 
-maybe_refresh = opts[:refresh] ? '?refresh' : ''
+# Oh boy encoding is fun. Shirley, some other call would encode better
+# without the need for the gsubs. But just as Shirley, noodlin should
+# really be a POST so TODO that one day and encoding won't matter.
+noodle_query = URI.encode(ARGV.join(' ')).gsub('=','%3D').gsub('+','%2B')
 
-noodle_query = URI.encode(ARGV.join(' '))
-uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/#{noodle_query}#{maybe_refresh}")
+uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/#{endpoint}#{noodle_query}#{maybe_refresh}")
 
-puts "URI is #{uri}" if opts[:debug]
+#puts "URI is #{uri}" if opts[:debug]
 puts Net::HTTP.get(uri)
-
