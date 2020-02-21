@@ -1,1 +1,114 @@
-noodle
+#!/usr/bin/env ruby
+
+# Um, maybe this should be reworked to use the 'gli' Gem or similar
+# but today that looked like a steeper hill to climb than a single
+# script. This version lacks global options (like --debug) but works.
+
+require 'uri'
+require 'net/http'
+require 'optimist'
+
+ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].nil?
+
+def do_create
+  opts = Optimist::options do
+    opt :ilk,       'Ilk',                                :short => :i, :type => :string, :required => true # It's tempting to default to host
+    opt :prodlevel, 'Prodlevel',                          :short => :p, :type => :string, :required => true
+    opt :project,   'Project',                            :short => :P, :type => :string, :required => true
+    opt :site,      'Site',                               :short => :s, :type => :string, :required => true
+
+    # Required if ilk=host
+    opt :usgos,     'USG OS name (required if ilk=host)', :short => :u, :type => :string
+
+    opt :status,    'Status',                             :short => :S, :type => :string, :default => 'enabled'
+
+    opt :param,     'Param (can specify more than once)', :short => :a, :type => :string, :multi => true
+    opt :fact,      'Fact (can specify more than once)',  :short => :f, :type => :string, :multi => true
+
+#    opt :debug,     'Display debug info'
+#    opt :help,      'Display help'
+  end
+
+  # usgos is required if ilk=host
+  #(puts "Must include --usgos when ilk=host."; exit(1)) if opts[:ilk] == 'host' and opts[:usgos].nil?
+
+  puts "So, you want to create host(s) named #{hosts} with these options: #{opts}?" if opts[:debug]
+  noodlin = ['create']
+  noodlin << "-i #{opts[:ilk]}"
+  noodlin << "-p #{opts[:prodlevel]}"
+  noodlin << "-P #{opts[:project]}"
+  noodlin << "-s #{opts[:site]}"
+  #noodlin << "-S #{opts[:status]}"
+  noodlin << "-a usgos=#{opts[:usgos]}" if opts[:usgos_given]
+  opts[:param].each do |pair|
+    noodlin << "-a #{pair}"
+  end
+  opts[:fact].each do |pair|
+    noodlin << "-f #{pair}"
+  end
+  return(noodlin)
+end
+
+def do_param
+  opts = Optimist::options do
+    opt :remove, 'Remove param'
+    opt :debug,  'Display debug info'
+    opt :help,   'Display help'
+  end
+
+  noodlin = ['param']
+  noodlin << '-r' if opts[:remove]
+  return(noodlin)
+end
+
+def do_fact
+  opts = Optimist::options do
+    opt :remove, 'Remove fact'
+    opt :debug,  'Display debug info'
+    opt :help,   'Display help'
+  end
+
+  noodlin = ['fact']
+  noodlin << '-r' if opts[:remove]
+  return(noodlin)
+end
+
+def do_remove
+  noodlin = ['remove']
+  return(noodlin)
+end
+
+def do_surplus
+  noodlin = ['surplus']
+  return(noodlin)
+end
+
+command = ARGV.shift
+case command
+when 'create'
+  noodlin = do_create
+when 'fact'
+  noodlin = do_fact
+when 'param'
+  noodlin = do_param
+when 'remove'
+  noodlin = do_remove
+when 'surplus'
+  noodlin = do_surplus
+else
+  puts "Unknown command: #{command}!"
+  exit(1)
+end
+
+# Append the remaining args which may be hostnames and/or key/value pairs
+noodlin << ARGV.join(' ')
+#puts "Your noodlin is:\n#{noodlin}" if opts[:debug]
+
+# Oh boy encoding is fun. Shirley, some other call would encode better
+# without the need for the gsubs. But just as Shirley, noodlin should
+# really be a POST so TODO that one day and encoding won't matter.
+noodle_query = URI.encode(noodlin.join(' ')).gsub('=','%3D').gsub('+','%2B')
+uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/noodlin/?now&#{noodle_query}")
+#puts "URI is #{uri}" if opts[:debug]
+
+puts Net::HTTP.get(uri)
