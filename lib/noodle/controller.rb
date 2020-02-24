@@ -43,6 +43,9 @@ class Noodle::Controller
 
     # NOTE: Order below should be preserved in case statement
     bareword_hash               = Noodle::Option.class_variable_get(:@@bareword_hash)
+    # TODO: Perhaps processing ? and ?= should happen in the same
+    # block of code. This would/could allow for ?+ to work too. And
+    # even permutations like =?
     term_present                = Regexp.new '\?$'
     term_present_and_show_value = Regexp.new '\?=$'
     term_does_not_equal         = Regexp.new '^[-@][^=]+=.+'
@@ -61,12 +64,12 @@ class Noodle::Controller
 
       when term_present
         list = true
-        term = part.sub(/\?$/,'')
+        term = part.sub(term_present,'')
         search.exists(term)
 
       when term_present_and_show_value
         list = true
-        term = part.sub(/\?=$/,'')
+        term = part.sub(term_present_and_show_value,'')
         search.exists(term)
         show << term
 
@@ -81,13 +84,14 @@ class Noodle::Controller
 
       when term_matches_regexp
         list = true
-        term,value = part.split(/=~/,2)
+        term,value = part.split(term_matches_regexp,2)
         search.match(term,value)
 
       when term_equals
         list = true
-        term,value = part.split(/=/,2)
+        term,value = part.split(term_equals,2)
         search.equals(term,value)
+
       when term_unique_values
         thing2unique = part.sub(term_unique_values,'')
         format = :unique
