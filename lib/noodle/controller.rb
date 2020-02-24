@@ -53,6 +53,7 @@ class Noodle::Controller
     term_matches_regexp         = Regexp.new '=~'
     term_equals                 = Regexp.new '='
     term_unique_values          = Regexp.new '^:'
+    term_sum                    = Regexp.new '[+]$'
 
     query.split(/\s+/).each do |part|
       case part
@@ -96,6 +97,11 @@ class Noodle::Controller
         thing2unique = part.sub(term_unique_values,'')
         format = :unique
 
+      when term_sum
+        format = :sum
+        term = part.sub(term_sum,'')
+        search.sum(term)
+
       when 'full'
         format = :full
 
@@ -119,10 +125,11 @@ class Noodle::Controller
 
     # TODO: Not pretty
     # If list is true, just list nodes, otherwise output in YAML.
-    # Unless, or course, json or full was specified
-    if format != :json and format != :full and format != :unique and format != :justonevalue
+    # Unless, or course, a special format was specified
+    if format != :json and format != :full and format != :unique and format != :justonevalue and format != :sum
       format = list ? :default : :yaml
     end
+    #format = list ? :default : :yaml if %w(:full :json :justonevalue :sum :unique).include?(format)
 
     search.equals('ilk',   Noodle::Option.option('default','default_ilk'))    unless search.search_terms.include?('ilk')
     search.equals('status',Noodle::Option.option('default','default_status')) unless search.search_terms.include?('status')
@@ -163,6 +170,12 @@ class Noodle::Controller
           body = 'Nothing found'
         end
       end
+    when :sum
+      body = []
+      found.response.aggregations.each do |param,sum|
+        body << "#{param}=#{sum.value}"
+      end
+      body = body.join(' ')
     else
       ['',200] if found.response.hits.empty?
       # Always show name. Show term=value pairs for anything in 'show'

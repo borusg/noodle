@@ -23,4 +23,3 @@ if [[ $status != 0 ]]
 then
     echo "Oops!  Bad status: $status"
 fi
-

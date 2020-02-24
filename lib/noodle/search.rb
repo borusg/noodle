@@ -12,6 +12,8 @@ class Noodle::Search
     @search_terms      = []
     @node_names        = []
     @only_these_fields = []
+    @aggs              = {}
+    @override_size     = nil
     self
   end
 
@@ -68,6 +70,13 @@ class Noodle::Search
     return(self.go(size: 0).total > 0)
   end
 
+  # TODO: This assumes that it's always a fact being summed.
+  def sum(fact)
+    # TODO: This is clunky
+    @override_size = 0
+    @aggs[fact] = {sum: {field: "facts.#{fact}"} }
+  end
+
   # This, combined with the _source bit in the 'go' method below limit
   # the fields returned by Elasticsearch to just the ones we
   # need. This should help with performance.
@@ -81,6 +90,8 @@ class Noodle::Search
   # Execute the search.  If minimum is specified, must find
   # at least that many (TODO: error if more than one found?)
   def go(minimum: false, name_and_params_only: false, names_only: false, size: 10000)
+    size = @override_size unless @override_size.nil?
+
     # Query starts empty or based on @query
     q = @query.empty? ? '' : "(#{query.join(' ')})"
 
@@ -101,12 +112,16 @@ class Noodle::Search
     else
       query[:_source] = ['name'] + @only_these_fields unless @only_these_fields.empty?
     end
+    query[:aggs] = @aggs unless @aggs.empty?
 
     # TODO: Add debug that shows query
     # puts "The query is:\n#{query}\n"
 
     # Execute search, return results
     results = @repository.search(query)
+
+    # TODO:
+    #puts "Results: #{results}"
 
     # TODO: Add debug that shows results
     return results.first if size == 1 # TODO: Hmm, this seems fishy/ugly
