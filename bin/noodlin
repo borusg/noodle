@@ -73,6 +73,11 @@ def do_fact
   return(noodlin)
 end
 
+def do_optionrefresh
+  noodlin = ['optionrefresh']
+  return(noodlin)
+end
+
 def do_remove
   noodlin = ['remove']
   return(noodlin)
@@ -89,6 +94,8 @@ when 'create'
   noodlin = do_create
 when 'fact'
   noodlin = do_fact
+when 'optionrefresh'
+  noodlin = do_optionrefresh
 when 'param'
   noodlin = do_param
 when 'remove'
