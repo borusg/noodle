@@ -143,12 +143,16 @@ class Noodle::Controller
 
     search.limit_fetch(show)
     status = 200
-    found = search.go(names_only: format == list, name_and_params_only: format == :yaml)
-    found = merge(found,hostnames,show) if merge
+
+    # Unique is a very special case (no surprise?!)
+    unless format == :unique
+      found = search.go(names_only: format == list, name_and_params_only: format == :yaml)
+      found = merge(found,hostnames,show) if merge
+    end
 
     case format
     when :unique
-      body = found.results.collect{|one| one.params[thing2unique]}.uniq.sort.join("\n") + "\n"
+      body = Noodle::Search.new(Noodle::NodeRepository.repository).param_values(term: thing2unique, facts: true).sort.join("\n") + "\n"
     when :json
       body = found.results.to_json + "\n"
     when :yaml

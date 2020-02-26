@@ -86,7 +86,7 @@ class Noodle::Option
     # Convoluted?  Maybe but makes magic easier
     @@bareword_hash = {}
     Noodle::Option.option('default','bareword_terms').each do |term|
-      Noodle::Search.new(Noodle::NodeRepository.repository).paramvalues(term).each do |value|
+      Noodle::Search.new(Noodle::NodeRepository.repository).param_values(term: term).each do |value|
         @@bareword_hash[value] = term
       end
     end

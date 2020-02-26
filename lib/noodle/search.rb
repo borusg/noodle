@@ -60,13 +60,19 @@ class Noodle::Search
     self
   end
 
-  # Return all values for param named TERM
-  def paramvalues(term)
-    @query = {}
+  def unique_values(term:, where: 'params')
+    @query = {size: 0}
     @query[:aggs] = {}
-    @query[:aggs][term.to_s] = {terms: {field: "params.#{term}.keyword"}}
-    results = @repository.search(@query)
-    return results.response.aggregations.send(term).buckets.collect{|x| x['key']}
+    @query[:aggs][term] = {terms: {field: "#{where}.#{term}.keyword"}}
+    return @repository.search(@query).response.aggregations.send(term).buckets.collect{|x| x['key']}.uniq
+  end
+
+  # Return unique list of values for param named TERM. If facts_too, look at both facts and params
+  def param_values(term:, facts: false)
+    results =           unique_values(term: term)
+    results = results + unique_values(term: term, where: 'facts') if facts
+    puts "YO! results.uniq are: #{results.compact.uniq}"
+    return results.compact.uniq
   end
 
   # Return true if any results found, false if none.
