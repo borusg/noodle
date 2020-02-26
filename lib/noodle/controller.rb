@@ -46,9 +46,10 @@ class Noodle::Controller
     # TODO: Perhaps processing ? and ?= should happen in the same
     # block of code. This would/could allow for ?+ to work too. And
     # even permutations like =?
+    term_present_and_show_value = Regexp.new '\?=$|=\?$'
     term_present                = Regexp.new '\?$'
-    term_present_and_show_value = Regexp.new '\?=$'
     term_does_not_equal         = Regexp.new '^[-@][^=]+=.+'
+    term_not_present            = Regexp.new '^[-@]'
     term_show_value             = Regexp.new '=$'
     term_matches_regexp         = Regexp.new '=~'
     term_equals                 = Regexp.new '='
@@ -63,21 +64,28 @@ class Noodle::Controller
         term  = bareword_hash[value]
         search.equals(term,value)
 
-      when term_present
-        list = true
-        term = part.sub(term_present,'')
-        search.exists(term)
-
+      # Look for this before term_persent since term_present matches both
       when term_present_and_show_value
         list = true
         term = part.sub(term_present_and_show_value,'')
         search.exists(term)
         show << term
 
+      when term_present
+        list = true
+        term = part.sub(term_present,'')
+        search.exists(term)
+
       when term_does_not_equal
         list = true
         term,value = part.sub(/^[-@]/,'').split(/=/,2)
         search.not_equal(term,value)
+
+      # Look for this after term_does_not_equal since it this regexp matches. TODO: Ugly!
+      when term_not_present
+        list = true
+        term = part.sub(term_not_present,'')
+        search.does_not_exist(term)
 
       when term_show_value
         list = true
@@ -129,7 +137,6 @@ class Noodle::Controller
     if format != :json and format != :full and format != :unique and format != :justonevalue and format != :sum
       format = list ? :default : :yaml
     end
-    #format = list ? :default : :yaml if %w(:full :json :justonevalue :sum :unique).include?(format)
 
     search.equals('ilk',   Noodle::Option.option('default','default_ilk'))    unless search.search_terms.include?('ilk')
     search.equals('status',Noodle::Option.option('default','default_status')) unless search.search_terms.include?('status')
