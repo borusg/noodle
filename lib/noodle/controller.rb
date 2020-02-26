@@ -56,6 +56,8 @@ class Noodle::Controller
     term_unique_values          = Regexp.new '^:'
     term_sum                    = Regexp.new '[+]$'
 
+    # TODO: The required ordering below is ugly which indicates
+    # there's a better way.
     query.split(/\s+/).each do |part|
       case part
       when *bareword_hash.keys
