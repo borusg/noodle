@@ -37,7 +37,7 @@ query = query + ARGV
 # Oh boy encoding is fun. Shirley, some other call would encode better
 # without the need for the gsubs. But just as Shirley, noodlin should
 # really be a POST so TODO that one day and encoding won't matter.
-noodle_query = URI.encode(query.join(' ')).gsub('=','%3D').gsub('+','%2B')
+noodle_query = URI.encode(query.join(' ')).gsub('=','%3D').gsub('+','%2B').gsub('?','%3F')
 
 uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/#{noodle_query}#{maybe_refresh}")
 
