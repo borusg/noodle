@@ -71,7 +71,6 @@ class Noodle::Search
   def param_values(term:, facts: false)
     results =           unique_values(term: term)
     results = results + unique_values(term: term, where: 'facts') if facts
-    puts "YO! results.uniq are: #{results.compact.uniq}"
     return results.compact.uniq
   end
 
