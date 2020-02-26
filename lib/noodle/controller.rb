@@ -71,11 +71,6 @@ class Noodle::Controller
         search.exists(term)
         show << term
 
-      when term_present
-        list = true
-        term = part.sub(term_present,'')
-        search.exists(term)
-
       when term_does_not_equal
         list = true
         term,value = part.sub(/^[-@]/,'').split(/=/,2)
@@ -86,6 +81,11 @@ class Noodle::Controller
         list = true
         term = part.sub(term_not_present,'')
         search.does_not_exist(term)
+
+      when term_present
+        list = true
+        term = part.sub(term_present,'')
+        search.exists(term)
 
       when term_show_value
         list = true
