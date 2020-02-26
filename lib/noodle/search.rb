@@ -4,6 +4,7 @@
 # list of nodes.  .go searches for (QUERY) OR (NODES)
 class Noodle::Search
   attr_accessor :query, :search_terms
+  @@DEFAULT_SIZE = 10000
 
   def initialize(repository)
     @repository        = repository
@@ -63,7 +64,9 @@ class Noodle::Search
   def unique_values(term:, where: 'params')
     @query = {size: 0}
     @query[:aggs] = {}
-    @query[:aggs][term] = {terms: {field: "#{where}.#{term}.keyword"}}
+    # TODO? Perhaps this should be using the Composite aggregation instead?
+    # https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html#search-aggregations-bucket-terms-aggregation-size
+    @query[:aggs][term] = {terms: {field: "#{where}.#{term}.keyword", size: @@DEFAULT_SIZE}}
     return @repository.search(@query).response.aggregations.send(term).buckets.collect{|x| x['key']}.uniq
   end
 
@@ -99,7 +102,7 @@ class Noodle::Search
 
   # Execute the search.  If minimum is specified, must find
   # at least that many (TODO: error if more than one found?)
-  def go(minimum: false, name_and_params_only: false, names_only: false, size: 10000)
+  def go(minimum: false, name_and_params_only: false, names_only: false, size: @@DEFAULT_SIZE)
     size = @override_size unless @override_size.nil?
 
     # Query starts empty or based on @query
