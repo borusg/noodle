@@ -7,18 +7,37 @@ require 'optimist'
 ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].nil?
 
 opts = Optimist::options do
+  opt :does_not_exist,  'Find all entries that do not have PARAM (same as @PARAM?)',              :type => :string
+  opt :exists,          'Show all entries that have PARAM (same as PARAM?)',                      :type => :string
+  opt :exclude,         'Exclude entries that do not have PARAM=VALUE (same as @PARAM=VALUE)',    :type => :string
+  opt :find,            'Find all entries that have PARAM=VALUE (same as PARAM=VALUE)',           :type => :string
+  opt :find_and_show,   'Show values of PARAM for all entries that have PARAM (same as PARAM=?)', :type => :string
+  opt :show_value,      'Show values of PARAM (same as PARAM=)',                                  :type => :string
+  opt :sum,             'Add all values of PARAM and display the result (same as PARAM+)',        :type => :string
+  opt :unique_value,    'Show a unique list of values for PARAM (same as :PARAM)',                 :type => :string
+
   opt :refresh,   'Refresh Noodle options and bareword terms (AKA voodoo)'
   opt :debug,     'Display debug info'
-
   educate_on_error
 end
 
 maybe_refresh = opts[:refresh] ? '?refresh' : ''
+query = []
+
+query << '@' + "#{opts[:does_not_exist]}?" if opts[:does_not_exist]
+query << "#{opts[:exists]}?"               if opts[:exists]
+query << '@' + opts[:exclude]              if opts[:exclude]
+query << opts[:find]                       if opts[:find]
+query << "#{opts[:find_and_show]}=?"       if opts[:find_and_show]
+query << "#{opts[:show_value]}="           if opts[:show_value]
+query << "#{opts[:sum]}+"                  if opts[:sum]
+query << ":#{opts[:unique_value]}"         if opts[:unique_value]
+query = query + ARGV
 
 # Oh boy encoding is fun. Shirley, some other call would encode better
 # without the need for the gsubs. But just as Shirley, noodlin should
 # really be a POST so TODO that one day and encoding won't matter.
-noodle_query = URI.encode(ARGV.join(' ')).gsub('=','%3D').gsub('+','%2B')
+noodle_query = URI.encode(query.join(' ')).gsub('=','%3D').gsub('+','%2B')
 
 uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/#{noodle_query}#{maybe_refresh}")
 
