@@ -7,14 +7,99 @@ require 'optimist'
 ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].nil?
 
 opts = Optimist::options do
-  opt :does_not_exist,  'Find all entries that do not have PARAM (same as @PARAM?)',              :type => :string
-  opt :exists,          'Show all entries that have PARAM (same as PARAM?)',                      :type => :string
-  opt :exclude,         'Exclude entries that do not have PARAM=VALUE (same as @PARAM=VALUE)',    :type => :string
-  opt :find,            'Find all entries that have PARAM=VALUE (same as PARAM=VALUE)',           :type => :string
-  opt :find_and_show,   'Show values of PARAM for all entries that have PARAM (same as PARAM=?)', :type => :string
-  opt :show_value,      'Show values of PARAM (same as PARAM=)',                                  :type => :string
-  opt :sum,             'Add all values of PARAM and display the result (same as PARAM+)',        :type => :string
-  opt :unique_value,    'Show a unique list of values for PARAM (same as :PARAM)',                 :type => :string
+  banner <<EOS
+  Ask Noodle questions!
+
+  "TERM" below means either parameter or fact.
+
+  All searches search for BOTH params and facts. (In theory there is
+  no overlap between the two. (And perhaps we should enforce this.))
+
+  The default status for all searches is 'enabled'.
+
+  The default ilk for all searches is 'host'.
+
+  Examples:
+
+  1) Find all prodlevel=prod entries:
+
+  noodle prodlevel=prod
+
+  OR
+
+  noodle --find prodlevel=prod
+
+  2) Find all entries with status set to 'disabled':
+
+  noodle status=disabled
+
+  OR
+
+  noodle --find status=disabled
+
+  3) Find all entries that are NOT disabled:
+
+  noodle @status=disabled
+
+  OR
+
+  noodle --exclude status=disabled
+
+  4) Find all entries that have the 'style' param:
+
+  noodle style?
+
+  OR
+
+  noodle --exists style
+
+  5) Find all entries that have the 'style' param and display the
+  value of that param for each entry found:
+
+  noodle style?=
+
+  OR
+
+  noodle style=?
+
+  OR
+
+  noodle --find-and-show style
+
+  6) Return the unique values for the prodlevel param:
+
+  noodle :prodlevel
+
+  OR
+
+  noodle --unique_values prodlevel
+
+  7) Find all entries that do NOT have the 'style' param:
+
+  noodle @style?
+
+  OR
+
+  noodle --does-not-exist style
+
+  8) Sum the values of the processorcount, ram_gigs, and storage_gigs
+  params for all project=noodle entries:
+
+  noodle processorcount+ ram_gigs+ storage_gigs+
+
+  OR
+
+  noodle --sum processorcount --sum ram_gigs --sum storage_gigs
+EOS
+
+  opt :does_not_exist,  'Find all entries that do not have TERM (same as @TERM?)',              :type => :string
+  opt :exists,          'Show all entries that have TERM (same as TERM?)',                      :type => :string
+  opt :exclude,         'Exclude entries that do not have TERM=VALUE (same as @TERM=VALUE)',    :type => :string
+  opt :find,            'Find all entries that have TERM=VALUE (same as TERM=VALUE)',           :type => :string
+  opt :find_and_show,   'Show values of TERM for all entries that have TERM (same as TERM=?)', :type => :string
+  opt :show_value,      'Show values of TERM (same as TERM=)',                                  :type => :string
+  opt :sum,             'Add all values of TERM and display the result (same as TERM+)',        :type => :string
+  opt :unique_values,   'Show a unique list of values for TERM (same as :TERM)',                 :type => :string
 
   opt :refresh,   'Refresh Noodle options and bareword terms (AKA voodoo)'
   opt :debug,     'Display debug info'
