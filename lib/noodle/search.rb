@@ -34,6 +34,11 @@ class Noodle::Search
     self
   end
 
+  def does_not_exist(term)
+    @query << "(NOT _exists_:params.#{term} AND NOT _exists_:facts.#{term})"
+    self
+  end
+
   def match_names(names)
     [names].flatten.map{|name| @node_names << "(name:#{name} OR name:#{name}.*)"}
     self
