@@ -64,6 +64,11 @@ class Noodle < Sinatra::Base
 
   Noodle::Option.refresh
 
+  get '/' do
+    body "Noodles are delicious\n"
+    status 200
+  end
+
   get '/help' do
     maybe_refresh(params)
     body "Noodle helps!\n"
