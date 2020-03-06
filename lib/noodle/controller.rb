@@ -353,7 +353,7 @@ class Noodle::Controller
  
     # Unless creating, must be able to find all nodes
     return false unless command == 'create' or found =
-                                               Noodle::Search.new(Noodle::NodeRepository.repository).match_names(nodes).go(minimum: nodes.size)
+                                               Noodle::Search.new(Noodle::NodeRepository.repository).match_names(nodes).go
 
     allowed_statuses = Noodle::Option.limit('default','status')
     # TODO: default_ilk = 'host'
