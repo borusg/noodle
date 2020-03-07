@@ -407,23 +407,25 @@ class Noodle::Controller
       else
         [opts[command.to_sym] + pairs].flatten.each do |change|
           name,op,value = change.match(/^([^-+=]+)([-+]*=)(.*)$/)[1..3]
-          
+
           # TODO: Error check fact names and values
           # TODO: Do something with the error strings below :)
           case op
           when '='
             found.each do |node|
               # If param must be an array split value on ,
-              value = [value.split(',')].flatten if Noodle::Option.limit(node.params['ilk'],name) == 'array'
+              # Avoid changing original 'value' so this works on the second, etc iterations of the loop:
+              new_value = value
+              new_value = [value.split(',')].flatten if Noodle::Option.limit(node.params['ilk'],name) == 'array'
               # If param must be a hash, create a hash based on name,value
               first_key_part,rest_key_parts = name.split('.',2)
-              value = hash_it(rest_key_parts,value) if Noodle::Option.limit(node.params['ilk'],first_key_part) == 'hash'
+              new_value = hash_it(rest_key_parts,new_value) if Noodle::Option.limit(node.params['ilk'],first_key_part) == 'hash'
               # If param must be a hash, merge hash created above into existing (or not) value for node
               if Noodle::Option.limit(node.params['ilk'],first_key_part) == 'hash'
                 node.send(which)[first_key_part] = Hash.new if node.send(which)[first_key_part].nil?
-                node.send(which)[first_key_part].deep_merge!(value)
+                node.send(which)[first_key_part].deep_merge!(new_value)
               else
-                node.send(which)[name] = value
+                node.send(which)[name] = new_value
               end
 
               r = node.errors?
