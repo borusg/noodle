@@ -25,12 +25,26 @@ def do_create
     opt :param,     'Param (can specify more than once)', :short => :a, :type => :string, :multi => true
     opt :fact,      'Fact (can specify more than once)',  :short => :f, :type => :string, :multi => true
 
+    opt :maxlen,    'Maximum length of short hostname. Defaults to 15. Because Active Directory', :short => :m, :type => :integer, :default => 15
 #    opt :debug,     'Display debug info'
 #    opt :help,      'Display help'
   end
 
   # usgos is required if ilk=host
   #(puts "Must include --usgos when ilk=host."; exit(1)) if opts[:ilk] == 'host' and opts[:usgos].nil?
+
+  too_long_names = []
+  ARGV.each do |fqdn|
+    next unless fqdn.sub(/[.].*/,'').length > opts[:maxlen]
+    too_long_names << fqdn
+  end
+
+  unless too_long_names.empty?
+    puts "Sorry, one or more of your short node names was longer than #{opts[:maxlen]} characters. Exiting.\n"
+    puts "Your node names were:"
+    puts too_long_names.join("\n")
+    exit(4)
+  end
 
   puts "So, you want to create host(s) named #{hosts} with these options: #{opts}?" if opts[:debug]
   noodlin = ['create']

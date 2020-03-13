@@ -20,7 +20,7 @@ include Rack::Test::Methods
 
 module HappyHelper
   def self.randomhostname
-    SecureRandom.uuid.gsub('-','') + '.example.com'
+    SecureRandom.alphanumeric(15) + '.example.com'
   end
 end
 
