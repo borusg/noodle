@@ -5,6 +5,7 @@ ENV['RACK_ENV'] = 'test'
 require 'rack/test'
 require_relative '../lib/noodle'
 require 'securerandom'
+require 'rack/handler/puma'
 
 ENV['NOODLE_SERVER'] = 'localhost:2929'
 
@@ -31,7 +32,7 @@ end
 
 # Start a local rack server to serve up test pages.
 @server_thread = Thread.new do
-  Rack::Handler::Thin.run Noodle.new, :Port => 2929
+  Rack::Handler::Puma.run Noodle.new, :Port => 2929
 end
 
 # 3/14/2017: Ran all tests 3 times without this and only once did a single test fail:
