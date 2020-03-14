@@ -3,10 +3,10 @@ require 'cgi'
 
 describe 'Noodle' do
   it "should allow finding by listing two FQDNs" do
-    put '/nodes/yyz.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter", "funky":"town","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/yyz.example.com', HappyHelper::node_funky_jupiter
     assert_equal last_response.status, 201
 
-    put '/nodes/zzy.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter", "funky":"town","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/zzy.example.com', HappyHelper::node_funky_jupiter
     assert_equal last_response.status, 201
 
     Noodle::NodeRepository.repository.refresh_index!

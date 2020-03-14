@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow finding by TERM=VALUE" do
-    put '/nodes/roro.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/roro.example.com', HappyHelper::node_jupiter
     assert_equal last_response.status, 201
     Noodle::NodeRepository.repository.refresh_index!
 

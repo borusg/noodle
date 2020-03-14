@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 
 describe 'Noodle' do
-  it "should noodlin create" do
+  it "should fail to noodlin create when hostname is too long" do
     hostname =  "this-is-way-too-long-" + HappyHelper::randomhostname
     # Create it
     noodlin = "create -s mars -i host -p hr -P prod #{hostname}"

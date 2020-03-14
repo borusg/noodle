@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow finding by TERM=VALUE and giving full output" do
-    put '/nodes/momo.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter","full":"yes","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/momo.example.com', HappyHelper::node_jupiter_full
     assert_equal last_response.status, 201
     Noodle::NodeRepository.repository.refresh_index!
 
@@ -16,6 +16,7 @@ Params:
   full=yes
   project=hr
   prodlevel=dev
+  last_updated_by=spec
 Facts:  
   fqdn=momo.example.com
 '

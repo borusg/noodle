@@ -2,9 +2,9 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow finding by 'TERM1=~VALUE1 TERM2=~VALUE2'" do
-    put '/nodes/vovo.example.com', '{"params":{"ilk":"host","status":"enabled","site":"neptune","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/vovo.example.com', HappyHelper::node_neptune
     assert_equal last_response.status, 201
-    put '/nodes/toto.example.com', '{"params":{"ilk":"host","status":"enabled","site":"neptune","prodlevel":"prod","project":"hr"}}'
+    put '/nodes/toto.example.com', HappyHelper::node_prod_neptune
     assert_equal last_response.status, 201
 
     Noodle::NodeRepository.repository.refresh_index!

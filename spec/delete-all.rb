@@ -2,9 +2,9 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow DELETE everything via /nodes" do
-    post '/nodes/sisi.example.com', '{"params":{"ilk":"host","status":"surplus","site":"moon","project":"hr","prodlevel":"dev"}}'
+    post '/nodes/sisi.example.com', HappyHelper::node_moon
     assert_equal last_response.status, 201
-    post '/nodes/titi.example.com', '{"params":{"ilk":"host","status":"surplus","site":"mars","project":"hr","prodlevel":"dev"}}'
+    post '/nodes/titi.example.com', HappyHelper::node_mars
     assert_equal last_response.status, 201
     Noodle::NodeRepository.repository.refresh_index!
 

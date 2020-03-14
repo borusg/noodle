@@ -11,7 +11,7 @@ describe 'Noodle' do
 
     assert_output("Your options had a nap and they are nicely refreshed.\n"){puts %x{bin/noodlin optionrefresh}}
 
-    put '/nodes/zippyziggy.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter", "funky":"town","project":"test","prodlevel":"dev"}}'
+    put '/nodes/zippyziggy.example.com', HappyHelper::node_funky_jupiter
     assert_equal last_response.status, 201
   end
 end

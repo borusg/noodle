@@ -3,7 +3,7 @@ require 'cgi'
 
 describe 'Noodle' do
   it "should allow finding by hostname or FQDN and give Puppet ENC YAML output" do
-    put '/nodes/ioio.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter", "funky":"town","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/ioio.example.com', HappyHelper::node_funky_jupiter
     assert_equal last_response.status, 201
     Noodle::NodeRepository.repository.refresh_index!
 
@@ -14,6 +14,7 @@ classes:
 - baseclass
 parameters:
   site: jupiter
+  last_updated_by: spec
   ilk: host
   funky: town
   project: hr

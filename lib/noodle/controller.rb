@@ -1,3 +1,5 @@
+# TODO: Add last_update_time :)
+
 # TODO: use repository.update :)
 
 class Noodle::Controller
@@ -329,14 +331,15 @@ class Noodle::Controller
     rest = rest.split(/\s+/)
 
     p = Optimist::Parser.new do
-      opt :remove,   "thing to remove (used with fact, param)", :type => :string
-      opt :param,    "Add param paramname=value",               :type => :string, :multi => true, :short => 'a'
-      opt :fact,     "Add fact  factname=value",                :type => :string, :multi => true
-      opt :ilk,      "Set ilk at create",                       :type => :string
-      opt :site,     "Set site at create",                      :type => :string
-      opt :status,   "Set status at create",                    :type => :string
-      opt :project,  "Set site at create",                      :type => :string
-      opt :prodlevel,"Set prodlevel at create",                 :type => :string, :short => 'P'
+      opt :remove,    "thing to remove (used with fact, param)", :type => :string
+      opt :param,     "Add param paramname=value",               :type => :string, :multi => true, :short => 'a'
+      opt :fact,      "Add fact  factname=value",                :type => :string, :multi => true
+      opt :ilk,       "Set ilk at create",                       :type => :string
+      opt :site,      "Set site at create",                      :type => :string
+      opt :status,    "Set status at create",                    :type => :string
+      opt :project,   "Set site at create",                      :type => :string
+      opt :prodlevel, "Set prodlevel at create",                 :type => :string, :short => 'P'
+      opt :who,       "Username of person making the change",    :type => :string, :short => 'w', :required => true
     end
     opts = p.parse(rest)
     # At this point rest contains node(s) and possibly key=value
@@ -366,17 +369,19 @@ class Noodle::Controller
       # TODO: Create more than one at a time?
       nodes.each do |name|
         args = {
-          'name' => name,
+          'name'       => name,
+          'created_by' => opts[:who],
         }
         facts  = Hash.new
         params = Hash.new
 
         # Convert special opts into params:
-        params['ilk']       = opts[:ilk]    #|| default_ilk,    # TODO
-        params['project']   = opts[:project]
-        params['prodlevel'] = opts[:prodlevel]
-        params['site']      = opts[:site]
-        params['status']    = opts[:status] || default_status  # TODO
+        params['ilk']             = opts[:ilk]    #|| default_ilk,    # TODO
+        params['project']         = opts[:project]
+        params['prodlevel']       = opts[:prodlevel]
+        params['site']            = opts[:site]
+        params['status']          = opts[:status] || default_status  # TODO
+        params['last_updated_by'] = opts[:who]
 
         # Merge in the rest
         # TODO: Can facts have required type?
@@ -395,6 +400,7 @@ class Noodle::Controller
       which = "#{command}s"
       if opts[:remove]
         found.each do |node|
+          node.params.last_updated_by = opts[:who]
           node.send(which).delete(opts[:remove])
           # TODO: DRY this begin/rescue/end
           begin
@@ -413,6 +419,8 @@ class Noodle::Controller
           case op
           when '='
             found.each do |node|
+              node.params.last_updated_by = opts[:who]
+
               # If param must be an array split value on ,
               # Avoid changing original 'value' so this works on the second, etc iterations of the loop:
               new_value = value
@@ -471,6 +479,7 @@ class Noodle::Controller
       end
     when *allowed_statuses
       found.each do |node|
+        node.params['last_updated_by'] = opts[:who]
         node.params['status'] = command
         r = node.errors?
         if r.class == Noodle::Node

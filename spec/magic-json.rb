@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow output in JSON format" do
-    put '/nodes/fofo.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter","output":"json","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/fofo.example.com', HappyHelper::node_jupiter_json
     assert_equal last_response.status, 201
     Noodle::NodeRepository.repository.refresh_index!
 

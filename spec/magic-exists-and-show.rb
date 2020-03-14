@@ -3,7 +3,7 @@ require 'cgi'
 
 describe 'Noodle' do
   it "should allow finding and showing with TERM?=" do
-    put '/nodes/lolo.example.com', '{"params":{"ilk":"host","status":"enabled","site":"jupiter", "funky":"town","project":"hr","prodlevel":"dev"}}'
+    put '/nodes/lolo.example.com', HappyHelper::node_funky_jupiter
     assert_equal last_response.status, 201
     Noodle::NodeRepository.repository.refresh_index!
 

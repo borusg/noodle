@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should delete a node" do
-    post '/nodes/soso.example.com', '{"params":{"ilk":"host","status":"surplus","site":"moon","project":"hr","prodlevel":"dev"}}'
+    post '/nodes/soso.example.com', HappyHelper::node_moon
     assert_equal last_response.status,201
     Noodle::NodeRepository.repository.refresh_index!
 

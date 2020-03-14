@@ -2,11 +2,11 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should fail to create a node with the same name as an existing node" do
-    post '/nodes/zozo.example.com?now', '{"params":{"ilk":"host","status":"surplus","site":"moon","project":"hr","prodlevel":"dev"}}'
+    post '/nodes/zozo.example.com?now', HappyHelper::node_jupiter
     assert_equal last_response.status, 201, 'First create'
     Noodle::NodeRepository.repository.refresh_index!
 
-    post '/nodes/zozo.example.com', '{"params":{"ilk":"yabba","status":"foo","site":"moon","project":"hr","prodlevel":"dev"}}'
+    post '/nodes/zozo.example.com', HappyHelper::node_prod_jupiter
     assert_equal last_response.status, 422, 'Second create'
     assert _(last_response.body).must_include 'zozo.example.com already exists'
   end

@@ -16,7 +16,7 @@ class Noodle::Option
   # Define built-in options:
   @@builtin_options = {
     'uniqueness_params' => %w(ilk),
-    'required_params'   => %w{ilk prodlevel project site status},
+    'required_params'   => %w{ilk last_updated_by prodlevel project site status},
     'default_ilk'       => 'host',
     'default_status'    => 'enabled',
     'bareword_terms'    => %w{prodlevel project site},
@@ -26,7 +26,7 @@ class Noodle::Option
       'prodlevel'         => %w{dev preprod prod test},
       'project'           => %w{hr financials lms noodle registration warehouse},
       'role'              => 'array',
-      'site'              => %w{jupiter mars moon neptune pluto uranus},
+      'site'              => %w{jupiter mars moon neptune pluto saturn uranus venus},
       'stack'             => 'array',
       'status'            => %w{disabled enabled future surplus},
       # Not in alphabetical order because they match the ones above outside the limits hash

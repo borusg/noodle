@@ -23,6 +23,231 @@ module HappyHelper
   def self.randomhostname
     SecureRandom.alphanumeric(15) + '.example.com'
   end
+
+  def self.node_mars
+    {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :surplus,
+        site:            :mars,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_moon
+    {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :surplus,
+        site:            :moon,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_piggly
+    {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :surplus,
+        site:            :moon,
+        project:         :pigglywiggly,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_funky_jupiter
+    {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :enabled,
+        site:            :jupiter,
+        funky:           :town,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_jupiter(magnitude: nil)
+    node = {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :enabled,
+        site:            :jupiter,
+        justfora:        :test,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }
+    node[:facts] = {magnitude: magnitude} unless magnitude.nil?
+    node.to_json
+  end
+  def self.node_prod_jupiter
+    {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :enabled,
+        site:            :jupiter,
+        justfora:        :test,
+        project:         :hr,
+        prodlevel:       :prod,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_jupiter_json
+    {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :enabled,
+        site:            :jupiter,
+        output:          :json,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_jupiter_full
+    {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :enabled,
+        site:            :jupiter,
+        full:            :yes,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_uranus
+    {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :enabled,
+        site:            :uranus,
+        justfora:        :test,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_pluto
+    {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :enabled,
+        site:            :pluto,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_prod_pluto
+    {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :enabled,
+        site:            :pluto,
+        project:         :hr,
+        prodlevel:       :prod,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_neptune
+    {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :enabled,
+        site:            :neptune,
+        justfora:        :test,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_prod_neptune
+    {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :enabled,
+        site:            :neptune,
+        justfora:        :test,
+        project:         :hr,
+        prodlevel:       :prod,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_saturn(magnitude: nil)
+    node = {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :enabled,
+        site:            :saturn,
+        magic_dne:       :yes,
+        at_me:           :yes,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }
+    node[:facts] = {magnitude: magnitude} unless magnitude.nil?
+    node.to_json
+  end
+  def self.node_venus(magnitude: nil)
+    node = {
+      created_by: 'spec',
+      params: {
+        ilk:             :host,
+        status:          :enabled,
+        site:            :venus,
+        magic_dne:       :yes,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }
+    node[:facts] = {magnitude: magnitude} unless magnitude.nil?
+    node.to_json
+  end
+
+#  def self.node_funky_jupiter
+#    {
+#      created_by: 'spec',
+#      params: {
+#        ilk:             :host,
+#
+#        last_updated_by: :spec,
+#      }
+#    }.to_json
+#  end
+
 end
 
 # Minitest
