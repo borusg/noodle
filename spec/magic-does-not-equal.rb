@@ -1,6 +1,5 @@
 require_relative 'spec_helper'
 
-puts "PIG"
 describe 'Noodle' do
   it "should allow finding by @TERM=VALUE and -TERM=VALUE" do
     put '/nodes/xoxo.example.com', HappyHelper::node_saturn

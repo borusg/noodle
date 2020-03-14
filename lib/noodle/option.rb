@@ -16,7 +16,7 @@ class Noodle::Option
   # Define built-in options:
   @@builtin_options = {
     'uniqueness_params' => %w(ilk),
-    'required_params'   => %w{ilk last_updated_by prodlevel project site status},
+    'required_params'   => %w{created_by ilk last_updated_by prodlevel project site status},
     'default_ilk'       => 'host',
     'default_status'    => 'enabled',
     'bareword_terms'    => %w{prodlevel project site},

@@ -26,8 +26,8 @@ module HappyHelper
 
   def self.node_mars
     {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :surplus,
         site:            :mars,
@@ -39,8 +39,8 @@ module HappyHelper
   end
   def self.node_moon
     {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :surplus,
         site:            :moon,
@@ -52,8 +52,8 @@ module HappyHelper
   end
   def self.node_piggly
     {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :surplus,
         site:            :moon,
@@ -65,8 +65,8 @@ module HappyHelper
   end
   def self.node_funky_jupiter
     {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :enabled,
         site:            :jupiter,
@@ -79,8 +79,8 @@ module HappyHelper
   end
   def self.node_jupiter(magnitude: nil)
     node = {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :enabled,
         site:            :jupiter,
@@ -95,8 +95,8 @@ module HappyHelper
   end
   def self.node_prod_jupiter
     {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :enabled,
         site:            :jupiter,
@@ -109,8 +109,8 @@ module HappyHelper
   end
   def self.node_jupiter_json
     {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :enabled,
         site:            :jupiter,
@@ -123,8 +123,8 @@ module HappyHelper
   end
   def self.node_jupiter_full
     {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :enabled,
         site:            :jupiter,
@@ -137,8 +137,8 @@ module HappyHelper
   end
   def self.node_uranus
     {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :enabled,
         site:            :uranus,
@@ -151,8 +151,8 @@ module HappyHelper
   end
   def self.node_pluto
     {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :enabled,
         site:            :pluto,
@@ -164,8 +164,8 @@ module HappyHelper
   end
   def self.node_prod_pluto
     {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :enabled,
         site:            :pluto,
@@ -177,8 +177,8 @@ module HappyHelper
   end
   def self.node_neptune
     {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :enabled,
         site:            :neptune,
@@ -191,8 +191,8 @@ module HappyHelper
   end
   def self.node_prod_neptune
     {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :enabled,
         site:            :neptune,
@@ -205,8 +205,8 @@ module HappyHelper
   end
   def self.node_saturn(magnitude: nil)
     node = {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :enabled,
         site:            :saturn,
@@ -222,8 +222,8 @@ module HappyHelper
   end
   def self.node_venus(magnitude: nil)
     node = {
-      created_by: 'spec',
       params: {
+        created_by:      :spec,
         ilk:             :host,
         status:          :enabled,
         site:            :venus,

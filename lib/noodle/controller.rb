@@ -370,12 +370,12 @@ class Noodle::Controller
       nodes.each do |name|
         args = {
           'name'       => name,
-          'created_by' => opts[:who],
         }
         facts  = Hash.new
         params = Hash.new
 
         # Convert special opts into params:
+        params['created_by']      = opts[:who],
         params['ilk']             = opts[:ilk]    #|| default_ilk,    # TODO
         params['project']         = opts[:project]
         params['prodlevel']       = opts[:prodlevel]

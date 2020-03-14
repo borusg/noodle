@@ -10,6 +10,7 @@ describe 'Noodle' do
     assert_equal last_response.status, 200
     assert_equal last_response.body, 'Name:   momo.example.com
 Params: 
+  created_by=spec
   ilk=host
   status=enabled
   site=jupiter

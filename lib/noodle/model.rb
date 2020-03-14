@@ -52,7 +52,6 @@ class Noodle::Node
   include ActiveModel::Validations
 
   ATTRIBUTES = [:name,
-                :created_by,
                 :id,
                 :_id,
                 :facts,
