@@ -18,7 +18,7 @@ describe 'Noodle' do
     noodle = "role= #{hostname1}"
     assert_output("#{hostname1} role=db\n"){puts %x{bin/noodle #{noodle}}}
 
-    #noodle = "role= #{hostname2}"
-    #assert_output("#{hostname2} role=db\n"){puts %x{bin/noodle #{noodle}}}
+    noodle = "role= #{hostname2}"
+    assert_output("#{hostname2} role=db\n"){puts %x{bin/noodle #{noodle}}}
   end
 end
