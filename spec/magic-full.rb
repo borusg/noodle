@@ -8,7 +8,8 @@ describe 'Noodle' do
 
     get '/nodes/_/full=yes%20full'
     assert_equal last_response.status, 200
-    assert_equal last_response.body, 'Name:   momo.example.com
+    # assert_match so it ignores timestamps
+    assert_match 'Name:   momo.example.com
 Params: 
   created_by=spec
   ilk=host
@@ -20,7 +21,7 @@ Params:
   last_updated_by=spec
 Facts:  
   fqdn=momo.example.com
-'
+', last_response.body
   end
 end
 
