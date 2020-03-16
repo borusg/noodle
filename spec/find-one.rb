@@ -4,16 +4,16 @@ require 'cgi'
 describe 'Noodle' do
   it "should allow finding by FQDN" do
     put '/nodes/zyyz.example.com', HappyHelper::node_funky_jupiter
-    assert_equal last_response.status, 201
+    assert_equal 201, last_response.status
     Noodle::NodeRepository.repository.refresh_index!
 
     get "/nodes/_/zyyz.example.com"
-    assert_equal last_response.status, 200
+    assert_equal 200, last_response.status
 
     r = YAML.load last_response.body
-    assert_equal r['parameters']['ilk'],    'host'
-    assert_equal r['parameters']['status'], 'enabled'
-    assert_equal r['parameters']['site'],   'jupiter'
+    assert_equal 'host',    r['parameters']['ilk']
+    assert_equal 'enabled', r['parameters']['status']
+    assert_equal 'jupiter', r['parameters']['site']
   end
 end
 

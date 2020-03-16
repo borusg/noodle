@@ -6,11 +6,11 @@ describe 'Noodle' do
     assert_equal last_response.status, 201
 
     r = MultiJson.load last_response.body
-    assert_equal r['name'],             'jojo.example.com'
-    assert_equal r['params']['ilk'],    'host'
-    assert_equal r['params']['status'], 'surplus'
-    assert_equal r['params']['site'],   'moon'
-    assert_equal r['facts']['fqdn'],    'jojo.example.com'
+    assert_equal 'jojo.example.com', r['name']
+    assert_equal 'host',             r['params']['ilk']
+    assert_equal 'surplus',          r['params']['status']
+    assert_equal 'moon',             r['params']['site']
+    assert_equal 'jojo.example.com', r['facts']['fqdn']
   end
 end
 
