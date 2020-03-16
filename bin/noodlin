@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# TODO: Add documentation to --help
+
 # Um, maybe this should be reworked to use the 'gli' Gem or similar
 # but today that looked like a steeper hill to climb than a single
 # script. This version lacks global options (like --debug) but works.
