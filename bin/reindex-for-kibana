@@ -1,0 +1,50 @@
+# First, create the noodle-kibana index with appropriate mappings (don't index listening_procs):
+
+curl -X PUT "localhost:9200/noodle-kibana?pretty" -H 'Content-Type: application/json' -d'
+{
+  "settings" : {
+    "number_of_shards" : 1,
+    "analysis" : {
+      "analyzer" : {
+        "default" : {
+          "tokenizer" : "my_pattern_tokenizer"
+        }
+      },
+      "tokenizer" : {
+        "my_pattern_tokenizer" : {
+          "type" : "pattern"
+        }
+      }
+    }
+  },
+  "mappings" : {
+    "properties" : {
+      "name" : {
+        "type" : "text",
+        "fields" : {
+          "raw" : {
+            "type" : "keyword"
+          }
+        }
+      },
+      "listening_procs": { 
+        "type": "object",
+        "enabled": false
+      }
+    }
+  }
+}
+'
+
+# Then, periodically reindex from noodle-nodes into noodle-kibana:
+
+curl -X POST "localhost:9200/_reindex?pretty" -H 'Content-Type: application/json' -d'
+{
+  "source": {
+    "index": "noodle-nodes"
+  },
+  "dest": {
+    "index": "noodle-kibana"
+  }
+}
+'
