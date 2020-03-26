@@ -36,15 +36,44 @@ curl -X PUT "localhost:9200/noodle-kibana?pretty" -H 'Content-Type: application/
 }
 '
 
-# Then, periodically reindex from noodle-nodes into noodle-kibana:
-
-curl -X POST "localhost:9200/_reindex?pretty" -H 'Content-Type: application/json' -d'
+# Ahem
+curl -XPUT 'http://localhost:9200/noodle-kibana/_settings?pretty' -H 'Content-Type: application/json' -d'
 {
-  "source": {
-    "index": "noodle-nodes"
-  },
-  "dest": {
-    "index": "noodle-kibana"
+  "index.mapping.total_fields.limit": 500000
+}'
+
+# Then, periodically reindex from noodle-nodes into noodle-kibana:
+time curl -X POST "localhost:9200/_reindex?pretty&timeout=1d&scroll=1h" -H 'Content-Type: application/json' -d'
+  {
+    "source": {
+      "index": "noodle-nodes"
+    },
+    "dest": {
+      "index": "noodle-kibana"
+    }
   }
-}
 '
+
+# { 
+#   "took" : 3479716,
+#   "timed_out" : false,
+#   "total" : 5006,
+#   "updated" : 2000,
+#   "created" : 3006,
+#   "deleted" : 0,
+#   "batches" : 6,
+#   "version_conflicts" : 0,
+#   "noops" : 0,
+#   "retries" : {
+#     "bulk" : 0,
+#     "search" : 0
+#   },
+#   "throttled_millis" : 0,
+#   "requests_per_second" : -1.0,
+#   "throttled_until_millis" : 0,
+#   "failures" : [ ]
+# }
+# 
+# real    57m59.731s
+# user    0m0.057s
+# sys     0m0.074s
