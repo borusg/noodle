@@ -198,13 +198,15 @@ class Noodle::Controller
       found.results.each do |hit|
         add = hit.name
         show.each do |term|
-          if !hit.params.nil? and hit.params[term]
-            value = hit.params[term]
-            # TODO: Join arrays for facts too?  What about hashes?
+          # Ahem, this funtimes "send" party lets you extract deep
+          # values from hashes; it also works if the TERM value isn't
+          # a hash (thanks, Hashie!)
+          if !hit.params.nil? and value = hit.params.send(*[:dig, term.split('.')].flatten)
+            # TODO: Join arrays for facts too?
             value = value.sort.join(',') if value.class == Hashie::Array
             add << " #{term}=#{value}"
-          elsif !hit.facts.nil? and hit.facts[term]
-            add << " #{term}=#{hit.facts[term]}"
+          elsif !hit.facts.nil? and value = hit.facts.send(*[:dig, term.split('.')].flatten)
+            add << " #{term}=#{value}"
           end
         end
         body << add + "\n"

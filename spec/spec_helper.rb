@@ -267,3 +267,28 @@ end
 # One day I'll track it down!
 # 12/13/2019: Still trouble with out this sleep
 sleep 1
+
+describe 'Noodle' do
+  it "should allow refreshing options" do
+    ## Allow gum to be a hash
+    # Create ilk=option entry and refresh options:
+    noodlin = 'create -i option -p noodle -P prod -s mars -a target_ilk=default -a limits.limits=hash default.option.example.com'
+    assert_output("\n"){puts %x{bin/noodlin #{noodlin}}}
+
+    noodlin = 'param limits.project=hr,financials,lms,noodle,registration,test,warehouse default.option.example.com'
+    assert_output("\n"){puts %x{bin/noodlin #{noodlin}}}
+
+    # Let limits.gum be a hash,
+    noodlin = 'param limits.gum=hash default.option.example.com'
+    assert_output("\n"){puts %x{bin/noodlin #{noodlin}}}
+    # Let limits.chew be a hash too
+    noodlin = 'param limits.chew=hash default.option.example.com'
+    assert_output("\n"){puts %x{bin/noodlin #{noodlin}}}
+
+    # Refresh options
+    assert_output("Your options had a nap and they are nicely refreshed.\n"){puts %x{bin/noodlin optionrefresh}}
+
+    put '/nodes/zippyziggy.example.com', HappyHelper::node_funky_jupiter
+    assert_equal 201, last_response.status
+  end
+end
