@@ -43,20 +43,21 @@ class Noodle::Controller
     hostnames       = []
     thing2unique    = nil
 
-    # NOTE: Order below should be preserved in case statement
+    # NOTE: Order below must be preserved in case statement.
     bareword_hash               = Noodle::Option.class_variable_get(:@@bareword_hash)
     # TODO: Perhaps processing ? and ?= should happen in the same
     # block of code. This would/could allow for ?+ to work too. And
     # even permutations like =?
-    term_present_and_show_value = Regexp.new '\?=$|=\?$'
-    term_present                = Regexp.new '\?$'
-    term_does_not_equal         = Regexp.new '^[-@][^=]+=.+'
-    term_not_present            = Regexp.new '^[-@]'
-    term_show_value             = Regexp.new '=$'
-    term_matches_regexp         = Regexp.new '=~'
-    term_equals                 = Regexp.new '='
-    term_unique_values          = Regexp.new '^:'
-    term_sum                    = Regexp.new '[+]$'
+    term_present_and_show_value = Regexp.new '\?=$|=\?$'     # Matches when term ends in ?= or =?
+    term_present                = Regexp.new '^[^@=]+\?$'    # Matches when term does not contain = and ends in ?
+    term_does_not_equal         = Regexp.new '^[-@][^=]+=.+' # Matches when term starts with - or @ and contains X=Y
+    term_not_present            = Regexp.new '^[-@][^=]+'
+    # Order really matters for the rest of these:
+    term_show_value             = Regexp.new '=$'            # Matches when terms ends with =
+    term_matches_regexp         = Regexp.new '=~'            # Matches when term contais =~
+    term_equals                 = Regexp.new '='             # Matches when term contains =; order matters for this check
+    term_unique_values          = Regexp.new '^:'            # Matches when term starts with :
+    term_sum                    = Regexp.new '[+]$'          # Matches when term ends with +
 
     # TODO: The required ordering below is ugly which indicates
     # there's a better way.
@@ -83,12 +84,12 @@ class Noodle::Controller
       # Look for this after term_does_not_equal since it this regexp matches. TODO: Ugly!
       when term_not_present
         list = true
-        term = part.sub(term_not_present,'')
+        term = part.sub(/^[-@]/,'')
         search.does_not_exist(term)
 
       when term_present
         list = true
-        term = part.sub(term_present,'')
+        term = part.sub(/\?$/,'')
         search.exists(term)
 
       when term_show_value

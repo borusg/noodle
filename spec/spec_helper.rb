@@ -77,6 +77,20 @@ module HappyHelper
       }
     }.to_json
   end
+  def self.node_funkymonkey_jupiter
+    {
+      params: {
+        created_by:      :spec,
+        ilk:             :host,
+        status:          :enabled,
+        site:            :jupiter,
+        funkymonkey:     :town,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
   def self.node_jupiter(magnitude: nil)
     node = {
       params: {
@@ -236,18 +250,6 @@ module HappyHelper
     node[:facts] = {magnitude: magnitude} unless magnitude.nil?
     node.to_json
   end
-
-#  def self.node_funky_jupiter
-#    {
-#      created_by: 'spec',
-#      params: {
-#        ilk:             :host,
-#
-#        last_updated_by: :spec,
-#      }
-#    }.to_json
-#  end
-
 end
 
 # Minitest
