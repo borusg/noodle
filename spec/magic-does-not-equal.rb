@@ -11,11 +11,11 @@ describe 'Noodle' do
     Noodle::NodeRepository.repository.refresh_index!
 
     # "Don't @ me!" :)
-    get '/nodes/_/@at_me=yes%20magic_dne=yes'
+    get '/nodes/_/@at_me=yes%20magic_dneq=yes'
     assert_equal 200, last_response.status
     assert_equal "oooo.example.com\n", last_response.body
 
-    get '/nodes/_/-at_me=yes%20magic_dne=yes'
+    get '/nodes/_/-at_me=yes%20magic_dneq=yes'
     assert_equal 200, last_response.status
     assert_equal "oooo.example.com\n", last_response.body
   end
