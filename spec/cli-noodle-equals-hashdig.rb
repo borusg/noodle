@@ -1,3 +1,5 @@
+# TODO: A race condition makes this test fail sometimes
+
 require_relative 'spec_helper'
 
 describe 'Noodle' do
