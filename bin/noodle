@@ -76,7 +76,7 @@ opts = Optimist::options do
 
   7) Find all entries that do NOT have the 'style' param:
 
-  noodle @style?
+  noodle @style
 
   OR
 
