@@ -84,6 +84,38 @@ module HappyHelper
         ilk:             :host,
         status:          :enabled,
         site:            :jupiter,
+        funky:           :town,
+        funkymonkey:     :town,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_funky_jupiter_dnex
+    {
+      params: {
+        created_by:      :spec,
+        ilk:             :host,
+        status:          :enabled,
+        site:            :jupiter,
+        funky:           :town,
+        dnex:            :yep,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+      }
+    }.to_json
+  end
+  def self.node_funkymonkey_jupiter_dnex
+    {
+      params: {
+        created_by:      :spec,
+        ilk:             :host,
+        status:          :enabled,
+        site:            :jupiter,
+        funky:           :town,
+        dnex:            :yep,
         funkymonkey:     :town,
         project:         :hr,
         prodlevel:       :dev,
