@@ -205,6 +205,7 @@ module HappyHelper
         project:         :hr,
         prodlevel:       :dev,
         last_updated_by: :spec,
+        hashdig:         :yep,
         gum: {
           address: {
             zipcode: 90210
@@ -212,12 +213,30 @@ module HappyHelper
         },
       },
       facts: {
+        fqdn: 'hashdig-node-with-hash.example.com',
         chew: {
           carrots: {
             times: 12
           },
         },
       }
+    }.to_json
+  end
+  def self.node_hashdig_without_hash
+    {
+      params: {
+        created_by:      :spec,
+        ilk:             :host,
+        status:          :enabled,
+        site:            :pluto,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+        hashdig:         :yep,
+      },
+      facts: {
+        fqdn: 'hashdig-node-without-hash.example.com',
+      },
     }.to_json
   end
   def self.node_pluto
