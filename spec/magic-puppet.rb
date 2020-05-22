@@ -3,9 +3,8 @@ require 'cgi'
 
 describe 'Noodle' do
   it "should allow finding by hostname or FQDN and give Puppet ENC YAML output" do
-    put '/nodes/ioio.example.com', HappyHelper::node_funky_jupiter
+    put '/nodes/ioio.example.com?now', HappyHelper::node_funky_jupiter
     assert_equal 201, last_response.status
-    Noodle::NodeRepository.repository.refresh_index!
 
     get "/nodes/_/ioio.example.com"
     assert_equal 200, last_response.status

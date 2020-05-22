@@ -3,13 +3,10 @@ require 'cgi'
 
 describe 'Noodle' do
   it "should allow finding by listing two FQDNs" do
-    put '/nodes/yyz.example.com', HappyHelper::node_funky_jupiter
+    put '/nodes/yyz.example.com?now', HappyHelper::node_funky_jupiter
     assert_equal 201, last_response.status
-
-    put '/nodes/zzy.example.com', HappyHelper::node_funky_jupiter
+    put '/nodes/zzy.example.com?now', HappyHelper::node_funky_jupiter
     assert_equal 201, last_response.status
-
-    Noodle::NodeRepository.repository.refresh_index!
 
     get "/nodes/_/yyz.example.com%20zzy.example.com"
     assert_equal 200, last_response.status

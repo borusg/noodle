@@ -2,9 +2,8 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow GETting a node after creating node via POST" do
-    post '/nodes/gogo.example.com', HappyHelper::node_moon
+    post '/nodes/gogo.example.com?now', HappyHelper::node_moon
     assert_equal 201, last_response.status
-    Noodle::NodeRepository.repository.refresh_index!
 
     r = MultiJson.load last_response.body
     assert_equal 'gogo.example.com', r['name']
