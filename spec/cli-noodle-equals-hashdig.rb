@@ -1,38 +1,26 @@
-# TODO: A race condition makes this test fail sometimes
-
 require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should noodle site=" do
     hostname = HappyHelper::randomhostname
 
-    # Create node
-    noodlin = "create -s mars -i host -p hr -P prod #{hostname}"
-    output = %x{bin/noodlin #{noodlin}}
-    assert_output("\n"){puts output}
+    put "/nodes/#{hostname}", HappyHelper::node_hashdig
+    assert_equal 201, last_response.status
+    Noodle::NodeRepository.repository.refresh_index!
 
-    # Set a deep hash value on the 'gum' param (TODO: noodlin create's -a doesn't yet get this right)
-    dotted = 'gum.address.zipcode'
-    value  = '90210'
-    noodlin = "param #{dotted}=#{value} #{hostname}"
-    output = %x{bin/noodlin #{noodlin}}
-    assert_output("\n"){puts output}
-    #
-    # Make sure hash digging works:
-    noodle = "#{dotted}= #{hostname}"
-    output = %x{bin/noodle #{noodle}}
-    assert_output("#{hostname} #{dotted}=#{value}\n"){puts output}
+    dotted_param = 'gum.address.zipcode'
+    param_value  = '90210'
+    dotted_fact  = 'chew.carrots.times'
+    fact_value   = '12'
 
-    # Set a deep hash value on the 'chew' fact (TODO: noodlin create's -a doesn't yet get this right)
-    dotted = 'chew.carrots.times'
-    value  = '12'
-    noodlin = "fact #{dotted}=#{value} #{hostname}"
-    output = %x{bin/noodlin #{noodlin}}
-    assert_output("\n"){puts output}
-    #
-    # Make sure hash digging works:
-    noodle = "#{dotted}= #{hostname}"
+    # 1) blah.blah= for params:
+    noodle = "#{dotted_param}= #{hostname}"
     output = %x{bin/noodle #{noodle}}
-    assert_output("#{hostname} #{dotted}=#{value}\n"){puts output}
+    assert_output("#{hostname} #{dotted_param}=#{param_value}\n"){puts output}
+
+    # 2) blah.blah= for facts:
+    noodle = "#{dotted_fact}= #{hostname}"
+    output = %x{bin/noodle #{noodle}}
+    assert_output("#{hostname} #{dotted_fact}=#{fact_value}\n"){puts output}
   end
 end

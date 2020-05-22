@@ -195,6 +195,31 @@ module HappyHelper
       }
     }.to_json
   end
+  def self.node_hashdig
+    {
+      params: {
+        created_by:      :spec,
+        ilk:             :host,
+        status:          :enabled,
+        site:            :pluto,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec,
+        gum: {
+          address: {
+            zipcode: 90210
+          }
+        },
+      },
+      facts: {
+        chew: {
+          carrots: {
+            times: 12
+          },
+        },
+      }
+    }.to_json
+  end
   def self.node_pluto
     {
       params: {
@@ -294,14 +319,6 @@ end
   Rack::Handler::Puma.run Noodle.new, :Port => 2929
 end
 
-# 3/14/2017: Ran all tests 3 times without this and only once did a single test fail:
-# sleep(1) # wait a sec for the server to be booted
-# So, um, I'll leave it out for a while.
-# 4/16/2017: Welp, today tests fail without this sleep :(
-# One day I'll track it down!
-# 12/13/2019: Still trouble with out this sleep
-sleep 1
-
 describe 'Noodle' do
   it "should allow refreshing options" do
     ## Allow gum to be a hash
@@ -326,3 +343,11 @@ describe 'Noodle' do
     assert_equal 201, last_response.status
   end
 end
+
+# 3/14/2017: Ran all tests 3 times without this and only once did a single test fail:
+# sleep(1) # wait a sec for the server to be booted
+# So, um, I'll leave it out for a while.
+# 4/16/2017: Welp, today tests fail without this sleep :(
+# One day I'll track it down!
+# 12/13/2019: Still trouble with out this sleep
+sleep 1
