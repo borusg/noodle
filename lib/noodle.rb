@@ -192,12 +192,19 @@ class Noodle < Sinatra::Base
   # "Magic" search via query (so I can use 'curl -G --data-urlencode' :)
   get '/nodes/_/' do
     maybe_refresh(params)
+    query = ''
     # TODO: This can't be the way to do this!
-    query = String.new(params.keys.first)
+    query = String.new(params.keys.first) unless params.empty?
     query << "=#{params.values.first}" unless params.values.first.nil?
-    b,s = Noodle::Controller.magic(query)
-    body   b
-    status s
+
+    if query.empty?
+      body ''
+      status 200
+    else
+      b,s = Noodle::Controller.magic(query)
+      body   b
+      status s
+    end
   end
 
   # TODO: Really this old-style noodlin should go away in favor of a
@@ -218,6 +225,11 @@ class Noodle < Sinatra::Base
     b,s = Noodle::Controller.noodlin(changes, {now: now})
     body   b
     status s
+  end
+
+  get '/*' do
+    body "Uh, yeah, I dunno what you want.\n"
+    status 404
   end
 
   helpers do
