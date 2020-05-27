@@ -26,7 +26,10 @@ class Noodle::Search
 
   def match(term,value)
     @search_terms << term
-    @query << "(params.#{term}:*#{value}* OR facts.#{term}:*#{value}*)"
+    # TODO: maybe more escaping is warranted
+    # Escape slashes in =~ queries so they can match path names.
+    value.gsub!('/','\/')
+    @query << "(params.#{term}.keyword:*#{value}* OR facts.#{term}.keyword:*#{value}*)"
     self
   end
 
