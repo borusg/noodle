@@ -228,7 +228,7 @@ class Noodle < Sinatra::Base
   end
 
   get '/*' do
-    body "Uh, yeah, I dunno what you want.\n"
+    body "Uh, yeah, I dunno what you want with your #{params}\n"
     status 404
   end
 
