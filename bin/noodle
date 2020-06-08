@@ -121,7 +121,7 @@ query << "#{opts[:find_and_show]}=?"       if opts[:find_and_show]
 query << "#{opts[:show_value]}="           if opts[:show_value]
 query << "#{opts[:sum]}+"                  if opts[:sum]
 query << ":#{opts[:unique_value]}"         if opts[:unique_value]
-query += query + ARGV
+query += ARGV
 
 # Oh boy encoding is fun. Shirley, some other call would encode better
 # without the need for the gsubs. But just as Shirley, noodlin should
