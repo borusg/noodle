@@ -85,7 +85,7 @@ def do_create
 end
 
 def do_param
-  opts = Optimist::options do
+  opts = Optimist.options do
     opt :remove, 'Remove param'
     opt :who,    'Username of person updating node',
         short: :w, type: :string, default: ENV['LOGNAME']
@@ -97,6 +97,7 @@ def do_param
   noodlin << "-w #{opts[:who]}"
   noodlin << '-r' if opts[:remove]
   # Rubocop says this is not needed but when I remove it, tests fail
+  # presumabry because of the 'if'
   return(noodlin)
 end
 
@@ -113,6 +114,7 @@ def do_fact
   noodlin << "-w #{opts[:who]}"
   noodlin << '-r' if opts[:remove]
   # Rubocop says this is not needed but when I remove it, tests fail
+  # presumabry because of the 'if'
   return(noodlin)
 end
 
@@ -125,8 +127,6 @@ def do_optionrefresh
   noodlin = []
   noodlin << 'optionrefresh'
   noodlin << "-w #{opts[:who]}"
-  # Rubocop says this is not needed but when I remove it, tests fail
-  return(noodlin)
 end
 
 def do_remove
@@ -138,8 +138,6 @@ def do_remove
   noodlin = []
   noodlin << 'remove'
   noodlin << "-w #{opts[:who]}"
-  # Rubocop says this is not needed but when I remove it, tests fail
-  return(noodlin)
 end
 
 def do_surplus
@@ -151,8 +149,6 @@ def do_surplus
   noodlin = []
   noodlin << 'surplus'
   noodlin << "-w #{opts[:who]}"
-  # Rubocop says this is not needed but when I remove it, tests fail
-  return(noodlin)
 end
 
 command = ARGV.shift
