@@ -80,6 +80,8 @@ def do_create
   opts[:fact].each do |pair|
     noodlin << "-f #{pair}"
   end
+  # Rubocop says this is not needed but when I remove it, tests fail
+  return(noodlin)
 end
 
 def do_param
@@ -94,6 +96,8 @@ def do_param
   noodlin = ['param']
   noodlin << "-w #{opts[:who]}"
   noodlin << '-r' if opts[:remove]
+  # Rubocop says this is not needed but when I remove it, tests fail
+  return(noodlin)
 end
 
 def do_fact
@@ -108,6 +112,8 @@ def do_fact
   noodlin = ['fact']
   noodlin << "-w #{opts[:who]}"
   noodlin << '-r' if opts[:remove]
+  # Rubocop says this is not needed but when I remove it, tests fail
+  return(noodlin)
 end
 
 def do_optionrefresh
@@ -119,6 +125,8 @@ def do_optionrefresh
   noodlin = []
   noodlin << 'optionrefresh'
   noodlin << "-w #{opts[:who]}"
+  # Rubocop says this is not needed but when I remove it, tests fail
+  return(noodlin)
 end
 
 def do_remove
@@ -130,6 +138,8 @@ def do_remove
   noodlin = []
   noodlin << 'remove'
   noodlin << "-w #{opts[:who]}"
+  # Rubocop says this is not needed but when I remove it, tests fail
+  return(noodlin)
 end
 
 def do_surplus
@@ -141,6 +151,8 @@ def do_surplus
   noodlin = []
   noodlin << 'surplus'
   noodlin << "-w #{opts[:who]}"
+  # Rubocop says this is not needed but when I remove it, tests fail
+  return(noodlin)
 end
 
 command = ARGV.shift
