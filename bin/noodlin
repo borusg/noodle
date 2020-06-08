@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+# Rubocop says:
+# frozen_string_literal: true
+
 # TODO: Add documentation to --help
 
 # Um, maybe this should be reworked to use the 'gli' Gem or similar
@@ -13,38 +16,50 @@ require 'optimist'
 ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].nil?
 
 def do_create
-  opts = Optimist::options do
-    opt :ilk,       'Ilk',                                :short => :i, :type => :string, :required => true # It's tempting to default to host
-    opt :prodlevel, 'Prodlevel',                          :short => :p, :type => :string, :required => true
-    opt :project,   'Project',                            :short => :P, :type => :string, :required => true
-    opt :site,      'Site',                               :short => :s, :type => :string, :required => true
+  opts = Optimist.options do
+    # It's tempting to default to host
+    opt :ilk,       'Ilk',
+        short: :i, type: :string, required: true
+    opt :prodlevel, 'Prodlevel',
+        short: :p, type: :string, required: true
+    opt :project,   'Project',
+        short: :P, type: :string, required: true
+    opt :site,      'Site',
+        short: :s, type: :string, required: true
 
     # Required if ilk=host
-    opt :usgos,     'USG OS name (required if ilk=host)', :short => :u, :type => :string
+    opt :usgos,     'USG OS name (required if ilk=host)',
+        short: :u, type: :string
 
-    opt :status,    'Status',                             :short => :S, :type => :string, :default => 'enabled'
+    opt :status,    'Status',
+        short: :S, type: :string, default: 'enabled'
 
-    opt :param,     'Param (can specify more than once)', :short => :a, :type => :string, :multi => true
-    opt :fact,      'Fact (can specify more than once)',  :short => :f, :type => :string, :multi => true
+    opt :param,     'Param (can specify more than once)',
+        short: :a, type: :string, multi: true
+    opt :fact,      'Fact (can specify more than once)',
+        short: :f, type: :string, multi: true
 
-    opt :maxlen,    'Maximum length of short hostname. Defaults to 15. Because Active Directory', :short => :m, :type => :integer, :default => 15
-    opt :who,       'Username of person making creating node', :short => :w, :type => :string, :default => ENV['LOGNAME']
-#    opt :debug,     'Display debug info'
-#    opt :help,      'Display help'
+    opt :maxlen,    'Maximum length of short hostname. Defaults to 15. Because Active Directory',
+        short: :m, type: :integer, default: 15
+    opt :who,       'Username of person making creating node',
+        short: :w, type: :string, default: ENV['LOGNAME']
+    # opt :debug,     'Display debug info'
+    # opt :help,      'Display help'
   end
 
   # usgos is required if ilk=host
-  #(puts "Must include --usgos when ilk=host."; exit(1)) if opts[:ilk] == 'host' and opts[:usgos].nil?
+  # (puts "Must include --usgos when ilk=host."; exit(1)) if opts[:ilk] == 'host' and opts[:usgos].nil?
 
   too_long_names = []
   ARGV.each do |fqdn|
-    next unless fqdn.sub(/[.].*/,'').length > opts[:maxlen]
+    next unless fqdn.sub(/[.].*/, '').length > opts[:maxlen]
+
     too_long_names << fqdn
   end
 
   unless too_long_names.empty?
     puts "Sorry, one or more of your short node names was longer than #{opts[:maxlen]} characters. Exiting.\n"
-    puts "Your node names were:"
+    puts 'Your node names were:'
     puts too_long_names.join("\n")
     exit(4)
   end
@@ -55,7 +70,7 @@ def do_create
   noodlin << "-p #{opts[:prodlevel]}"
   noodlin << "-P #{opts[:project]}"
   noodlin << "-s #{opts[:site]}"
-  #noodlin << "-S #{opts[:status]}"
+  # noodlin << "-S #{opts[:status]}"
   noodlin << "-a usgos=#{opts[:usgos]}" if opts[:usgos_given]
   noodlin << "-w #{opts[:who]}"
 
@@ -65,14 +80,13 @@ def do_create
   opts[:fact].each do |pair|
     noodlin << "-f #{pair}"
   end
-
-  return(noodlin)
 end
 
 def do_param
   opts = Optimist::options do
     opt :remove, 'Remove param'
-    opt :who,    'Username of person updating node', :short => :w, :type => :string, :default => ENV['LOGNAME']
+    opt :who,    'Username of person updating node',
+        short: :w, type: :string, default: ENV['LOGNAME']
     opt :debug,  'Display debug info'
     opt :help,   'Display help'
   end
@@ -80,13 +94,13 @@ def do_param
   noodlin = ['param']
   noodlin << "-w #{opts[:who]}"
   noodlin << '-r' if opts[:remove]
-  return(noodlin)
 end
 
 def do_fact
-  opts = Optimist::options do
+  opts = Optimist.options do
     opt :remove, 'Remove fact'
-    opt :who,    'Username of person updating node', :short => :w, :type => :string, :default => ENV['LOGNAME']
+    opt :who,    'Username of person updating node',
+        short: :w, type: :string, default: ENV['LOGNAME']
     opt :debug,  'Display debug info'
     opt :help,   'Display help'
   end
@@ -94,40 +108,39 @@ def do_fact
   noodlin = ['fact']
   noodlin << "-w #{opts[:who]}"
   noodlin << '-r' if opts[:remove]
-  return(noodlin)
 end
 
 def do_optionrefresh
-  opts = Optimist::options do
-    opt :who,       'Username of person making creating node', :short => :w, :type => :string, :default => ENV['LOGNAME']
+  opts = Optimist.options do
+    opt :who, 'Username of person making creating node',
+        short: :w, type: :string, default: ENV['LOGNAME']
   end
 
   noodlin = []
   noodlin << 'optionrefresh'
   noodlin << "-w #{opts[:who]}"
-  return(noodlin)
 end
 
 def do_remove
-  opts = Optimist::options do
-    opt :who,       'Username of person making creating node', :short => :w, :type => :string, :default => ENV['LOGNAME']
+  opts = Optimist.options do
+    opt :who, 'Username of person making creating node',
+        short: :w, type: :string, default: ENV['LOGNAME']
   end
 
   noodlin = []
   noodlin << 'remove'
   noodlin << "-w #{opts[:who]}"
-  return(noodlin)
 end
 
 def do_surplus
-  opts = Optimist::options do
-    opt :who,       'Username of person making creating node', :short => :w, :type => :string, :default => ENV['LOGNAME']
+  opts = Optimist.options do
+    opt :who, 'Username of person making creating node',
+        short: :w, type: :string, default: ENV['LOGNAME']
   end
 
   noodlin = []
   noodlin << 'surplus'
   noodlin << "-w #{opts[:who]}"
-  return(noodlin)
 end
 
 command = ARGV.shift
@@ -151,13 +164,13 @@ end
 
 # Append the remaining args which may be hostnames and/or key/value pairs
 noodlin << ARGV.join(' ')
-#puts "Your noodlin is:\n#{noodlin}" #if opts[:debug]
+# puts "Your noodlin is:\n#{noodlin}" #if opts[:debug]
 
 # Oh boy encoding is fun. Shirley, some other call would encode better
 # without the need for the gsubs. But just as Shirley, noodlin should
 # really be a POST so TODO that one day and encoding won't matter.
-noodle_query = URI.encode(noodlin.join(' ')).gsub('=','%3D').gsub('+','%2B')
+noodle_query = URI.encode(noodlin.join(' ')).gsub('=', '%3D').gsub('+', '%2B')
 uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/noodlin/?now&#{noodle_query}")
-#puts "URI is #{uri}" if opts[:debug]
+# puts "URI is #{uri}" if opts[:debug]
 
 puts Net::HTTP.get(uri)
