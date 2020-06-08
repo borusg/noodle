@@ -1,16 +1,17 @@
 #!/usr/bin/env ruby
 
+# Rubocop says:
+# frozen_string_literal: true
+
 require 'uri'
 require 'net/http'
 require 'optimist'
 
 ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].nil?
 
-opts = Optimist::options do
-  banner <<EOS
-  Ask Noodle questions!
+help = "  Ask Noodle questions!
 
-  "TERM" below means either parameter or fact.
+  \"TERM\" below means either parameter or fact.
 
   All searches search for BOTH params and facts. (In theory there is
   no overlap between the two. (And perhaps we should enforce this.))
@@ -90,7 +91,10 @@ opts = Optimist::options do
   OR
 
   noodle --sum processorcount --sum ram_gigs --sum storage_gigs
-EOS
+"
+
+opts = Optimist.options do
+  banner help
 
   opt :does_not_exist,  'Find all entries that do not have TERM (same as @TERM?)',              :type => :string
   opt :exists,          'Show all entries that have TERM (same as TERM?)',                      :type => :string
@@ -117,7 +121,7 @@ query << "#{opts[:find_and_show]}=?"       if opts[:find_and_show]
 query << "#{opts[:show_value]}="           if opts[:show_value]
 query << "#{opts[:sum]}+"                  if opts[:sum]
 query << ":#{opts[:unique_value]}"         if opts[:unique_value]
-query = query + ARGV
+query += query + ARGV
 
 # Oh boy encoding is fun. Shirley, some other call would encode better
 # without the need for the gsubs. But just as Shirley, noodlin should
