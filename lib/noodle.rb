@@ -49,7 +49,7 @@ class Noodle < Sinatra::Base
     index_settings = {
       number_of_shards: 1,
       number_of_replicas: 1,
-      index: { mapping: { total_fields: { limit: "20000" } } }
+      index: { mapping: { total_fields: { limit: '20000' } } }
     }
   end
 
@@ -126,7 +126,7 @@ class Noodle < Sinatra::Base
   patch '/nodes/:name' do
     maybe_refresh(params)
     halt(422, "#{params[:name]} does not exist.\n") unless
-      node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go(size: 1)
+      (node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go(size: 1))
 
     begin
       args = MultiJson.load(request.body.read)
