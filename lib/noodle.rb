@@ -1,3 +1,6 @@
+# Rubocop says:
+# frozen_string_literal: true
+
 # TODO: JSON all responses
 #
 # TODO: Using name as the key is probably stupid
@@ -11,8 +14,9 @@ require 'multi_json'
 require 'oj'
 
 # Super debug logging
-#Noodle::Node.gateway.client.transport.logger = Logger.new(STDERR)
+# Noodle::Node.gateway.client.transport.logger = Logger.new(STDERR)
 
+# Docs RSN :)
 class Noodle < Sinatra::Base
   enable :logging
 
@@ -36,7 +40,7 @@ class Noodle < Sinatra::Base
     index_settings = {
       number_of_shards: 1,
       number_of_replicas: 0,
-      index: {mapping: {total_fields: {limit: "20000"}}},
+      index: { mapping: { total_fields: { limit: "20000" } } }
     }
     maybe_force_create_index = true
   end
@@ -45,7 +49,7 @@ class Noodle < Sinatra::Base
     index_settings = {
       number_of_shards: 1,
       number_of_replicas: 1,
-      index: {mapping: {total_fields: {limit: "20000"}}},
+      index: { mapping: { total_fields: { limit: "20000" } } }
     }
   end
 
@@ -55,8 +59,7 @@ class Noodle < Sinatra::Base
   repository.create_index! force: maybe_force_create_index
   repository.client.cluster.health wait_for_status: 'yellow'
 
-  # TODO:
-  # Ahem, this is maybe the right way to do it:
+  # TODO: Ahem, this is maybe the right way to do it:
   set :repository, repository
   # But I'm cheating for now because passing repository into Node::Controller and such is unweildy
   Noodle::NodeRepository.set_repository(repository)
@@ -102,15 +105,15 @@ class Noodle < Sinatra::Base
     args = nil
     begin
       args = MultiJson.load(request.body.read)
-    rescue MultiJson::ParseError => exception
-      puts exception.data
-      puts exception.cause
+    rescue MultiJson::ParseError => e
+      puts e.data
+      puts e.cause
       halt 500
     end
 
     args['name'] = params[:name]
 
-    node = Noodle::Controller.create_one(args, {now: params.key?('now')})
+    node = Noodle::Controller.create_one(args, { now: params.key?('now') })
     if node.class == Noodle::Node
       body node.to_json + "\n"
       status 201
@@ -127,13 +130,13 @@ class Noodle < Sinatra::Base
 
     begin
       args = MultiJson.load(request.body.read)
-    rescue MultiJson::ParseError => exception
-      puts exception.data
-      puts exception.cause
+    rescue MultiJson::ParseError => e
+      puts e.data
+      puts e.cause
       halt 500
     end
 
-    node = Noodle::Controller.update(node,args,params)
+    node = Noodle::Controller.update(node, args, params)
     if node.class == Noodle::Node
       body node.to_json + "\n"
       status 200
@@ -184,7 +187,7 @@ class Noodle < Sinatra::Base
   # "Magic" search
   get '/nodes/_/:search' do
     maybe_refresh(params)
-    b,s = Noodle::Controller.magic(params[:search])
+    b, s = Noodle::Controller.magic(params[:search])
     body   b
     status s
   end
@@ -222,7 +225,7 @@ class Noodle < Sinatra::Base
     # TODO: This can't be the way to do this!
     changes = String.new(params.keys.first)
     changes << "=#{params.values.first}" unless params.values.first.nil?
-    b,s = Noodle::Controller.noodlin(changes, {now: now})
+    b, s = Noodle::Controller.noodlin(changes, { now: now })
     body   b
     status s
   end
