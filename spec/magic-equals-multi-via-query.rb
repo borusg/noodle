@@ -2,9 +2,9 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow finding by 'TERM1=VALUE1 TERM2=VALUE2' via query (nodes/_/?blah blah)" do
-    put '/nodes/kiki.example.com?now', HappyHelper::node_pluto
+    post '/nodes/kiki.example.com?now', HappyHelper::node_pluto
     assert_equal 201, last_response.status
-    put '/nodes/cici.example.com?now', HappyHelper::node_prod_pluto
+    post '/nodes/cici.example.com?now', HappyHelper::node_prod_pluto
     assert_equal 201, last_response.status
 
     get '/nodes/_/?site=pluto%20prodlevel=prod'

@@ -3,7 +3,7 @@ require 'cgi'
 
 describe 'Noodle' do
   it "should allow finding and showing with TERM?=" do
-    put '/nodes/lolo.example.com?now', HappyHelper::node_funky_jupiter
+    post '/nodes/lolo.example.com?now', HappyHelper::node_funky_jupiter
     assert_equal 201, last_response.status
 
     get "/nodes/_/funky#{CGI.escape('?=')}"

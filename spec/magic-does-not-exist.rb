@@ -3,9 +3,9 @@ require 'cgi'
 
 describe 'Noodle' do
   it "should allow finding by @TERM?" do
-    put '/nodes/yoyo.example.com?now', HappyHelper::node_funkymonkey_jupiter_dnex
+    post '/nodes/yoyo.example.com?now', HappyHelper::node_funkymonkey_jupiter_dnex
     assert_equal 201, last_response.status
-    put '/nodes/soyo.example.com?now', HappyHelper::node_funky_jupiter_dnex
+    post '/nodes/soyo.example.com?now', HappyHelper::node_funky_jupiter_dnex
     assert_equal 201, last_response.status
 
     get "/nodes/_/@funkymonkey dnex=yep".gsub(' ', '%20')

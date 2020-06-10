@@ -3,9 +3,9 @@ require 'cgi'
 
 describe 'Noodle' do
   it "should allow sum to work" do
-    put '/nodes/zyyz.example.com?now', HappyHelper::node_jupiter(magnitude: 4)
+    post '/nodes/zyyz.example.com?now', HappyHelper::node_jupiter(magnitude: 4)
     assert_equal 201, last_response.status
-    put '/nodes/zxxz.example.com?now', HappyHelper::node_jupiter(magnitude: 40)
+    post '/nodes/zxxz.example.com?now', HappyHelper::node_jupiter(magnitude: 40)
     assert_equal 201, last_response.status
 
     get "/nodes/_/ilk=host%20magnitude+".gsub('+','%2B')

@@ -358,7 +358,7 @@ describe 'Noodle' do
     # Refresh options
     assert_output("Your options had a nap and they are nicely refreshed.\n"){puts %x{bin/noodlin optionrefresh}}
 
-    put '/nodes/zippyziggy.example.com', HappyHelper::node_funky_jupiter
+    post '/nodes/zippyziggy.example.com', HappyHelper::node_funky_jupiter
     assert_equal 201, last_response.status
   end
 end

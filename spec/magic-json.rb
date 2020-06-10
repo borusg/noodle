@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow output in JSON format" do
-    put '/nodes/fofo.example.com?now', HappyHelper::node_jupiter_json
+    post '/nodes/fofo.example.com?now', HappyHelper::node_jupiter_json
     assert_equal 201, last_response.status
 
     get '/nodes/_/output=json%20json'

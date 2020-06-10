@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should allow finding by TERM=VALUE and giving full output" do
-    put '/nodes/momo.example.com?now', HappyHelper::node_jupiter_full
+    post '/nodes/momo.example.com?now', HappyHelper::node_jupiter_full
     assert_equal 201, last_response.status
 
     get '/nodes/_/full=yes%20full'

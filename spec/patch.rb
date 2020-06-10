@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it "should patch a node" do
-    put '/nodes/dodo.example.com?now', params = HappyHelper::node_moon
+    post '/nodes/dodo.example.com?now', params = HappyHelper::node_moon
     assert_equal 201, last_response.status
 
     patch '/nodes/dodo.example.com?now', params = '{"params":{"site":"mars"}}'

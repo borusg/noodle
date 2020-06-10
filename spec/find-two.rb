@@ -3,9 +3,9 @@ require 'cgi'
 
 describe 'Noodle' do
   it "should allow finding by listing two FQDNs" do
-    put '/nodes/yyz.example.com?now', HappyHelper::node_funky_jupiter
+    post '/nodes/yyz.example.com?now', HappyHelper::node_funky_jupiter
     assert_equal 201, last_response.status
-    put '/nodes/zzy.example.com?now', HappyHelper::node_funky_jupiter
+    post '/nodes/zzy.example.com?now', HappyHelper::node_funky_jupiter
     assert_equal 201, last_response.status
 
     get "/nodes/_/yyz.example.com%20zzy.example.com"
