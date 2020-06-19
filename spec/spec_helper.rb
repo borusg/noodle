@@ -1,3 +1,6 @@
+# Rubocop says:
+# frozen_string_literal: true
+
 require 'coveralls'
 Coveralls.wear!
 
@@ -33,7 +36,7 @@ module HappyHelper
         site:            :mars,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -46,7 +49,7 @@ module HappyHelper
         site:            :moon,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -59,7 +62,7 @@ module HappyHelper
         site:            :moon,
         project:         :pigglywiggly,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -73,7 +76,7 @@ module HappyHelper
         funky:           :town,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -88,7 +91,7 @@ module HappyHelper
         funkymonkey:     :town,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -103,7 +106,7 @@ module HappyHelper
         dnex:            :yep,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -119,7 +122,7 @@ module HappyHelper
         funkymonkey:     :town,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -133,10 +136,10 @@ module HappyHelper
         justfora:        :test,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }
-    node[:facts] = {magnitude: magnitude} unless magnitude.nil?
+    node[:facts] = { magnitude: magnitude } unless magnitude.nil?
     node.to_json
   end
   def self.node_prod_jupiter
@@ -149,7 +152,7 @@ module HappyHelper
         justfora:        :test,
         project:         :hr,
         prodlevel:       :prod,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -163,7 +166,7 @@ module HappyHelper
         output:          :json,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -177,7 +180,7 @@ module HappyHelper
         full:            :yes,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -191,7 +194,7 @@ module HappyHelper
         justfora:        :test,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -208,17 +211,17 @@ module HappyHelper
         hashdig:         :yep,
         gum: {
           address: {
-            zipcode: 90210
+            zipcode: 90_210
           }
-        },
+        }
       },
       facts: {
         fqdn: 'hashdig-node-with-hash.example.com',
         chew: {
           carrots: {
             times: 12
-          },
-        },
+          }
+        }
       }
     }.to_json
   end
@@ -232,11 +235,11 @@ module HappyHelper
         project:         :hr,
         prodlevel:       :dev,
         last_updated_by: :spec,
-        hashdig:         :yep,
+        hashdig:         :yep
       },
       facts: {
         fqdn: 'hashdig-node-without-hash.example.com',
-      },
+      }
     }.to_json
   end
   def self.node_pluto
@@ -248,7 +251,7 @@ module HappyHelper
         site:            :pluto,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -261,7 +264,7 @@ module HappyHelper
         site:            :pluto,
         project:         :hr,
         prodlevel:       :prod,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -275,7 +278,7 @@ module HappyHelper
         justfora:        :test,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -289,7 +292,7 @@ module HappyHelper
         justfora:        :test,
         project:         :hr,
         prodlevel:       :prod,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }.to_json
   end
@@ -304,10 +307,10 @@ module HappyHelper
         at_me:           :yes,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }
-    node[:facts] = {magnitude: magnitude} unless magnitude.nil?
+    node[:facts] = { magnitude: magnitude } unless magnitude.nil?
     node.to_json
   end
   def self.node_venus(magnitude: nil)
@@ -320,10 +323,10 @@ module HappyHelper
         magic_dneq:      :yes,
         project:         :hr,
         prodlevel:       :dev,
-        last_updated_by: :spec,
+        last_updated_by: :spec
       }
     }
-    node[:facts] = {magnitude: magnitude} unless magnitude.nil?
+    node[:facts] = { magnitude: magnitude } unless magnitude.nil?
     node.to_json
   end
 end
@@ -335,7 +338,7 @@ end
 
 # Start a local rack server to serve up test pages.
 @server_thread = Thread.new do
-  Rack::Handler::Puma.run Noodle.new, :Port => 2929
+  Rack::Handler::Puma.run Noodle.new, Port: 2929
 end
 
 describe 'Noodle' do
@@ -343,20 +346,20 @@ describe 'Noodle' do
     ## Allow gum to be a hash
     # Create ilk=option entry and refresh options:
     noodlin = 'create -i option -p noodle -P prod -s mars -a target_ilk=default -a limits.limits=hash default.option.example.com'
-    assert_output("\n"){puts %x{bin/noodlin #{noodlin}}}
+    assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     noodlin = 'param limits.project=hr,financials,lms,noodle,registration,test,warehouse default.option.example.com'
-    assert_output("\n"){puts %x{bin/noodlin #{noodlin}}}
+    assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Let limits.gum be a hash,
     noodlin = 'param limits.gum=hash default.option.example.com'
-    assert_output("\n"){puts %x{bin/noodlin #{noodlin}}}
+    assert_output("\n") { puts `bin/noodlin #{noodlin}` }
     # Let limits.chew be a hash too
     noodlin = 'param limits.chew=hash default.option.example.com'
-    assert_output("\n"){puts %x{bin/noodlin #{noodlin}}}
+    assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Refresh options
-    assert_output("Your options had a nap and they are nicely refreshed.\n"){puts %x{bin/noodlin optionrefresh}}
+    assert_output("Your options had a nap and they are nicely refreshed.\n") { puts `bin/noodlin optionrefresh`}
 
     post '/nodes/zippyziggy.example.com', HappyHelper::node_funky_jupiter
     assert_equal 201, last_response.status
