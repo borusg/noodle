@@ -358,6 +358,12 @@ describe 'Noodle' do
     noodlin = 'param limits.chew=hash default.option.example.com'
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
+    # Uniqueness based on name *and* ilk:
+    noodlin = 'param limits.uniqueness_params=array default.option.example.com'
+    assert_output("\n") { puts `bin/noodlin #{noodlin}` }
+    noodlin = 'param uniqueness_params=ilk default.option.example.com'
+    assert_output("\n") { puts `bin/noodlin #{noodlin}` }
+
     # Refresh options
     assert_output("Your options had a nap and they are nicely refreshed.\n") { puts `bin/noodlin optionrefresh`}
 
