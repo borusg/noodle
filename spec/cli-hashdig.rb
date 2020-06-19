@@ -11,13 +11,21 @@ describe 'Noodle' do
   before do
     node = HappyHelper::node_hashdig
     fqdn = JSON.load(node)['facts']['fqdn']
-    put "/nodes/#{fqdn}?now", node
+    post "/nodes/#{fqdn}?now", node
     assert_equal 201, last_response.status
 
     node = HappyHelper::node_hashdig_without_hash
     fqdn = JSON.load(node)['facts']['fqdn']
-    put "/nodes/#{fqdn}?now", node
+    post "/nodes/#{fqdn}?now", node
     assert_equal 201, last_response.status
+  end
+
+  after do
+    [hostname_with_hash, hostname_without_hash].each do |fqdn|
+      delete "/nodes/#{fqdn}"
+      assert_equal 200, last_response.status
+      assert _(last_response.body).must_include "Deleted #{fqdn}"
+    end
   end
 
   it "should hashdig param when BLAH=YABBA" do
