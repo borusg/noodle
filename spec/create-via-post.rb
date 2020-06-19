@@ -5,7 +5,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it 'allow creating a node via POST' do
-    post '/nodes/jojo.example.com', HappyHelper.node_moon
+    post '/nodes/jojo.example.com?now', HappyHelper.node_moon
     assert_equal 201, last_response.status
 
     r = MultiJson.load last_response.body
