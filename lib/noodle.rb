@@ -95,37 +95,18 @@ class Noodle < Sinatra::Base
 
   put '/nodes/:name' do
     maybe_refresh(params)
-    # TODO: Refuse to stomp an existing node?
+    halt(422, "#{params[:name]} does not exist.\n") unless
+      (node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go(size: 1))
 
-    # Delete it if it exists
-    Noodle::Controller.delete_one(params[:name])
+    body, status = update(node, params, request, replace_all: true)
 
-    # TODO: DRY with patch
-    # TODO: Delete this line?
-    args = nil
-    begin
-      args = MultiJson.load(request.body.read)
-    rescue MultiJson::ParseError => e
-      puts e.data
-      puts e.cause
-      halt 500
-    end
-
-    args['name'] = params[:name]
-
-    node = Noodle::Controller.create_one(args, { now: params.key?('now') })
-    if node.class == Noodle::Node
-      body node.to_json + "\n"
-      status 201
-    else
-      body node[:errors]
-      status 400
-    end
+    body body
+    status status
   end
 
   patch '/nodes/:name' do
     maybe_refresh(params)
-    halt(422, "#{params[:name]} does not exist.\n") unless
+    halt(423, "#{params[:name]} does not exist.\n") unless
       (node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go(size: 1))
 
     begin
@@ -148,9 +129,13 @@ class Noodle < Sinatra::Base
 
   post '/nodes/:name' do
     maybe_refresh(params)
-    halt(422, "#{params[:name]} already exists.\n") if
+    halt(409, "#{params[:name]} already exists.\n") if
       Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).any?
-    call! env.merge("REQUEST_METHOD" => 'PUT')
+
+    body, status = create(request, params)
+
+    body body
+    status status
   end
 
   # TODO: This is flawed since we now allow the same name to exist
@@ -171,7 +156,7 @@ class Noodle < Sinatra::Base
       body "Deleted #{params[:name]}\n"
       status 200
     else
-      halt(422, "#{params[:name]} does not exist.\n")
+      halt(424, "#{params[:name]} does not exist.\n")
     end
   end
 
@@ -239,5 +224,39 @@ class Noodle < Sinatra::Base
     def maybe_refresh(params)
       Noodle::Option.refresh if params.key?('refresh')
     end
+
+    def request2object(request, params)
+      s = request.body.read
+      hash = MultiJson.load(s)
+      hash['name'] = params[:name]
+      hash
+    rescue MultiJson::ParseError => e
+      puts e.data
+      puts e.cause
+      halt 500
+    end
+
+    def create(request, params)
+      x = request2object(request, params)
+      node = Noodle::Controller.create_one(x, { now: params.key?('now') })
+      check4errors(node, '201')
+    end
+
+    # Should use keyword args
+    def update(node, params, request, options)
+      node = Noodle::Controller.update(node, request2object(request, params), params.merge(options))
+      check4errors(node, '200')
+    end
+  end
+
+  def check4errors(node, good_status)
+    if node.class == Noodle::Node
+      body = node.to_json + "\n"
+      status = good_status
+    else
+      body = node[:errors]
+      status = 400
+    end
+    [body, status]
   end
 end
