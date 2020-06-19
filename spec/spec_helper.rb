@@ -53,6 +53,19 @@ module HappyHelper
       }
     }.to_json
   end
+  def self.node_moon_sslcert
+    {
+      params: {
+        created_by:      :spec,
+        ilk:             :esx,
+        status:          :surplus,
+        site:            :moon,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec
+      }
+    }.to_json
+  end
   def self.node_piggly
     {
       params: {
