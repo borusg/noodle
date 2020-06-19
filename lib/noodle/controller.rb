@@ -510,10 +510,12 @@ class Noodle
     end
 
     # Update a node based on options.
-    def self.update(node, args, options = { now: false })
-      args.each_pair do |key,value|
-        node.send("#{key}=", node.send(key).deep_merge(value))
+    def self.update(node, args, options = { now: false, replace_all: true })
+      args.each_pair do |key, value|
+        value = node.send(key).deep_merge(value) unless options[:replace_all]
+        node.send("#{key}=", value)
       end
+
       # TODO: is this order and being outside the loop correct?
       r = node.errors?
       if r.class == Noodle::Node
@@ -536,15 +538,13 @@ class Noodle
     end
 
     def self.delete_one(name)
-      return false unless node =
-                          Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(name).go(size: 1)
+      return false unless (node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(name).go(size: 1))
       Noodle::NodeRepository.repository.delete(node, refresh: true)
       return true
     end
 
     def self.create_one(args, options = { now: false })
       node = Noodle::Node.new(args)
-
       # TODO: This is probably bogus:
       # Set default FQDN fact in case none provided
       node.facts[:fqdn] = node.name if node.facts[:fqdn].nil?
