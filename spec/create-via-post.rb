@@ -1,8 +1,11 @@
+# Rubocop says:
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 describe 'Noodle' do
-  it "should allow creating a node via POST" do
-    post '/nodes/jojo.example.com', HappyHelper::node_moon
+  it 'allow creating a node via POST' do
+    post '/nodes/jojo.example.com', HappyHelper.node_moon
     assert_equal last_response.status, 201
 
     r = MultiJson.load last_response.body
@@ -13,4 +16,3 @@ describe 'Noodle' do
     assert_equal 'jojo.example.com', r['facts']['fqdn']
   end
 end
-

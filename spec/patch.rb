@@ -1,11 +1,14 @@
+# Rubocop says:
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 describe 'Noodle' do
-  it "should patch a node" do
-    post '/nodes/dodo.example.com?now', params = HappyHelper::node_moon
+  it "patch a node" do
+    post '/nodes/dodo.example.com?now', HappyHelper::node_moon
     assert_equal 201, last_response.status
 
-    patch '/nodes/dodo.example.com?now', params = '{"params":{"site":"mars"}}'
+    patch '/nodes/dodo.example.com?now', '{"params":{"site":"mars"}}'
     assert_equal 200, last_response.status
 
     r = MultiJson.load last_response.body
@@ -16,4 +19,3 @@ describe 'Noodle' do
     assert_equal 'dodo.example.com', r['facts']['fqdn']
   end
 end
-

@@ -1,8 +1,11 @@
+# Rubocop says:
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 describe 'Noodle' do
-  it "should delete a node" do
-    post '/nodes/soso.example.com?now', HappyHelper::node_moon
+  it 'delete a node' do
+    post '/nodes/soso.example.com?now', HappyHelper.node_moon
     assert_equal 201, last_response.status
 
     delete '/nodes/soso.example.com'
@@ -10,4 +13,3 @@ describe 'Noodle' do
     assert _(last_response.body).must_include 'Deleted soso.example.com'
   end
 end
-

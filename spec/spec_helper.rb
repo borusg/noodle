@@ -342,7 +342,7 @@ end
 end
 
 describe 'Noodle' do
-  it "should allow refreshing options" do
+  it "allow refreshing options" do
     ## Allow gum to be a hash
     # Create ilk=option entry and refresh options:
     noodlin = 'create -i option -p noodle -P prod -s mars -a target_ilk=default -a limits.limits=hash default.option.example.com'

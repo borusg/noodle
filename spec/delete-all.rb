@@ -1,10 +1,10 @@
 require_relative 'spec_helper'
 
 describe 'Noodle' do
-  it "should allow DELETE everything via /nodes" do
-    post '/nodes/sisi.example.com?now', HappyHelper::node_moon
+  it 'allow DELETE everything via /nodes' do
+    post '/nodes/sisi.example.com?now', HappyHelper.node_moon
     assert_equal 201, last_response.status
-    post '/nodes/titi.example.com?now', HappyHelper::node_mars
+    post '/nodes/titi.example.com?now', HappyHelper.node_mars
     assert_equal 201, last_response.status
 
     delete '/nodes'
@@ -15,4 +15,3 @@ describe 'Noodle' do
     assert_equal '', last_response.body
   end
 end
-

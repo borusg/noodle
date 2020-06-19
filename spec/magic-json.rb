@@ -1,8 +1,11 @@
+# Rubocop says:
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 describe 'Noodle' do
-  it "should allow output in JSON format" do
-    post '/nodes/fofo.example.com?now', HappyHelper::node_jupiter_json
+  it 'allow output in JSON format' do
+    post '/nodes/fofo.example.com?now', HappyHelper.node_jupiter_json
     assert_equal 201, last_response.status
 
     get '/nodes/_/output=json%20json'
@@ -16,4 +19,3 @@ describe 'Noodle' do
     assert_equal 'fofo.example.com', r['facts']['fqdn']
   end
 end
-
