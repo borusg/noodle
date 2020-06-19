@@ -6,6 +6,6 @@ require_relative 'spec_helper'
 describe 'Noodle' do
   it 'NOT allow creating a node via PUT' do
     put '/nodes/popo.example.com', HappyHelper.node_moon
-    assert_equal last_response.status, 422
+    assert_equal 422, last_response.status
   end
 end
