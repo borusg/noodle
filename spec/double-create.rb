@@ -9,7 +9,7 @@ describe 'Noodle' do
     assert_equal 201, last_response.status, 'First create'
 
     post '/nodes/zozo.example.com?now', HappyHelper.node_prod_jupiter
-    assert_equal 409, last_response.status, 'Second create'
-    assert _(last_response.body).must_include 'zozo.example.com already exists'
+    assert_equal 400, last_response.status, 'Second create'
+    assert _(last_response.body).must_include "Nope! Node is not unique\n"
   end
 end
