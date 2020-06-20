@@ -95,6 +95,7 @@ class Noodle < Sinatra::Base
 
   put '/nodes/:name' do
     maybe_refresh(params)
+    # TODO: Should take uniqueness params into account
     halt(422, "#{params[:name]} does not exist.\n") unless
       (node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go(size: 1))
 
@@ -106,6 +107,7 @@ class Noodle < Sinatra::Base
 
   patch '/nodes/:name' do
     maybe_refresh(params)
+    # TODO: Should take uniqueness params into account
     halt(423, "#{params[:name]} does not exist.\n") unless
       (node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go(size: 1))
 
@@ -129,8 +131,6 @@ class Noodle < Sinatra::Base
 
   post '/nodes/:name' do
     maybe_refresh(params)
-    halt(409, "#{params[:name]} already exists.\n") if
-      Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).any?
 
     body, status = create(request, params)
 
@@ -146,6 +146,7 @@ class Noodle < Sinatra::Base
   # TODO: This same problem applies to various searched above too.
   get '/nodes/:name' do
     maybe_refresh(params)
+    # TODO: should take uniqueness params into account
     nodes = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go
     body nodes.first.to_json + "\n" unless nodes.empty?
     status 200
