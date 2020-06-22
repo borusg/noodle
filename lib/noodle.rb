@@ -95,7 +95,7 @@ class Noodle < Sinatra::Base
 
   put '/nodes/:name' do
     maybe_refresh(params)
-    # TODO: Should take uniqueness params into account
+    # TODO: Should take uniqueness params into account. How about a find_unique_node method?
     halt(422, "#{params[:name]} does not exist.\n") unless
       (node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go(size: 1))
 
@@ -107,7 +107,7 @@ class Noodle < Sinatra::Base
 
   patch '/nodes/:name' do
     maybe_refresh(params)
-    # TODO: Should take uniqueness params into account
+    # TODO: Should take uniqueness params into account. How about a find_unique_node method?
     halt(423, "#{params[:name]} does not exist.\n") unless
       (node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go(size: 1))
 
@@ -138,18 +138,34 @@ class Noodle < Sinatra::Base
     status status
   end
 
-  # TODO: This is flawed since we now allow the same name to exist
-  # twice in different ilks.  Either this should require ilk (and any
-  # other uniqueness params) or it should return all matches for name
-  # and let the caller sort it out
-  #
-  # TODO: This same problem applies to various searched above too.
   get '/nodes/:name' do
     maybe_refresh(params)
-    # TODO: should take uniqueness params into account
-    nodes = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go
-    body nodes.first.to_json + "\n" unless nodes.empty?
-    status 200
+
+    # Handle body of request
+    #
+    # And, um, if ES does it then it must be OK! (?)
+    # https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html
+    # Grab the name
+    name = params.delete('name')
+    # If the body is present, it represents params. This allows uniqueness params to be specified.
+    hash = params.keys.empty? ? {} : JSON.parse(params.keys.first)
+    hash['name'] = name
+
+    node = find_unique_node(hash)
+    if node.class == String
+      status = 400
+      body = "#{node}\n"
+    else
+      status = 200
+      body = node.to_json + "\n"
+    end
+    status status
+    body body
+
+    # # TODO: Should take uniqueness params into account. How about a find_unique_node method?
+    # nodes = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go
+    # body nodes.first.to_json + "\n" unless nodes.empty?
+    # status 200
   end
 
   delete '/nodes/:name' do
@@ -259,5 +275,40 @@ class Noodle < Sinatra::Base
       status = 400
     end
     [body, status]
+  end
+
+  def find_unique_node(hash)
+    # Make sure all unqiueness params are present.
+    #
+    # NOTE: This requires that the 'ilk' param is present because
+    # uniqueness can vary by ilk!
+
+    # Return right away if no ilk supplied:
+    if hash['params'].nil? || hash['params']['ilk'].nil?
+      return('No ilk supplied so cannot check uniqueness.')
+    end
+
+    # Otherwise, check uniqueness
+    #
+    # Get the intersection of uniqueness params and the params
+    # specified in the hash, make sure the resulting array has the
+    # same number of elements as uniqueness_params has :)
+    uniqueness_params = Noodle::Option.option(hash['params']['ilk'], 'uniqueness_params')
+    if uniqueness_params.size == [uniqueness_params & hash['params'].keys].size
+      # nodes = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(hash['name']).go
+      # Search by name,
+      search = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(hash['name'])
+      # and any uniqueness params,
+      uniqueness_params.map { |uniqueness_param| search.equals(uniqueness_param, hash['params'][uniqueness_param]) }
+      # and search
+      nodes = search.go
+      if nodes.size != 1
+        "Did not find exactly one match. Matches found: #{nodes.size}"
+      else
+        nodes.first # and only!
+      end
+    else
+      "Not all uniqueness_params were not supplied. Expected uniqueness_params are: #{uniqueness_params.join(',')}"
+    end
   end
 end
