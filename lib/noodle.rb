@@ -96,9 +96,13 @@ class Noodle < Sinatra::Base
 
   put '/nodes/:name' do
     maybe_refresh(params.delete('refresh'))
-    # TODO: Should take uniqueness params into account. How about a find_unique_node method?
-    halt(422, "#{params[:name]} does not exist.\n") unless
-      (node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go(size: 1))
+
+    node = find_unique_node(params2hash(params))
+    if node.class == String
+      status 400
+      body "#{node}\n"
+      return
+    end
 
     body, status = update(node, params, request, replace_all: true)
 
