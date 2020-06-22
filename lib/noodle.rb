@@ -161,11 +161,6 @@ class Noodle < Sinatra::Base
     end
     status status
     body body
-
-    # # TODO: Should take uniqueness params into account. How about a find_unique_node method?
-    # nodes = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go
-    # body nodes.first.to_json + "\n" unless nodes.empty?
-    # status 200
   end
 
   delete '/nodes/:name' do
