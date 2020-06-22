@@ -15,12 +15,13 @@ describe 'Noodle' do
     assert_equal 'moon',             r['params']['site']
     assert_equal 'gogo.example.com', r['facts']['fqdn']
 
-    get '/nodes/gogo.example.com'
+    # Um, if ES does it then it must be OK! (?)
+    # https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html
+    params = { params: { ilk: 'host' } }.to_json
+    get '/nodes/gogo.example.com', params
     assert_equal 200, last_response.status
 
-    # TODO: DRY
-    # TODO: Should fix body so ternary isn't needed here:
-    r = last_response.body.empty? ? {} : MultiJson.load(last_response.body)
+    r = MultiJson.load(last_response.body)
     assert_equal 'gogo.example.com', r['name']
     assert_equal 'host',             r['params']['ilk']
     assert_equal 'surplus',          r['params']['status']
