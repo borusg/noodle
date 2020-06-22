@@ -73,15 +73,16 @@ class Noodle < Sinatra::Base
   end
 
   get '/help' do
-    maybe_refresh(params)
+    maybe_refresh(params.delete('refresh'))
     body "Noodle helps!\n"
     status 200
   end
 
   get '/nodes' do
-    maybe_refresh(params)
+    maybe_refresh(params.delete('refresh'))
+
     # TODO: Support JSON output too
-    b,s = Noodle::Controller.all_names
+    b, s = Noodle::Controller.all_names
     body   b
     status s
   end
@@ -94,7 +95,7 @@ class Noodle < Sinatra::Base
   end
 
   put '/nodes/:name' do
-    maybe_refresh(params)
+    maybe_refresh(params.delete('refresh'))
     # TODO: Should take uniqueness params into account. How about a find_unique_node method?
     halt(422, "#{params[:name]} does not exist.\n") unless
       (node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go(size: 1))
@@ -106,10 +107,14 @@ class Noodle < Sinatra::Base
   end
 
   patch '/nodes/:name' do
-    maybe_refresh(params)
-    # TODO: Should take uniqueness params into account. How about a find_unique_node method?
-    halt(423, "#{params[:name]} does not exist.\n") unless
-      (node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(params[:name]).go(size: 1))
+    maybe_refresh(params.delete('refresh'))
+
+    node = find_unique_node(params2hash(params))
+    if node.class == String
+      status 400
+      body "#{node}\n"
+      return
+    end
 
     begin
       args = MultiJson.load(request.body.read)
@@ -130,8 +135,7 @@ class Noodle < Sinatra::Base
   end
 
   post '/nodes/:name' do
-    maybe_refresh(params)
-
+    maybe_refresh(params.delete('refresh'))
     body, status = create(request, params)
 
     body body
@@ -139,19 +143,9 @@ class Noodle < Sinatra::Base
   end
 
   get '/nodes/:name' do
-    maybe_refresh(params)
+    maybe_refresh(params.delete('refresh'))
 
-    # Handle body of request
-    #
-    # And, um, if ES does it then it must be OK! (?)
-    # https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html
-    # Grab the name
-    name = params.delete('name')
-    # If the body is present, it represents params. This allows uniqueness params to be specified.
-    hash = params.keys.empty? ? {} : JSON.parse(params.keys.first)
-    hash['name'] = name
-
-    node = find_unique_node(hash)
+    node = find_unique_node(params2hash(params))
     if node.class == String
       status = 400
       body = "#{node}\n"
@@ -173,7 +167,7 @@ class Noodle < Sinatra::Base
   end
 
   options '/nodes/:name' do
-    maybe_refresh(params)
+    maybe_refresh(params.delete('refresh'))
     # TODO: Generate this list
     headers 'Allow' => 'DELETE, GET, OPTIONS, PATCH, POST, PUT'
     status 200
@@ -183,7 +177,7 @@ class Noodle < Sinatra::Base
   #
   # "Magic" search
   get '/nodes/_/:search' do
-    maybe_refresh(params)
+    maybe_refresh(params.delete('refresh'))
     b, s = Noodle::Controller.magic(params[:search])
     body   b
     status s
@@ -191,7 +185,7 @@ class Noodle < Sinatra::Base
 
   # "Magic" search via query (so I can use 'curl -G --data-urlencode' :)
   get '/nodes/_/' do
-    maybe_refresh(params)
+    maybe_refresh(params.delete('refresh'))
     query = ''
     # TODO: This can't be the way to do this!
     query = String.new(params.keys.first) unless params.empty?
@@ -212,13 +206,14 @@ class Noodle < Sinatra::Base
   #
   # Noodlin via query (so I can use 'curl -G --data-urlencode' :)
   get '/nodes/noodlin/' do
+    maybe_refresh(params.delete('refresh'))
+
     # TODO: This is ugly but required because the noodlin command is
     # also part of the hash and leaving "now" in there confuses
     # noodlin parsing
     now = params.key?('now')
     params.delete('now')
 
-    maybe_refresh(params)
     # TODO: This can't be the way to do this!
     changes = String.new(params.keys.first)
     changes << "=#{params.values.first}" unless params.values.first.nil?
@@ -233,8 +228,8 @@ class Noodle < Sinatra::Base
   end
 
   helpers do
-    def maybe_refresh(params)
-      Noodle::Option.refresh if params.key?('refresh')
+    def maybe_refresh(refresh)
+      Noodle::Option.refresh if refresh
     end
 
     def request2object(request, params)
@@ -305,5 +300,16 @@ class Noodle < Sinatra::Base
     else
       "Not all uniqueness_params were not supplied. Expected uniqueness_params are: #{uniqueness_params.join(',')}"
     end
+  end
+
+  # Turn request into a hash hash for use with find_unique_node
+  def params2hash(params)
+    # Delete unused param. TODO: Better!
+    params.delete('now')
+    name = params.delete('name')
+    # If the body is present, it represents params. This allows uniqueness params to be specified.
+    hash = params.keys.empty? ? {} : JSON.parse(params.keys.first)
+    hash['name'] = name
+    hash
   end
 end
