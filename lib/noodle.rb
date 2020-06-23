@@ -73,13 +73,13 @@ class Noodle < Sinatra::Base
   end
 
   get '/help' do
-    maybe_refresh(params.delete('refresh'))
+    maybe_refresh(params)
     body "Noodle helps!\n"
     status 200
   end
 
   get '/nodes' do
-    maybe_refresh(params.delete('refresh'))
+    maybe_refresh(params)
 
     # TODO: Support JSON output too
     b, s = Noodle::Controller.all_names
@@ -95,7 +95,7 @@ class Noodle < Sinatra::Base
   end
 
   put '/nodes/:name' do
-    maybe_refresh(params.delete('refresh'))
+    maybe_refresh(params)
 
     node = find_unique_node(params2hash(params))
     if node.class == String
@@ -111,7 +111,7 @@ class Noodle < Sinatra::Base
   end
 
   patch '/nodes/:name' do
-    maybe_refresh(params.delete('refresh'))
+    maybe_refresh(params)
 
     node = find_unique_node(params2hash(params))
     if node.class == String
@@ -139,7 +139,7 @@ class Noodle < Sinatra::Base
   end
 
   post '/nodes/:name' do
-    maybe_refresh(params.delete('refresh'))
+    maybe_refresh(params)
     body, status = create(request, params)
 
     body body
@@ -147,7 +147,7 @@ class Noodle < Sinatra::Base
   end
 
   get '/nodes/:name' do
-    maybe_refresh(params.delete('refresh'))
+    maybe_refresh(params)
 
     node = find_unique_node(params2hash(params))
     if node.class == String
@@ -171,7 +171,6 @@ class Noodle < Sinatra::Base
   end
 
   options '/nodes/:name' do
-    maybe_refresh(params.delete('refresh'))
     # TODO: Generate this list
     headers 'Allow' => 'DELETE, GET, OPTIONS, PATCH, POST, PUT'
     status 200
@@ -181,7 +180,7 @@ class Noodle < Sinatra::Base
   #
   # "Magic" search
   get '/nodes/_/:search' do
-    maybe_refresh(params.delete('refresh'))
+    maybe_refresh(params)
     b, s = Noodle::Controller.magic(params[:search])
     body   b
     status s
@@ -189,7 +188,8 @@ class Noodle < Sinatra::Base
 
   # "Magic" search via query (so I can use 'curl -G --data-urlencode' :)
   get '/nodes/_/' do
-    maybe_refresh(params.delete('refresh'))
+    maybe_refresh(params)
+
     query = ''
     # TODO: This can't be the way to do this!
     query = String.new(params.keys.first) unless params.empty?
@@ -210,7 +210,7 @@ class Noodle < Sinatra::Base
   #
   # Noodlin via query (so I can use 'curl -G --data-urlencode' :)
   get '/nodes/noodlin/' do
-    maybe_refresh(params.delete('refresh'))
+    maybe_refresh(params)
 
     # TODO: This is ugly but required because the noodlin command is
     # also part of the hash and leaving "now" in there confuses
@@ -232,8 +232,11 @@ class Noodle < Sinatra::Base
   end
 
   helpers do
-    def maybe_refresh(refresh)
-      Noodle::Option.refresh if refresh
+    def maybe_refresh(params)
+      return if params.nil? || !params.key?('refresh')
+
+      Noodle::Option.refresh
+      params.delete('refresh')
     end
 
     def request2object(request, params)
