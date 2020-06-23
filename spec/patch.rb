@@ -5,7 +5,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it 'patch a node' do
-    post '/nodes/dodo.example.com?now', HappyHelper::node_moon
+    post '/nodes/dodo.example.com?now', HappyHelper.node_moon
     assert_equal 201, last_response.status
 
     params = { params: { ilk: 'host', site: 'mars' } }.to_json
