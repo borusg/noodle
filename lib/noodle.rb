@@ -120,14 +120,7 @@ class Noodle < Sinatra::Base
       return
     end
 
-    begin
-      args = MultiJson.load(request.body.read)
-    rescue MultiJson::ParseError => e
-      puts e.data
-      puts e.cause
-      halt 500
-    end
-
+    args = request2object(request, params)
     node = Noodle::Controller.update(node, args, params)
     if node.class == Noodle::Node
       body node.to_json + "\n"
@@ -242,7 +235,7 @@ class Noodle < Sinatra::Base
     def request2object(request, params)
       s = request.body.read
       hash = MultiJson.load(s)
-      hash['name'] = params[:name]
+      hash['name'] = params[:name] unless params[:name].nil?
       hash
     rescue MultiJson::ParseError => e
       puts e.data
