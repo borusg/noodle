@@ -1,3 +1,6 @@
+# Rubocop says:
+# frozen_string_literal: true
+
 # TODO: Check all statuses :)
 
 # Noodle client library
@@ -34,24 +37,23 @@ class NoodleClient
     include Enumerable
 
     def each
-      NoodleClient.noodles.map{|n| yield n}
+      NoodleClient.noodles.map { |n| yield n }
     end
   end
 
   # Create a bare Noodle object, not connected to the server at all
   def initialize(name)
     @name   = name
-    @params = Hash.new
-    @facts  = Hash.new
+    @params = {}
+    @facts  = {}
     NoodleClient.noodles << self
-    self
   end
 
   # Assume Noodle entry exists on the server and update it with
   # contents of this object.  Raises error if node doesn't exist on
   # the server.
   def self.updateone(name,options)
-    http = Net::HTTP.new(NoodleClient.server,NoodleClient.port)
+    http = Net::HTTP.new(NoodleClient.server, NoodleClient.port)
     request = Net::HTTP::Patch.new("/nodes/#{name}")
     request.body = options.to_json
     request.content_type = 'application/json'
@@ -65,7 +67,7 @@ class NoodleClient
 
   # Delete node named @name from server
   def delete
-    http = Net::HTTP.new(NoodleClient.server,NoodleClient.port)
+    http = Net::HTTP.new(NoodleClient.server, NoodleClient.port)
     request = Net::HTTP.delete "/nodes/#{@name}"
     begin
       r = http.request(request)
@@ -77,8 +79,8 @@ class NoodleClient
 
   # Create node on server
   def create
-    http = Net::HTTP.new(NoodleClient.server,NoodleClient.port)
-    request = Net::HTTP::Put.new("/nodes/#{@name}")
+    http = Net::HTTP.new(NoodleClient.server, NoodleClient.port)
+    request = Net::HTTP::Post.new("/nodes/#{@name}")
     request.body = self.to_json
     request.content_type = 'application/json'
     begin
@@ -95,10 +97,10 @@ class NoodleClient
     # TODO: Switch to value-only query when magic supports that
     begin
       uri = URI(URI.encode("http://#{@server}:#{@port}/nodes/#{node} json"))
-      r = JSON.load(Net::HTTP.get(uri))
+      r = JSON.parse(Net::HTTP.get(uri))
     rescue => e
       # TODO: Fancier :)
-      return "#{e}"
+      return e.to_s
     end
     r
   end
@@ -108,10 +110,10 @@ class NoodleClient
     # TODO: Switch to value-only query when magic supports that
     begin
       uri = URI(URI.encode("http://#{@server}:#{@port}/nodes"))
-      r = JSON.load(Net::HTTP.get(uri))
+      r = JSON.parse(Net::HTTP.get(uri))
     rescue => e
       # TODO: Fancier :)
-      return "#{e}"
+      return e.to_s
     end
     r
   end
@@ -123,12 +125,12 @@ class NoodleClient
   end
 
   def to_json
-    {params: @params, facts: @facts}.to_json
+    { params: @params, facts: @facts }.to_json
   end
 
   # Return the value of one PARAM for HOST.  Optional third argument
   # specifies Noodle server:port to query
-  def self.paramvalue(host,param,server=false)
+  def self.paramvalue(host, param, server = false)
     r = self.find(host)
     # TODO: .first is dumb
     r.first['params'][param]
@@ -137,7 +139,7 @@ class NoodleClient
   # Return the result of Noodle magic QUERY as a string.  Optional
   # second argument specifies Noodle server:port to query
   def self.magic(query)
-    http = Net::HTTP.new(NoodleClient.server,NoodleClient.port)
+    http = Net::HTTP.new(NoodleClient.server, NoodleClient.port)
     request = Net::HTTP::Get.new("/nodes/_/#{query}")
     begin
       r = http.request(request)
