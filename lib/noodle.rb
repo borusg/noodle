@@ -113,14 +113,15 @@ class Noodle < Sinatra::Base
   patch '/nodes/:name' do
     maybe_refresh(params)
 
-    node = find_unique_node(params2hash(params))
+    args = request2object(request, params)
+    node = find_unique_node(args)
     if node.class == String
       status 400
       body "#{node}\n"
       return
     end
 
-    args = request2object(request, params)
+    args.delete('name')
     node = Noodle::Controller.update(node, args, params)
     if node.class == Noodle::Node
       body node.to_json + "\n"
