@@ -124,10 +124,13 @@ class Noodle
         when 'json'
           format = :json
 
+        when 'json_params_only'
+          format = :json_params_only
+
         when 'merge'
           merge = true
 
-        when 'justonevalue,json'
+        when 'justonevalue,json,json_params_only'
           format = :justonevalue
 
         else
@@ -142,7 +145,7 @@ class Noodle
       # TODO: Not pretty
       # If list is true, just list nodes, otherwise output in YAML.
       # Unless, or course, a special format was specified
-      if format != :json && format != :full && format != :unique && format != :justonevalue && format != :sum
+      if format != :json_params_only && format != :json && format != :full && format != :unique && format != :justonevalue && format != :sum
         format = list ? :default : :yaml
       end
 
@@ -163,6 +166,12 @@ class Noodle
         body = Noodle::Search.new(Noodle::NodeRepository.repository).param_values(term: thing2unique, facts: true).sort.join("\n") + "\n"
       when :json
         body = found.results.to_json + "\n"
+      when :json_params_only
+        # TODO: What's the pretty/correct way to do this?
+        found.results.each do |result|
+          result.facts = {}
+        end
+        body = found.results.to_json
       when :yaml
         body = found.results.map { |one| one.to_puppet }.join("\n") + "\n"
       when :full
