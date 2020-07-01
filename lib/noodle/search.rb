@@ -24,13 +24,13 @@ class Noodle
       @override_size     = nil
     end
 
-    def equals(term,value)
+    def equals(term, value)
       @search_terms << term
       @query << "(params.#{term}:#{value} OR facts.#{term}:#{value})"
       self
     end
 
-    def match(term,value)
+    def match(term, value)
       @search_terms << term
       # TODO: maybe more escaping is warranted
       # Escape slashes in =~ queries so they can match path names.
