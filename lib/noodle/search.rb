@@ -35,7 +35,7 @@ class Noodle
       # TODO: maybe more escaping is warranted
       # Escape slashes in =~ queries so they can match path names.
       value.gsub!('/', '\/')
-      @query << "(params.#{term}.keyword:*#{value}* OR facts.#{term}.keyword:*#{value}*)"
+      @query << "(params.#{term}.keyword:/.*#{value}.*/ OR facts.#{term}.keyword:/.*#{value}.*/)"
       self
     end
 
