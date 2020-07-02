@@ -124,8 +124,8 @@ class NoodleClient
   def valid?
   end
 
-  def self.to_json
-    { params: @params, facts: @facts }.to_json
+  def to_json
+    { name: @name, params: @params, facts: @facts }.to_json
   end
 
   # Return the value of one PARAM for HOST.  Optional third argument
