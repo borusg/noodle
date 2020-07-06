@@ -26,7 +26,7 @@ class Noodle
 
     def equals(term, value)
       @search_terms << term
-      @query << "(params.#{term}:#{value} OR facts.#{term}:#{value})"
+      @query << "(params.#{term}:\"#{value}\" OR facts.#{term}:\"#{value}\")"
       self
     end
 
@@ -61,7 +61,7 @@ class Noodle
 
     def not_equal(term,value)
       @search_terms << term
-      @query << "-(params.#{term}:#{value} AND -facts.#{term}:#{value})"
+      @query << "-(params.#{term}:\"#{value}\" AND -facts.#{term}:\"#{value}\")"
       self
     end
 
