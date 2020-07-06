@@ -1,3 +1,6 @@
+# TODO: Search multiple fields instead of using OR:
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-multi-field
+
 # Build up a search query and execute with .go
 #
 # The default is AND.  .node is the only exception.  .node adds to a
@@ -30,10 +33,20 @@ class Noodle
       self
     end
 
+    # TODO: DRY match and match_regexp
     def match(term, value)
       @search_terms << term
       # TODO: maybe more escaping is warranted
-      # Escape slashes in =~ queries so they can match path names.
+      # Escape slashes so they can match path names.
+      value.gsub!('/', '\/')
+      @query << "(params.#{term}.keyword:\"#{value}\" OR facts.#{term}.keyword:\"#{value}\")"
+      self
+    end
+
+    def match_regexp(term, value)
+      @search_terms << term
+      # TODO: maybe more escaping is warranted
+      # Escape slashes so they can match path names.
       value.gsub!('/', '\/')
       @query << "(params.#{term}.keyword:/.*#{value}.*/ OR facts.#{term}.keyword:/.*#{value}.*/)"
       self
@@ -84,7 +97,7 @@ class Noodle
       results =  unique_values(term: term)
       # Rubocop: I guess I have more to learn :)
       results += unique_values(term: term, where: 'facts') if facts
-      return results.compact.uniq
+      results.compact.uniq
     end
 
     # Return true if any results found, false if none.

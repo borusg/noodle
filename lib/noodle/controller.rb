@@ -82,7 +82,7 @@ class Noodle
         when term_does_not_equal
           list = true
           term,value = part.sub(/^[-@]/, '').split(/=/, 2)
-          search.not_equal(term,value)
+          search.not_equal(term, value)
 
         # Look for this after term_does_not_equal since it this regexp matches. TODO: Ugly!
         when term_not_present
@@ -102,7 +102,7 @@ class Noodle
         when term_matches_regexp
           list = true
           term, value = part.split(term_matches_regexp, 2)
-          search.match(term, value)
+          search.match_regexp(term, value)
 
         when term_equals
           list = true
