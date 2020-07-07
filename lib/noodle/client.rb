@@ -54,6 +54,7 @@ class NoodleClient
   # the server.
   def self.updateone(name, options)
     http = Net::HTTP.new(NoodleClient.server, NoodleClient.port)
+    http.use_ssl = true if NoodleClient.port == 443
     request = Net::HTTP::Patch.new("/nodes/#{name}?now")
     request.body = options.to_json
     request.content_type = 'application/json'
