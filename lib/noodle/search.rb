@@ -63,7 +63,7 @@ class Noodle
     end
 
     def match_names(names)
-      [names].flatten.map { |name| @node_names << "(name:#{name} OR name:#{name}.*)" }
+      [names].flatten.map { |name| @node_names << "(name:\"#{name}\" OR name:#{name}.*)" }
       self
     end
 
