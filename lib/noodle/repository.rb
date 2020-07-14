@@ -35,26 +35,8 @@ class Noodle
         }
       }
     }
-    noodle_mapping = {
-      properties: {
-        name: {
-          type: 'text',
-          fields: {
-            raw: {
-              type: 'keyword'
-            }
-          }
-        }
-      }
-    }
-
     settings noodle_settings do
-      mapping noodle_mapping do
-        # Specifying these seems like a good idea but somehow doing so means we don't end up with name.keyword?!
-        #
-        # indexes :name
-        # indexes :facts,  { type: 'object'  }
-        # indexes :params, { type: 'object'  }
+      mapping do
       end
     end
 
