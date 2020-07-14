@@ -37,6 +37,11 @@ class Noodle
     }
     settings noodle_settings do
       mapping do
+        # TODO: The list of flattened fields should be configurable :)
+        indexes :'facts.listening_procs', {
+          type: 'flattened'
+        }
+
         # NOTE because I had trouble getting the details right: This
         # works but seems to be the default now so it is not needed:
         #
