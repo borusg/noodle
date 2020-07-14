@@ -37,6 +37,18 @@ class Noodle
     }
     settings noodle_settings do
       mapping do
+        # NOTE because I had trouble getting the details right: This
+        # works but seems to be the default now so it is not needed:
+        #
+        # indexes :name, {
+        #   type: 'text',
+        #   fields: {
+        #     keyword: {
+        #       type: 'keyword',
+        #       ignore_above: 256
+        #     }
+        #   }
+        # }
       end
     end
 
