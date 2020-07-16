@@ -35,12 +35,54 @@ class Noodle
         }
       }
     }
+
+    # TODO: The list of flattened fields should be configurable :)
+    structured_facts = %w[
+      advanced_config
+      augeas
+      bound_certs
+      cmdline
+      cpuinfo
+      credential
+      crontab
+      dhcp_servers
+      disks
+      dmi
+      elasticsearch
+      guest_info
+      host_switch_spec
+      hypervisors
+      identity
+      listening_procs
+      load_averages
+      login_defs
+      mco_client_settings
+      memory
+      mountpoints
+      networking
+      node_deployment_info
+      os
+      partitions
+      prelink
+      processors
+      puppet_settings
+      puppet_sslpaths
+      ruby
+      simplib__networkmanager
+      simplib__sshd_config
+      sites
+      source
+      ssh
+      system_uptime
+      trusted
+    ]
     settings noodle_settings do
       mapping do
-        # TODO: The list of flattened fields should be configurable :)
-        indexes :'facts.listening_procs', {
-          type: 'flattened'
-        }
+        structured_facts.each do |fact|
+          indexes :"facts.#{fact}", {
+            type: 'flattened'
+          }
+        end
 
         # NOTE because I had trouble getting the details right: This
         # works but seems to be the default now so it is not needed:
