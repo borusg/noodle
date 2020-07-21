@@ -288,7 +288,7 @@ class Noodle < Sinatra::Base
     if uniqueness_params.size == [uniqueness_params & hash['params'].keys].size
       # nodes = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(hash['name']).go
       # Search by name,
-      search = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(hash['name'])
+      search = Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(hash['name'])
       # and any uniqueness params,
       uniqueness_params.map { |uniqueness_param| search.equals(uniqueness_param, hash['params'][uniqueness_param]) }
       # and search
