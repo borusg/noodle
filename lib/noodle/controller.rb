@@ -37,12 +37,20 @@ class Noodle
     #   - And bare words are highest (or tunable?)
     # - Make order explicit?  Needed?
     # - ~x=y  That is, regexp on the fact/param name
+    #
+    # TODO: Complain when there are conflicts. Example:
+    #
+    # A) sum and prodlevel= conflict. ATM sum "wins" and prodlevel= is
+    # ignored. No doubt there are similar cases.
+    #
+    # B) unique_values only makes sense for one term. ATM it returns
+    # the results for the LAST :BLAH in the query.
     def self.magic(query)
       search          = Noodle::Search.new(Noodle::NodeRepository.repository)
       show            = []
       format          = :default
       list            = false
-      merge           = false
+      # merge           = false
       hostnames       = []
       thing2unique    = nil
 
@@ -67,51 +75,51 @@ class Noodle
       query.split(/\s+/).each do |part|
         case part
         when *bareword_hash.keys
-          list  = true
+          format = :list
           value = part
-          term  = bareword_hash[value]
-          search.equals(term,value)
+          term = bareword_hash[value]
+          search.equals(term, value)
 
         # Look for this before term_persent since term_present matches both
         when term_present_and_show_value
-          list = true
+          format = :list
           term = part.sub(term_present_and_show_value, '')
           search.exists(term)
           show << term
 
         when term_does_not_equal
-          list = true
-          term,value = part.sub(/^[-@]/, '').split(/=/, 2)
+          format = :list
+          term, value = part.sub(/^[-@]/, '').split(/=/, 2)
           search.not_equal(term, value)
 
         # Look for this after term_does_not_equal since it this regexp matches. TODO: Ugly!
         when term_not_present
-          list = true
+          format = :list
           term = part.sub(/^[-@]/, '')
           search.does_not_exist(term)
 
         when term_present
-          list = true
+          format = :list
           term = part.sub(/\?$/, '')
           search.exists(term)
 
         when term_show_value
-          list = true
+          format = :list
           show << part.chop
 
         when term_matches_regexp
-          list = true
+          format = :list
           term, value = part.split(term_matches_regexp, 2)
           search.match_regexp(term, value)
 
         when term_equals
-          list = true
+          format = :list
           term, value = part.split(term_equals, 2)
           search.equals(term, value)
 
         when term_unique_values
           thing2unique = part.sub(term_unique_values, '')
-          format = :unique
+          format = :unique_values
 
         when term_sum
           format = :sum
@@ -127,11 +135,11 @@ class Noodle
         when 'json_params_only'
           format = :json_params_only
 
-        when 'merge'
-          merge = true
-
-        when 'justonevalue,json,json_params_only'
-          format = :justonevalue
+        # TODO: What use cas was merge intended for? The search code had this:
+        # found = merge(found,hostnames,show) if merge
+        #
+        # when 'merge'
+        #   merge = true
 
         else
           # Assume everything else is a hostname (or partial hostname)
@@ -142,70 +150,54 @@ class Noodle
         end
       end
 
-      # TODO: Not pretty
-      # If list is true, just list nodes, otherwise output in YAML.
-      # Unless, or course, a special format was specified
-      if format != :json_params_only && format != :json && format != :full && format != :unique && format != :justonevalue && format != :sum
-        format = list ? :default : :yaml
-      end
+      # Use default ilk and status unless they are specified in the query:
+      search.equals('ilk', Noodle::Option.option('default', 'default_ilk')) unless search.search_terms.include?('ilk')
+      search.equals('status', Noodle::Option.option('default', 'default_status')) unless search.search_terms.include?('status')
 
-      search.equals('ilk',   Noodle::Option.option('default','default_ilk'))    unless search.search_terms.include?('ilk')
-      search.equals('status',Noodle::Option.option('default','default_status')) unless search.search_terms.include?('status')
-
-      search.limit_fetch(show)
+      # Assume the best
       status = 200
 
-      # Unique is a very special case (no surprise?!)
-      unless format == :unique
-        found = search.go(names_only: format == list, name_and_params_only: format == :yaml)
-        found = merge(found,hostnames,show) if merge
-      end
-
+      # Let's rethink this.
+      # There are just a few different cases. Listed in order of precedence:
       case format
-      when :unique
+
+      # 1. Unique is simply its own thing
+      when :unique_values
         body = Noodle::Search.new(Noodle::NodeRepository.repository).param_values(term: thing2unique, facts: true).sort.join("\n") + "\n"
+
+      # 2 Sum is also its own thing; as-is it overrides prodlevel= and similar
+      when :sum
+        body = []
+        found = search.go
+        found.response.aggregations.each do |param, sum|
+          body << "#{param}=#{sum.value}"
+        end
+        body = body.join(' ')
+
+      # 3. json and full in which we want *everything* returned with different output formats
       when :json
+        found = search.go
         body = found.results.to_json + "\n"
+      when :full
+        found = search.go
+        body = found.results.map { |one| one.full }.join("\n") + "\n"
+
+      # 4. json_params_only and yaml (AKA "puppet") in which we only want params returned (:json_params_only, :yaml)
       when :json_params_only
+        found = search.go(name_and_params_only: true)
         # TODO: What's the pretty/correct way to do this?
         found.results.each do |result|
           result.facts = {}
         end
         body = found.results.to_json
-      when :yaml
-        body = found.results.map { |one| one.to_puppet }.join("\n") + "\n"
-      when :full
-        body = found.results.map { |one| one.full }.join("\n") + "\n"
-      when :justonevalue
-        # Super-special case:
-        # 1. Errors if there is more than one search result
-        # 2. Errors if more than one param to show
-        # 3. Returns JSON for the value for easy consumption
-        # 4. Should probably be implemented in some other way!
-        unless found.results.size == 1 && show.size == 1
-          status = 500
-          body   = 'More than one result found but you specified just_one_value'
-        else
-          it = found.results.first
-          # TODO: There should be a fact_or_param helper or something!
-          # Was it a param?
-          if !it.params.nil? && it.params[show.first]
-            body = it.params[show.first].to_json + "\n"
-          elsif !it.facts.nil? && it.facts[show.first]
-            body = it.facts[show.first].to_json + "\n"
-          else
-            status = 500
-            body = 'Nothing found'
-          end
-        end
-      when :sum
-        body = []
-        found.response.aggregations.each do |param,sum|
-          body << "#{param}=#{sum.value}"
-        end
-        body = body.join(' ')
-      else
-        ['',200] if found.response.hits.empty?
+      # 5. Everything else except for YAML, in which we only want hostnames *OR* hostnames plus specific fields
+      when :list
+        # Limit the search results to the fields we are supposed to display (if any)
+        search.limit_fetch(show)
+        # If no fields to show, limit the search results to node names
+        found = search.go(names_only: show.empty?)
+
+        ['', 200] if found.response.hits.empty?
         # Always show name. Show term=value pairs for anything in 'show'
         body = []
         found.results.each do |hit|
@@ -225,8 +217,12 @@ class Noodle
           body << add + "\n"
         end
         body = body.sort.join
+      # 6. Otherwise, it's YAML
+      else
+        found = search.go(name_and_params_only: true)
+        body = found.results.map { |one| one.to_puppet }.join("\n") + "\n"
       end
-      [body,status]
+      [body, status]
     end
 
     ## merge
