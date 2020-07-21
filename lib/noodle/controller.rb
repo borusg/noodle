@@ -49,7 +49,6 @@ class Noodle
       search          = Noodle::Search.new(Noodle::NodeRepository.repository)
       show            = []
       format          = :default
-      list            = false
       # merge           = false
       hostnames       = []
       thing2unique    = nil
@@ -180,7 +179,7 @@ class Noodle
         body = found.results.to_json + "\n"
       when :full
         found = search.go
-        body = found.results.map { |one| one.full }.join("\n") + "\n"
+        body = found.results.map(&:full).join("\n") + "\n"
 
       # 4. json_params_only and yaml (AKA "puppet") in which we only want params returned (:json_params_only, :yaml)
       when :json_params_only
@@ -366,10 +365,11 @@ class Noodle
       return ["Oops! No nodes specified.\n", 400] if nodes.empty?
 
       # Unless creating, must be able to find all nodes
-      return false unless command == 'create' || (found =
-                                                  Noodle::Search.new(Noodle::NodeRepository.repository).match_names(nodes).go)
+      return false unless
+        command == 'create' ||
+        (found = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(nodes).go)
 
-      allowed_statuses = Noodle::Option.limit('default','status')
+      allowed_statuses = Noodle::Option.limit('default', 'status')
       # TODO: default_ilk = 'host'
       default_status = 'enabled'
 
@@ -417,13 +417,13 @@ class Noodle
             begin
               Noodle::NodeRepository.repository.save(node, refresh: true)
             rescue => e
-              body << "#{e.to_s}\n"
+              body << "#{e}\n"
               status = 400
             end
           end
         else
           [opts[command.to_sym] + pairs].flatten.each do |change|
-            name,op,value = change.match(/^([^-+=]+)([-+]*=)(.*)$/)[1..3]
+            name, op, value = change.match(/^([^-+=]+)([-+]*=)(.*)$/)[1..3]
 
             # TODO: Error check fact names and values
             # TODO: Do something with the error strings below :)
@@ -435,10 +435,10 @@ class Noodle
                 # If param must be an array split value on ,
                 # Avoid changing original 'value' so this works on the second, etc iterations of the loop:
                 new_value = value
-                new_value = [value.split(',')].flatten if Noodle::Option.limit(node.params['ilk'],name) == 'array'
+                new_value = [value.split(',')].flatten if Noodle::Option.limit(node.params['ilk'], name) == 'array'
                 # If param must be a hash, create a hash based on name,value
-                first_key_part,rest_key_parts = name.split('.',2)
-                new_value = hash_it(rest_key_parts,new_value) if Noodle::Option.limit(node.params['ilk'],first_key_part) == 'hash'
+                first_key_part, rest_key_parts = name.split('.', 2)
+                new_value = hash_it(rest_key_parts, new_value) if Noodle::Option.limit(node.params['ilk'], first_key_part) == 'hash'
                 # If param must be a hash, merge hash created above into existing (or not) value for node
                 if Noodle::Option.limit(node.params['ilk'], first_key_part) == 'hash'
                   node.send(which)[first_key_part] = {} if node.send(which)[first_key_part].nil?
@@ -462,11 +462,11 @@ class Noodle
             when '+=', '-='
               method = op == '+=' ? :push : :delete
               found.each do |node|
-                if node.send(which)[name].kind_of?(Array)
+                if node.send(which)[name].is_a?(Array)
                   # Handle the case where they want to add multiple new elements to the array
                   # as in: noodlin param role+=app,db,web
                   value.split(',').each do |one_value|
-                    node.send(which)[name].send(method,one_value)
+                    node.send(which)[name].send(method, one_value)
                   end
                   r = node.errors?
                   if r.class == Noodle::Node
@@ -505,13 +505,13 @@ class Noodle
           end
         end
       when 'remove'
-        found.map{|node| Noodle::NodeRepository.repository.delete(node, refresh: true)}
+        found.map { |node| Noodle::NodeRepository.repository.delete(node, refresh: true) }
       # TODO: Error check
       else
         status = 400
         body = "Unknown noodlin command: #{command}"
       end
-      [body,status]
+      [body, status]
     end
 
     # Update a node based on options.
@@ -544,8 +544,9 @@ class Noodle
 
     def self.delete_one(name)
       return false unless (node = Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(name).go(size: 1))
+
       Noodle::NodeRepository.repository.delete(node, refresh: true)
-      return true
+      true
     end
 
     def self.create_one(args, options = { now: false })
@@ -567,11 +568,11 @@ class Noodle
     end
 
     def self.all_names
-      body = Noodle::NodeRepository.repository.all.results.collect{ |hit| hit.name }.sort.join("\n")
+      body = Noodle::NodeRepository.repository.all.results.collect(&:name).sort.join("\n")
       [body, 200]
     end
 
-    def self.maybe2array(ilk,name,value)
+    def self.maybe2array(ilk, name, value)
       return [value.split(',')].flatten if Noodle::Option.limit(ilk, name) == 'array'
 
       value
@@ -600,7 +601,7 @@ class Noodle
       end
 
       key, rest = name.split('.', 2)
-      hash[key] = hash_it(rest,value)
+      hash[key] = hash_it(rest, value)
       hash
     end
   end
