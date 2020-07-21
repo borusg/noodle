@@ -96,14 +96,14 @@ help = "  Ask Noodle questions!
 opts = Optimist.options do
   banner help
 
-  opt :does_not_exist,  'Find all entries that do not have TERM (same as @TERM?)',              :type => :string
-  opt :exists,          'Show all entries that have TERM (same as TERM?)',                      :type => :string
-  opt :exclude,         'Exclude entries that do not have TERM=VALUE (same as @TERM=VALUE)',    :type => :string
-  opt :find,            'Find all entries that have TERM=VALUE (same as TERM=VALUE)',           :type => :string
-  opt :find_and_show,   'Show values of TERM for all entries that have TERM (same as TERM=?)', :type => :string
-  opt :show_value,      'Show values of TERM (same as TERM=)',                                  :type => :string
-  opt :sum,             'Add all values of TERM and display the result (same as TERM+)',        :type => :string
-  opt :unique_values,   'Show a unique list of values for TERM (same as :TERM)',                 :type => :string
+  opt :does_not_exist,  'Find all entries that do not have TERM (same as @TERM?)',             type: :string
+  opt :exists,          'Show all entries that have TERM (same as TERM?)',                     type: :string
+  opt :exclude,         'Exclude entries that do not have TERM=VALUE (same as @TERM=VALUE)',   type: :string
+  opt :find,            'Find all entries that have TERM=VALUE (same as TERM=VALUE)',          type: :string
+  opt :find_and_show,   'Show values of TERM for all entries that have TERM (same as TERM=?)', type: :string
+  opt :show_value,      'Show values of TERM (same as TERM=)',                                 type: :string
+  opt :sum,             'Add all values of TERM and display the result (same as TERM+)',       type: :string
+  opt :unique_values,   'Show a unique list of values for TERM (same as :TERM)',               type: :string
 
   opt :refresh,   'Refresh Noodle options and bareword terms (AKA voodoo)'
   opt :debug,     'Display debug info'
@@ -126,7 +126,7 @@ query += ARGV
 # Oh boy encoding is fun. Shirley, some other call would encode better
 # without the need for the gsubs. But just as Shirley, noodlin should
 # really be a POST so TODO that one day and encoding won't matter.
-noodle_query = URI.encode(query.join(' ')).gsub('=','%3D').gsub('+','%2B').gsub('?','%3F')
+noodle_query = URI.encode(query.join(' ')).gsub('=', '%3D').gsub('+', '%2B').gsub('?', '%3F')
 
 uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/?#{noodle_query}#{maybe_refresh}")
 
