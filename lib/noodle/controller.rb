@@ -175,6 +175,7 @@ class Noodle
 
       # 3. json and full in which we want *everything* returned with different output formats
       when :json
+        search.limit_fetch(show)
         found = search.go
         body = found.results.to_json + "\n"
       when :full
