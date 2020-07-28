@@ -183,6 +183,20 @@ module HappyHelper
       }
     }.to_json
   end
+  def self.node_jupiter_json2
+    {
+      params: {
+        created_by:      :spec,
+        ilk:             :host,
+        status:          :enabled,
+        site:            :jupiter,
+        output:          :json2,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec
+      }
+    }.to_json
+  end
   def self.node_jupiter_full
     {
       params: {
