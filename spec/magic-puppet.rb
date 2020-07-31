@@ -12,17 +12,17 @@ describe 'Noodle' do
     get '/nodes/_/ioio.example.com'
     assert_equal 200, last_response.status
     assert _(last_response.body).must_include '---
+parameters:
+  created_by: spec
+  funky: town
+  ilk: host
+  last_updated_by: spec
+  prodlevel: dev
+  project: hr
+  site: jupiter
+  status: enabled
 classes:
 - baseclass
-parameters:
-  site: jupiter
-  last_updated_by: spec
-  ilk: host
-  funky: town
-  project: hr
-  created_by: spec
-  prodlevel: dev
-  status: enabled
 '
   end
 end

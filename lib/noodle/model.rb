@@ -125,8 +125,8 @@ class Noodle
     def to_puppet
       r = {}
       # TODO: Get class list from node/options
+      r['parameters'] = @params.sort.to_h
       r['classes']    = ['baseclass']
-      r['parameters'] = @params.to_hash # TODO: .to_hash is only to avoid having "Hashie::Mash" show up in YAML output?!
       r.to_yaml.strip
     end
 
