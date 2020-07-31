@@ -16,3 +16,4 @@ gem 'coveralls', require: false
 gem 'optimist'
 gem 'pry', require: false
 gem 'rest-client'
+gem 'deepsort'

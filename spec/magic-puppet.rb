@@ -19,6 +19,9 @@ parameters:
   last_updated_by: spec
   prodlevel: dev
   project: hr
+  role:
+  - fly
+  - pigs
   site: jupiter
   status: enabled
 classes:

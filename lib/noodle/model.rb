@@ -6,6 +6,7 @@ require 'hashie'
 require 'optimist'
 require 'active_model'
 require 'active_model/validations'
+require 'deepsort'
 
 # Docs RSN
 class Noodle
@@ -124,8 +125,11 @@ class Noodle
 
     def to_puppet
       r = {}
-      # TODO: Get class list from node/options
-      r['parameters'] = @params.sort.to_h
+      # TODO: Get class list from node/options?
+      #
+      # NOTE: The first to_hash below prevents the YAML output from containing
+      # "!ruby/array:Hashie::Array" and similar:
+      r['parameters'] = @params.to_hash.deep_sort.to_h
       r['classes']    = ['baseclass']
       r.to_yaml.strip
     end

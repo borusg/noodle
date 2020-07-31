@@ -87,6 +87,7 @@ module HappyHelper
         status:          :enabled,
         site:            :jupiter,
         funky:           :town,
+        role:            %w[pigs fly],
         project:         :hr,
         prodlevel:       :dev,
         last_updated_by: :spec
