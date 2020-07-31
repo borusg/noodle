@@ -220,7 +220,7 @@ class Noodle
       # 6. Otherwise, it's YAML
       else
         found = search.go(name_and_params_only: true)
-        body = found.results.map { |one| one.to_puppet }.join("\n") + "\n"
+        body = found.results.map(&:to_puppet).join("\n") + "\n"
       end
       [body, status]
     end
