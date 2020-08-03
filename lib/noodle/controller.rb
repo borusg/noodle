@@ -200,6 +200,7 @@ class Noodle
         ['', 200] if found.response.hits.empty?
         # Always show name. Show term=value pairs for anything in 'show'
         body = []
+        shown = []
         found.results.each do |hit|
           add = hit.name
           show.each do |term|
@@ -210,10 +211,14 @@ class Noodle
               # TODO: Join arrays for facts too?
               value = value.sort.join(',') if value.class == Hashie::Array
               add << " #{term}=#{value}"
+              shown << term
             elsif !hit.facts.nil? && (value = hit.facts.send(*[:dig, term.split('.')].flatten))
               add << " #{term}=#{value}"
+              shown << term
             end
           end
+          # To match original noodle if a term-to-show is not shown, add TERM= to the output:
+          (show - shown).map { |i| add << " #{i}=" }
           body << add + "\n"
         end
         body = body.sort.join
