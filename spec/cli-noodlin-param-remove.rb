@@ -25,6 +25,6 @@ describe 'Noodle' do
 
     # Make sure role param is gone
     noodle = "role= #{hostname}"
-    assert_output("#{hostname}\n") { puts `bin/noodle #{noodle}` }
+    assert_output("#{hostname} role=\n") { puts `bin/noodle #{noodle}` }
   end
 end
