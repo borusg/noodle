@@ -40,7 +40,7 @@ class Noodle < Sinatra::Base
     index_settings = {
       number_of_shards: 1,
       number_of_replicas: 0,
-      index: { mapping: { total_fields: { limit: "20000" } } }
+      index: { mapping: { total_fields: { limit: '5000' } } }
     }
     maybe_force_create_index = true
   end
@@ -49,7 +49,7 @@ class Noodle < Sinatra::Base
     index_settings = {
       number_of_shards: 1,
       number_of_replicas: 1,
-      index: { mapping: { total_fields: { limit: '20000' } } }
+      index: { mapping: { total_fields: { limit: '5000' } } }
     }
   end
 
