@@ -32,14 +32,14 @@ class Noodle
         if record.params['ilk'].nil? || record.name.nil?
           record.errors.add :base, 'Gack! Ilk and name are always required params but none specified'
         end
-        unless unique?(record,Noodle::Option.option(record.params['ilk'], 'uniqueness_params'))
+        unless unique?(record, Noodle::Option.option(record.params['ilk'], 'uniqueness_params'))
           record.errors.add :base, 'Nope! Node is not unique'
         end
       end
 
       private
 
-      def unique?(record,uniqueness_params)
+      def unique?(record, uniqueness_params)
         # name is always part of uniqueness
         search = Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(record.name)
         # Add uniqueness_params to search
@@ -74,11 +74,12 @@ class Noodle
     attr_reader :attributes
 
     # TODO: Intentionally skipping :fqdn
-    def initialize(attrs={})
+    def initialize(attrs = {})
       @name = attrs['name'] unless attrs['name'].nil?
       # Force facts and params to be hashes
-      attrs['facts'].nil?  ? @facts  = Hashie::Mash.new : @facts  = Hashie::Mash.new(attrs['facts'])
-      attrs['params'].nil? ? @params = Hashie::Mash.new : @params = Hashie::Mash.new(attrs['params'])
+      @facts =  attrs['facts'].nil?  ? Hashie::Mash.new : Hashie::Mash.new(attrs['facts'])
+      @params = attrs['params'].nil? ? Hashie::Mash.new : Hashie::Mash.new(attrs['params'])
+      @id = attrs['id'] unless attrs['id'].nil?
     end
 
     # Validate node uniqueness (by default ilk+name must be unique
@@ -86,7 +87,7 @@ class Noodle
 
     validates_each :params do |record, attr, value|
       # Check for required params
-      Noodle::Option.option(record.params['ilk'],'required_params').each do |param|
+      Noodle::Option.option(record.params['ilk'], 'required_params').each do |param|
         record.errors.add attr, "#{param} must be provided but is not." if value[param].nil?
       end
 
@@ -94,7 +95,7 @@ class Noodle
       record.errors.add attr, 'Empty value not allowed.' if value.empty?
 
       # Check per-param liits
-      Noodle::Option.option(record.params['ilk'],'limits').each do |param,limit|
+      Noodle::Option.option(record.params['ilk'], 'limits').each do |param,limit|
         case limit.class.to_s
         when 'Hashie::Array'
           record.errors.add attr, "#{param} is not one of these: #{limit.join(',')}.  It is #{value[param]}." unless
