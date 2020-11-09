@@ -156,7 +156,6 @@ class Noodle
       # Assume the best
       status = 200
 
-      # Let's rethink this.
       # There are just a few different cases. Listed in order of precedence:
       case format
 
