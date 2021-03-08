@@ -176,10 +176,10 @@ class Noodle
       when :json
         search.limit_fetch(show)
         found = search.go
-        body = found.results.to_json + "\n"
+        body = "#{found.results.to_json}\n"
       when :full
         found = search.go
-        body = found.results.map(&:full).join("\n") + "\n"
+        body = "#{found.results.map(&:full).join("\n")}\n"
 
       # 4. json_params_only and yaml (AKA "puppet") in which we only want params returned (:json_params_only, :yaml)
       when :json_params_only
