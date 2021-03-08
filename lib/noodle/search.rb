@@ -142,7 +142,7 @@ class Noodle
       query = { size: size, query: { query_string: { default_operator: 'AND', query: q } } }
       query[:query][:query_string][:minimum_should_match] = minimum unless minimum == false
       if name_and_params_only
-        query[:_source] = ['name', 'params']
+        query[:_source] = %w[name params]
       elsif names_only
         query[:_source] = ['name']
       else
@@ -162,7 +162,7 @@ class Noodle
       return results.first if size == 1 # TODO: Hmm, this seems fishy/ugly
 
       # Rubocop: I guess I have more to learn :)
-      return results
+      results
     end
   end
 end
