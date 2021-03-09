@@ -115,7 +115,7 @@ class Noodle < Sinatra::Base
 
     args = request2object(request, params)
     node = find_unique_node(args)
-    if node.class == String
+    if node.instance_of?(String)
       status 400
       body "#{node}\n"
       return
@@ -123,8 +123,8 @@ class Noodle < Sinatra::Base
 
     args.delete('name')
     node = Noodle::Controller.update(node, args, params)
-    if node.class == Noodle::Node
-      body node.to_json + "\n"
+    if node.instance_of?(Noodle::Node)
+      body "#{node.to_json}\n"
       status 200
     else
       body node[:errors]
@@ -144,12 +144,12 @@ class Noodle < Sinatra::Base
     maybe_refresh(params)
 
     node = find_unique_node(params2hash(params))
-    if node.class == String
+    if node.instance_of?(String)
       status = 400
       body = "#{node}\n"
     else
       status = 200
-      body = node.to_json + "\n"
+      body = "#{node.to_json}\n"
     end
     status status
     body body
@@ -258,8 +258,8 @@ class Noodle < Sinatra::Base
   end
 
   def check4errors(node, good_status)
-    if node.class == Noodle::Node
-      body = node.to_json + "\n"
+    if node.instance_of?(Noodle::Node)
+      body = "#{node.to_json}\n"
       status = good_status
     else
       body = node[:errors]
