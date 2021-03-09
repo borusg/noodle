@@ -175,7 +175,11 @@ class Noodle
       # 3. json and full in which we want *everything* returned with different output formats
       when :json
         search.limit_fetch(show)
-        found = search.go
+        # TODO: TEMP: Exclude listening_procs from JSON output to
+        # greatly reduce the to_json processing time. It would be
+        # better to use the raw response from Elasticsearch (which is
+        # already JSON) or .. something.
+        found = search.go(exclude: ['facts.listening_procs'])
         body = "#{found.results.to_json}\n"
       when :full
         found = search.go

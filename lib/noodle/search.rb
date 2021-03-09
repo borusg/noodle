@@ -125,7 +125,7 @@ class Noodle
 
     # Execute the search.  If minimum is specified, must find
     # at least that many (TODO: error if more than one found?)
-    def go(minimum: false, name_and_params_only: false, names_only: false, size: @default_size)
+    def go(minimum: false, name_and_params_only: false, names_only: false, size: @default_size, exclude: [])
       size = @override_size unless @override_size.nil?
 
       # Query starts empty or based on @query
@@ -146,7 +146,9 @@ class Noodle
       elsif names_only
         query[:_source] = ['name']
       else
-        query[:_source] = ['name'] + @only_these_fields unless @only_these_fields.empty?
+        query[:_source] = {}
+        query[:_source][:includes] = ['name'] + @only_these_fields unless @only_these_fields.empty?
+        query[:_source][:excludes] = exclude
       end
       query[:aggs] = @aggs unless @aggs.empty?
 
