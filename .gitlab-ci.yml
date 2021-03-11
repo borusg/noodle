@@ -1,4 +1,10 @@
-include:
-  template: Dependency-Scanning.gitlab-ci.yml
-include:
-  - template: SAST.gitlab-ci.yml
+test-job1:
+  stage: test
+  script:
+    - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.11.2-amd64.deb
+    - dpkg -i --force-confnew                                      elasticsearch-7.11.2-amd64.deb
+    - service elasticsearch restart
+    - sleep 5 # Wait for Elasticsearch to start :)
+    - bundle config set path 'vendor/bundle'
+    - bundle install
+    - bundle exec rake test
