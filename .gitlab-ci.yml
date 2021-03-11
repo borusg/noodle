@@ -8,6 +8,7 @@ test-job1:
     - dpkg -i --force-confnew                                      elasticsearch-7.11.2-amd64.deb
     - service elasticsearch restart
     - sleep 5 # Wait for Elasticsearch to start :)
+    - gem update bundler
     - bundle config set path 'vendor/bundle'
     - bundle install
     - bundle exec rake test
