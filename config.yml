@@ -1,0 +1,8 @@
+development:
+  elasticsearch_logging: true
+
+test:
+  elasticsearch_logging: true
+
+production:
+  elasticsearch_logging: false

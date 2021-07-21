@@ -9,6 +9,7 @@
 #       by name is probably stupid
 require 'sinatra/base'
 require 'sinatra/reloader'
+require 'sinatra/config_file'
 require 'elasticsearch/persistence'
 require 'multi_json'
 require 'oj'
@@ -18,6 +19,18 @@ require 'oj'
 
 # Docs RSN :)
 class Noodle < Sinatra::Base
+  # Default settings:
+  configure do
+    set elasticsearch_logging: false
+  end
+
+  register Sinatra::ConfigFile
+  # You can pass multiple pathnames to config_file, but loading more
+  # than one would be confusing. And without a full path, it looks for
+  # the file in the directory in which this file lives! So:
+  etccfg = '/etc/noodle/config.yml'
+  config_file File.exist?(etccfg) ? etccfg : '../config.yml'
+
   enable :logging
 
   require_relative 'noodle/model'
@@ -25,7 +38,6 @@ class Noodle < Sinatra::Base
   require_relative 'noodle/repository'
   require_relative 'noodle/search'
 
-  client = Elasticsearch::Client.new(url: ENV['ELASTICSEARCH_URL'], log: true)
   configure :development do
     register Sinatra::Reloader
   end
@@ -53,6 +65,7 @@ class Noodle < Sinatra::Base
     }
   end
 
+  client = Elasticsearch::Client.new(url: ENV['ELASTICSEARCH_URL'], log: settings.elasticsearch_logging)
   repository = Noodle::NodeRepository.new(client: client, index_name: index)
   repository.settings index_settings
   # Create the index if it doesn't already exist
