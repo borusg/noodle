@@ -5,4 +5,3 @@ Bundler.require
 
 require './lib/noodle'
 run Noodle
-
