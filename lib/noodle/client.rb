@@ -30,6 +30,8 @@ class NoodleClient
   @server  = 'localhost'
   @port    = '9292'
   @noodles = []
+  # https://docs.knapsackpro.com/2020/uri-escape-is-obsolete-percent-encoding-your-query-string
+  @escap = URI::Parser.new
   attr_accessor :params, :facts, :name
 
   class << self
@@ -97,7 +99,9 @@ class NoodleClient
     NoodleClient.server = server if server
     # TODO: Switch to value-only query when magic supports that
     begin
-      uri = URI(URI.encode("http://#{@server}:#{@port}/nodes/#{node} json"))
+      # had to put in the escape hack to clear deprecated warns
+      url = "http://#{@server}:#{@port}/nodes/#{node} json"
+      uri = URI(@escap.escape(url))
       r = JSON.parse(Net::HTTP.get(uri))
     rescue => e
       # TODO: Fancier :)
@@ -148,6 +152,6 @@ class NoodleClient
       # TODO: Fancier :)
       return ''
     end
-    r.to_str
+    r.body.to_s
   end
 end

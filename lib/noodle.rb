@@ -276,7 +276,7 @@ class Noodle < Sinatra::Base
 
     # Return right away if no ilk supplied:
     if hash['params'].nil? || hash['params']['ilk'].nil?
-      return('No ilk supplied so cannot check uniqueness.')
+      return("No ilk supplied so cannot check uniqueness. Here's hash: #{hash}")
     end
 
     # Otherwise, check uniqueness
