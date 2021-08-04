@@ -41,7 +41,7 @@ describe 'Noodle' do
         sleep 1 # make sure it updated
         assert_equal String, NoodleClient.magic(node.name).presence.class
         # Find one entry (is it an JSON still)
-        # NoodleClient.findone('name' => '1b651ec518364fe999dd93bf06ca6191.example.com', 'ilk' => 'host') # not working, but trying
+        assert_equal 1, NoodleClient.findone(node.name).count
         #update the entry
 
         # to json?

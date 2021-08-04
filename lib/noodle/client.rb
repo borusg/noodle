@@ -99,10 +99,12 @@ class NoodleClient
     NoodleClient.server = server if server
     # TODO: Switch to value-only query when magic supports that
     begin
+      http = Net::HTTP.new(NoodleClient.server, NoodleClient.port)
       # had to put in the escape hack to clear deprecated warns
-      url = "http://#{@server}:#{@port}/nodes/#{node} json"
+      url = "http://#{@server}:#{@port}/nodes/_/#{node} json"
       uri = URI(@escap.escape(url))
-      r = JSON.parse(Net::HTTP.get(uri))
+      request = http.request(Net::HTTP::Get.new(uri))
+      r = JSON.parse(request.body)
     rescue => e
       # TODO: Fancier :)
       return e.to_s
