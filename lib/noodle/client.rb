@@ -63,7 +63,8 @@ class NoodleClient
     rescue => e
       puts e
       puts r
-      e + e.backtrace
+      # TODO: Obviously bad:
+      e.to_s + e.backtrace.join("\n")
     end
   end
 
@@ -76,7 +77,8 @@ class NoodleClient
     rescue => e
       puts e
       puts r
-      e + e.backtrace
+      # TODO: Obviously bad:
+      e.to_s + e.backtrace.join("\n")
     end
   end
 
@@ -91,7 +93,8 @@ class NoodleClient
     rescue => e
       puts e
       puts r
-      e + e.backtrace
+      # TODO: Obviously bad:
+      e.to_s + e.backtrace.join("\n")
     end
   end
 
