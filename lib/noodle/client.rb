@@ -63,6 +63,7 @@ class NoodleClient
     rescue => e
       puts e
       puts r
+      e + e.backtrace
     end
   end
 
@@ -75,6 +76,7 @@ class NoodleClient
     rescue => e
       puts e
       puts r
+      e + e.backtrace
     end
   end
 
@@ -89,6 +91,7 @@ class NoodleClient
     rescue => e
       puts e
       puts r
+      e + e.backtrace
     end
   end
 
