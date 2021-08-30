@@ -52,7 +52,7 @@ class NoodleClient
   # Assume Noodle entry exists on the server and update it with
   # contents of this object.  Raises error if node doesn't exist on
   # the server.
-  def self.updateone(name, options, now = true)
+  def self.updateone(name, options, now: true)
     now = now ? '?now' : ''
     http = Net::HTTP.new(NoodleClient.server, NoodleClient.port)
     http.use_ssl = true if NoodleClient.port == 443
