@@ -111,7 +111,7 @@ class Noodle < Sinatra::Base
     maybe_refresh(params)
 
     node = find_unique_node(params2hash(params))
-    if node.class == String
+    if node.instance_of?(String)
       status 400
       body "#{node}\n"
       return
