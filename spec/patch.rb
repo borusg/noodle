@@ -12,7 +12,19 @@ describe 'Noodle' do
     patch '/nodes/dodo.example.com?now', params
     assert_equal 200, last_response.status
 
+    # Verify PATCH returned the node we expected  
     r = MultiJson.load last_response.body
+    assert_equal 'dodo.example.com', r['name']
+    assert_equal 'host',             r['params']['ilk']
+    assert_equal 'surplus',          r['params']['status']
+    assert_equal 'mars',             r['params']['site']
+
+    # Now verify that the node was correctly saved to the backend
+    params = { params: { ilk: 'host' } }.to_json
+    get '/nodes/dodo.example.com', params
+    assert_equal 200, last_response.status
+
+    r = MultiJson.load(last_response.body)
     assert_equal 'dodo.example.com', r['name']
     assert_equal 'host',             r['params']['ilk']
     assert_equal 'surplus',          r['params']['status']
