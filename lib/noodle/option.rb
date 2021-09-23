@@ -40,7 +40,7 @@ class Noodle
         'uniqueness_params' => 'array',
       }
     }
-    @@options = Hash.new{ |k,v| k[v] = {} }
+    @@options = Hash.new { |k, v| k[v] = {} }
 
     # Update the @@options and @@bareword_hash class variable caches.
     #
@@ -101,7 +101,7 @@ class Noodle
       ##
     end
 
-    def self.get(target_ilk=nil)
+    def self.get(target_ilk = nil)
       target_ilk = 'default' if target_ilk.nil? || target_ilk.empty?
 
       # We're done if target_ilk is 'default'
@@ -116,15 +116,15 @@ class Noodle
       default_options.merge(target_options)
     end
 
-    def self.option(ilk,option)
+    def self.option(ilk, option)
       r = get(ilk)[option]
-      return emptyness(ilk,option) if r.nil?
+      return emptyness(ilk, option) if r.nil?
 
       r
     end
 
     # TODO: need .empty? because who knows if caller wants string or array, etc
-    def self.limit(ilk,thing)
+    def self.limit(ilk, thing)
       limits = get(ilk)['limits']
       return [] if limits.nil?
 
@@ -134,10 +134,10 @@ class Noodle
       limit
     end
 
-    def self.emptyness(ilk,option)
-      return [] if limit(ilk,option) == 'array'
+    def self.emptyness(ilk, option)
+      return [] if limit(ilk, option) == 'array'
 
-      return {} if limit(ilk,option) == 'hash'
+      return {} if limit(ilk, option) == 'hash'
 
       ''
     end
