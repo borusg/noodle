@@ -49,7 +49,11 @@ module HappyHelper
         site:            :moon,
         project:         :hr,
         prodlevel:       :dev,
+        color:           :purple,
         last_updated_by: :spec
+      },
+      facts: {
+        thatsa: 'jack'
       }
     }.to_json
   end
