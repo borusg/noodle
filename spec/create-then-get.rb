@@ -26,5 +26,6 @@ describe 'Noodle' do
     assert_equal 'host',             r['params']['ilk']
     assert_equal 'surplus',          r['params']['status']
     assert_equal 'moon',             r['params']['site']
+    assert_equal 'gogo.example.com', r['facts']['fqdn']
   end
 end
