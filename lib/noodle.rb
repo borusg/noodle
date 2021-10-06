@@ -153,18 +153,11 @@ class Noodle < Sinatra::Base
     status status
   end
 
-  # TODO: This seems unused, has no test, and doesn't seem to work! How to specify ilk=host?
-  #
-  # TODO: ALSO, are you expecting the FULL node? find_unique_node only
-  # returns required and uniqueness params. It seems like a mistake to
-  # return the FULL node except when explicitly requested. But perhaps
-  # that's what you'd expect from GET?
-  #
   # TODO: Maybe make it act like /nodes/_/NAME
   get '/nodes/:name' do
     maybe_refresh(params)
 
-    node = find_unique_node(params2hash(params))
+    node = find_unique_node(params2hash(params), full: true)
     if node.instance_of?(String)
       status = 400
       body = "#{node}\n"
@@ -289,7 +282,7 @@ class Noodle < Sinatra::Base
     [body, status]
   end
 
-  def find_unique_node(hash)
+  def find_unique_node(hash, full: false)
     # Make sure all unqiueness params are present.
     #
     # NOTE: This requires that the 'ilk' param is present because
@@ -311,8 +304,8 @@ class Noodle < Sinatra::Base
     uniqueness_params.map { |uniqueness_param| search.equals(uniqueness_param, hash['params'][uniqueness_param]) }
     # and include required params too in case we are going to save the node later on.
     required_params = Noodle::Option.option(hash['params']['ilk'], 'required_params')
-    # Limit fetch to uniqueness and required params so we don't drag the whole node back
-    search.limit_fetch(uniqueness_params + required_params)
+    # Unless full, limit fetch to uniqueness and required params so we don't drag the whole node back
+    search.limit_fetch(uniqueness_params + required_params) unless full
     # Do the search
     nodes = search.go
     if nodes.size != 1
