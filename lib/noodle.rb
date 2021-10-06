@@ -153,6 +153,14 @@ class Noodle < Sinatra::Base
     status status
   end
 
+  # TODO: This seems unused, has no test, and doesn't seem to work! How to specify ilk=host?
+  #
+  # TODO: ALSO, are you expecting the FULL node? find_unique_node only
+  # returns required and uniqueness params. It seems like a mistake to
+  # return the FULL node except when explicitly requested. But perhaps
+  # that's what you'd expect from GET?
+  #
+  # TODO: Maybe make it act like /nodes/_/NAME
   get '/nodes/:name' do
     maybe_refresh(params)
 
@@ -286,33 +294,31 @@ class Noodle < Sinatra::Base
     #
     # NOTE: This requires that the 'ilk' param is present because
     # uniqueness can vary by ilk!
+    return('No ilk supplied so cannot check uniqueness.') if hash['params'].nil? || hash['params']['ilk'].nil?
 
-    # Return right away if no ilk supplied:
-    if hash['params'].nil? || hash['params']['ilk'].nil?
-      return('No ilk supplied so cannot check uniqueness.')
+    #
+    # Make sure params in hash exactly match uniqueness params:
+    uniqueness_params = Noodle::Option.option(hash['params']['ilk'], 'uniqueness_params')
+    unless (uniqueness_params - hash['params'].keys).empty?
+      return "Not all uniqueness_params were not supplied. Expected uniqueness_params are: #{uniqueness_params.join(',')}"
     end
 
-    # Otherwise, check uniqueness
+    # If so,
     #
-    # Get the intersection of uniqueness params and the params
-    # specified in the hash, make sure the resulting array has the
-    # same number of elements as uniqueness_params has :)
-    uniqueness_params = Noodle::Option.option(hash['params']['ilk'], 'uniqueness_params')
-    if uniqueness_params.size == [uniqueness_params & hash['params'].keys].size
-      # nodes = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(hash['name']).go
-      # Search by name,
-      search = Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(hash['name'])
-      # and any uniqueness params,
-      uniqueness_params.map { |uniqueness_param| search.equals(uniqueness_param, hash['params'][uniqueness_param]) }
-      # and search
-      nodes = search.go
-      if nodes.size != 1
-        "Did not find exactly one match. Matches found: #{nodes.size}"
-      else
-        nodes.first # and only!
-      end
+    # Set up to search by name,
+    search = Noodle::Search.new(Noodle::NodeRepository.repository).match_names_exact(hash['name'])
+    # and any uniqueness params,
+    uniqueness_params.map { |uniqueness_param| search.equals(uniqueness_param, hash['params'][uniqueness_param]) }
+    # and include required params too in case we are going to save the node later on.
+    required_params = Noodle::Option.option(hash['params']['ilk'], 'required_params')
+    # Limit fetch to uniqueness and required params so we don't drag the whole node back
+    search.limit_fetch(uniqueness_params + required_params)
+    # Do the search
+    nodes = search.go
+    if nodes.size != 1
+      "Did not find exactly one match. Matches found: #{nodes.size}"
     else
-      "Not all uniqueness_params were not supplied. Expected uniqueness_params are: #{uniqueness_params.join(',')}"
+      nodes.first # and only!
     end
   end
 
