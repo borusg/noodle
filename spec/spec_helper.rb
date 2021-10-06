@@ -361,6 +361,39 @@ module HappyHelper
     node[:facts] = { magnitude: magnitude } unless magnitude.nil?
     node.to_json
   end
+  def self.node_hashy
+    {
+      params: {
+        created_by:      :spec,
+        ilk:             :host,
+        status:          :surplus,
+        site:            :moon,
+        project:         :hr,
+        prodlevel:       :dev,
+        color:           :purple,
+        last_updated_by: :spec
+      },
+      facts: {
+        this: {
+          is: {
+            a: {
+              very: 'berry',
+              nested: {
+                hash: {
+                  value: 4
+                }
+              }
+            }
+          },
+          isnt: {
+            as: 'nested'
+          }
+        }
+      }
+    }.to_json
+  end
+
+
 end
 
 # Minitest

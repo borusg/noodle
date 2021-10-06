@@ -33,6 +33,10 @@ describe 'Noodle' do
     assert_equal 'surplus',          r['params']['status']
     assert_equal 'mars',             r['params']['site']
 
+    # TODO: Temporary workaround until elasticsearch-persistence
+    # supports query param options in update
+    sleep 5
+
     # Now verify that the node was correctly saved to the backend
     params = { params: { ilk: 'host' } }.to_json
     get '/nodes/dodo.example.com', params

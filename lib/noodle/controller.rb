@@ -534,7 +534,15 @@ class Noodle
       r = node.errors?
       if r.class == Noodle::Node
         begin
-          Noodle::NodeRepository.repository.save(node, refresh: options[:now])
+          # TODO: Temporary until elasticsearch-persistence supports
+          # query param options in update. No refresh:
+          Noodle::NodeRepository.repository.update(node)
+          # TODO: Once it's supported, get refresh option back by
+          # switching to this:
+          # Noodle::NodeRepository.repository.update(node, {}, refresh: options[:now])
+          #
+          # This patch works in my testing, needs updated spec to match:
+          # https://github.com/happymcplaksin/elasticsearch-rails/commit/070006c69d9fd54ab90cbc678ec237b649ba8d05
         rescue => e
           r = { errors: "#{e}\n" }
         end
