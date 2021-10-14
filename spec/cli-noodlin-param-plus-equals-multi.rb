@@ -7,10 +7,10 @@ describe 'Noodle' do
   it 'noodlin param role+=app,web' do
     hostname = HappyHelper.randomhostname
 
-    noodlin = "create -s mars -i host -p hr -P prod -a role=db #{hostname}"
+    noodlin = "create -s mars -i host -p hr -P prod -a role=db #{hostname} -w test"
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
-    noodlin = "param role+=app,web #{hostname}"
+    noodlin = "param role+=app,web #{hostname} -w test"
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Make sure role param is present and correct

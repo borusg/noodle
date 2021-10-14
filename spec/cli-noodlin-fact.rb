@@ -7,10 +7,10 @@ describe 'Noodle' do
   it 'noodlin fact role=db' do
     hostname = HappyHelper.randomhostname
 
-    noodlin = "create -s mars -i host -p hr -P prod #{hostname}"
+    noodlin = "create -s mars -i host -p hr -P prod #{hostname} -w test"
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
-    noodlin = "fact ram_gigs=2.0 #{hostname}"
+    noodlin = "fact ram_gigs=2.0 #{hostname} -w test"
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Make sure ram_gigs fact is present

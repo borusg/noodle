@@ -4,12 +4,12 @@ describe 'Noodle' do
   it 'voodoo work' do
     # Create project=hr
     hostname_hr = HappyHelper.randomhostname
-    noodlin = "create -s mars -i host -p hr -P prod -a voodoo=yes #{hostname_hr}"
+    noodlin = "create -s mars -i host -p hr -P prod -a voodoo=yes #{hostname_hr} -w test"
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Create project=warehouse
     hostname_warehouse = HappyHelper.randomhostname
-    noodlin = "create -s mars -i host -p warehouse -P prod -a voodoo=yes #{hostname_warehouse}"
+    noodlin = "create -s mars -i host -p warehouse -P prod -a voodoo=yes #{hostname_warehouse} -w test"
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # refresh bareword_hash (and options but bareword_hash is what matters for voodoo)

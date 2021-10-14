@@ -6,14 +6,14 @@ require_relative 'spec_helper'
 describe 'Noodle' do
   it 'noodlin param role=db for multiple nodes' do
     hostname1 = HappyHelper.randomhostname
-    noodlin = "create -s mars -i host -p hr -P prod #{hostname1}"
+    noodlin = "create -s mars -i host -p hr -P prod #{hostname1} -w test"
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     hostname2 = HappyHelper.randomhostname
-    noodlin = "create -s mars -i host -p hr -P prod #{hostname2}"
+    noodlin = "create -s mars -i host -p hr -P prod #{hostname2} -w test"
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
-    noodlin = "param role=db #{hostname1} #{hostname2}"
+    noodlin = "param role=db #{hostname1} #{hostname2} -w test"
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Make sure role param is present for both

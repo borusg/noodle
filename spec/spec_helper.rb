@@ -410,23 +410,23 @@ describe 'Noodle' do
   it "allow refreshing options" do
     ## Allow gum to be a hash
     # Create ilk=option entry and refresh options:
-    noodlin = 'create -i option -p noodle -P prod -s mars -a target_ilk=default -a limits.limits=hash default.option.example.com'
+    noodlin = 'create -i option -p noodle -P prod -s mars -a target_ilk=default -a limits.limits=hash default.option.example.com -w test'
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
-    noodlin = 'param limits.project=hr,financials,lms,noodle,registration,test,warehouse default.option.example.com'
+    noodlin = 'param limits.project=hr,financials,lms,noodle,registration,test,warehouse default.option.example.com -w test'
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Let limits.gum be a hash,
-    noodlin = 'param limits.gum=hash default.option.example.com'
+    noodlin = 'param limits.gum=hash default.option.example.com -w test'
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
     # Let limits.chew be a hash too
-    noodlin = 'param limits.chew=hash default.option.example.com'
+    noodlin = 'param limits.chew=hash default.option.example.com -w test'
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Uniqueness based on name *and* ilk:
-    noodlin = 'param limits.uniqueness_params=array default.option.example.com'
+    noodlin = 'param limits.uniqueness_params=array default.option.example.com -w test'
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
-    noodlin = 'param uniqueness_params=ilk default.option.example.com'
+    noodlin = 'param uniqueness_params=ilk default.option.example.com -w test'
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Refresh options
