@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/borusg/noodle.svg?branch=master)](https://travis-ci.org/borusg/noodle) [![Coverage Status](https://coveralls.io/repos/github/borusg/noodle/badge.svg?branch=master)](https://coveralls.io/github/borusg/noodle?branch=master)
+[![Build Status](https://travis-ci.org/borusg/noodle.svg?branch=master)](https://travis-ci.org/borusg/noodle) [![codecov](https://codecov.io/gl/happymcplaksin/noodle/branch/\x6d61696e/graph/badge.svg?token=PAJMA0D05K)](https://codecov.io/gl/happymcplaksin/noodle)
 
 # noodle
 Clean-room implementation of the [Puppet External Node Classifier](http://docs.puppetlabs.com/guides/external_nodes.html)
