@@ -12,8 +12,8 @@ gem 'rake'
 gem 'rspec'
 gem 'rspec_rake'
 gem 'hashie'
-gem 'coveralls', require: false
 gem 'optimist'
 gem 'pry', require: false
 gem 'rest-client'
 gem 'deepsort'
+gem 'codecov', require: false, group: :test
