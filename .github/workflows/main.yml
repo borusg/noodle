@@ -28,8 +28,8 @@ jobs:
       - name: Install Elasticsearch
         run: |
           curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.11.2-amd64.deb
-          dpkg -i --force-confnew                                      elasticsearch-7.11.2-amd64.deb
-          service elasticsearch restart
+          sudo dpkg -i --force-confnew                                 elasticsearch-7.11.2-amd64.deb
+          sudo service elasticsearch restart
           sleep 5 # Wait for Elasticsearch to start :)
       - name: Run tests
         run: bundle exec rake test
