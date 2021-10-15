@@ -1,7 +1,7 @@
 # Rubocop says:
 # frozen_string_literal: true
 
-if ENV.has_key('GITLAB_CI')
+if ENV.key?('GITLAB_CI')
   require 'simplecov'
   SimpleCov.start
 
