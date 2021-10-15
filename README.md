@@ -1,4 +1,4 @@
-[![Build Status](https://gitlab.com/happymcplaksin/noodle/badges/main/pipeline.svg) [![codecov](https://codecov.io/gl/happymcplaksin/noodle/branch/main/graph/badge.svg?token=PAJMA0D05K)](https://codecov.io/gl/happymcplaksin/noodle)
+![Build Status](https://gitlab.com/happymcplaksin/noodle/badges/main/pipeline.svg) [![codecov](https://codecov.io/gl/happymcplaksin/noodle/branch/main/graph/badge.svg?token=PAJMA0D05K)](https://codecov.io/gl/happymcplaksin/noodle)
 
 # noodle
 Clean-room implementation of the [Puppet External Node Classifier](http://docs.puppetlabs.com/guides/external_nodes.html)
