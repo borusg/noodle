@@ -1,0 +1,39 @@
+# From: https://github.com/actions/starter-workflows/blob/main/ci/ruby.yml
+
+name: Ruby
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: ['2.6', '2.7', '3.0']
+
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
+        # change this to (see https://github.com/ruby/setup-ruby#versioning):
+        # uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@v1 # 473e4d8fe5dd94ee328fdfca9f8c9c7afc9dae5e
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Install Elasticsearch
+        run: |
+          curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.11.2-amd64.deb
+          dpkg -i --force-confnew                                      elasticsearch-7.11.2-amd64.deb
+          service elasticsearch restart
+          sleep 5 # Wait for Elasticsearch to start :)
+      - name: Run tests
+        run: bundle exec rake test
