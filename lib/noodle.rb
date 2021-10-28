@@ -230,6 +230,10 @@ class Noodle < Sinatra::Base
     changes = String.new(params.keys.first)
     changes << "=#{params.values.first}" unless params.values.first.nil?
     b, s = Noodle::Controller.noodlin(changes, { now: now })
+    if b == false
+      b = 'No nodes matched, no action taken.'
+      s = 400
+    end
     body   b
     status s
   end

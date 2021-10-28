@@ -374,9 +374,9 @@ class Noodle
       return ["Oops! No nodes specified.\n", 400] if nodes.empty?
 
       # Unless creating, must be able to find all nodes
+      found = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(nodes).go
       return false unless
-        command == 'create' ||
-        (found = Noodle::Search.new(Noodle::NodeRepository.repository).match_names(nodes).go)
+        command == 'create' || found.any?
 
       allowed_statuses = Noodle::Option.limit('default', 'status')
       # TODO: default_ilk = 'host'
