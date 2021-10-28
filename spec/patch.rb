@@ -24,6 +24,8 @@ describe 'Noodle' do
     # Note time, sleep a moment, make sure time doesn't change after PATCH
     create_time = r['facts']['noodle_create_time']
     sleep(1)
+    # Note update time and make sure it *does* change
+    update_time = r['facts']['noodle_update_time']
 
     # Patch, change site to mars
     params = { params: { ilk: 'host', site: 'mars' } }.to_json
@@ -54,5 +56,6 @@ describe 'Noodle' do
     assert_equal 'purple',           r['params']['color']
     assert_equal 'jack',             r['facts']['thatsa']
     assert_equal create_time,        r['facts']['noodle_create_time']
+    refute_equal update_time,        r['facts']['noodle_update_time']
   end
 end

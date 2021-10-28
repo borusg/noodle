@@ -529,6 +529,7 @@ class Noodle
         value = node.send(key).deep_merge(value) unless options[:replace_all]
         node.send("#{key}=", value)
       end
+      node.facts.noodle_update_time = Time.now.utc.iso8601
 
       # TODO: is this order and being outside the loop correct?
       r = node.errors?
@@ -572,7 +573,9 @@ class Noodle
       # Set default FQDN fact in case none provided
       node.facts[:fqdn] = node.name if node.facts[:fqdn].nil?
       # Set create time when not provided
-      node.facts.noodle_create_time = Time.now.utc.iso8601 if node.facts.noodle_create_time.nil?
+      now = Time.now.utc.iso8601
+      node.facts.noodle_create_time = now if node.facts.noodle_create_time.nil?
+      node.facts.noodle_update_time = now
 
       # TODO: This is both ugly and repeated :(
       r = node.errors?

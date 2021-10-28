@@ -99,14 +99,6 @@ class Noodle
       end
     end
 
-    # Add create_time and last_update_time
-    def serialize(document)
-      node = super
-      t = Time.now.utc.iso8601
-      node[:facts]['noodle_update_time'] = t
-      node
-    end
-
     def deserialize(document)
       node = super
       node.id = document['_id']
