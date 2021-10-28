@@ -131,4 +131,5 @@ noodle_query = URI.encode(query.join(' ')).gsub('=', '%3D').gsub('+', '%2B').gsu
 uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/?#{noodle_query}#{maybe_refresh}")
 
 puts "URI is #{uri}" if opts[:debug]
-puts Net::HTTP.get(uri)
+r = Net::HTTP.get(uri)
+puts r unless r.empty?
