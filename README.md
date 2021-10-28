@@ -210,6 +210,19 @@ util/create-sample-nodes.sh
 util/makepasta.rb > /tmp/makepasta.out
 . /tmp/makepasta.out
 ```
+## Backend manipulation via pry
+`bundle exec bin/console` and read the comments it displays. Currently:
+
+```
+# For example:
+#
+# nodes = magic('ilk=host')
+# node = nodes.first
+# node.params.site = 'jupiter'
+# repository.save(node)
+#
+# node = magic_node('ilk=host site=jupiter')
+```
 
 # Running Noodle on OpenShift
 Exercise left to reader: I assume you can hook up a Ruby Application at [OpenShift](https://www.openshift.com/) to a Noodle repository :)  I picked OpenShift because it's free and doesn't require a credit card.

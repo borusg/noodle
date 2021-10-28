@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+
+# Rubocop says:
+# frozen_string_literal: true
+
+require 'pry'
+require 'elasticsearch/persistence'
+require 'json'
+
+require './lib/noodle/controller'
+require './lib/noodle/model'
+require './lib/noodle/option'
+require './lib/noodle/repository'
+require './lib/noodle/search'
+
+log = false
+
+index = 'noodle'
+
+client = Elasticsearch::Client.new(url: ENV['ELASTICSEARCH_URL'], log: log)
+repository = Noodle::NodeRepository.new(client: client, index_name: index)
+Noodle::NodeRepository.set_repository(repository)
+Noodle::Option.refresh
+
+def magic(query)
+  r = Noodle::Controller.magic("#{query} json")
+  unless r[1] == 200
+    puts "Sorry, error: #{r[0]}"
+    return nil
+  end
+
+  nodes = []
+  # 'json' returns an array of nodes
+  JSON.parse(r[0]).each do |hash|
+    nodes << Noodle::Node.new(hash)
+  end
+  nodes
+end
+
+# For example:
+#
+# nodes = magic('ilk=host')
+# node = nodes.first
+# node.params.site = 'jupiter'
+# repository.save(node)
+#
+# node = magic('ilk=host site=jupiter')
+
+Pry.config.default_window_size = 10
+binding.pry
