@@ -571,6 +571,8 @@ class Noodle
       # TODO: This is probably bogus:
       # Set default FQDN fact in case none provided
       node.facts[:fqdn] = node.name if node.facts[:fqdn].nil?
+      # Set create time when not provided
+      node.facts.noodle_create_time = Time.now.utc.iso8601 if node.facts.noodle_create_time.nil?
 
       # TODO: This is both ugly and repeated :(
       r = node.errors?

@@ -20,7 +20,10 @@ describe 'Noodle' do
     assert_equal 'moon',             r['params']['site']
     assert_equal 'purple',           r['params']['color']
     assert_equal 'jack',             r['facts']['thatsa']
+
+    # Note time, sleep a moment, make sure time doesn't change after PATCH
     create_time = r['facts']['noodle_create_time']
+    sleep(1)
 
     # Patch, change site to mars
     params = { params: { ilk: 'host', site: 'mars' } }.to_json
