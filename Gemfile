@@ -17,3 +17,4 @@ gem 'pry', require: false
 gem 'rest-client'
 gem 'deepsort'
 gem 'codecov', require: false, group: :test
+gem 'elastic-apm'

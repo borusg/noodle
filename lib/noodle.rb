@@ -13,6 +13,7 @@ require 'sinatra/config_file'
 require 'elasticsearch/persistence'
 require 'multi_json'
 require 'oj'
+require 'elastic-apm'
 
 # Super debug logging
 # Noodle::Node.gateway.client.transport.logger = Logger.new(STDERR)
@@ -22,6 +23,7 @@ class Noodle < Sinatra::Base
   # Default settings:
   configure do
     set elasticsearch_logging: false
+    set apm: true
   end
 
   register Sinatra::ConfigFile
@@ -30,6 +32,8 @@ class Noodle < Sinatra::Base
   # the file in the directory in which this file lives! So:
   etccfg = '/etc/noodle/config.yml'
   config_file File.exist?(etccfg) ? etccfg : '../config.yml'
+
+  use ElasticAPM::Middleware if settings.apm
 
   enable :logging
 

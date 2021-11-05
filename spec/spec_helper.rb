@@ -397,8 +397,6 @@ module HappyHelper
       }
     }.to_json
   end
-
-
 end
 
 # Minitest
@@ -408,7 +406,10 @@ end
 
 # Start a local rack server to serve up test pages.
 @server_thread = Thread.new do
+  # TODO: Add setting to skip APM. How/Where to do that?
+  ElasticAPM.start(app: Noodle)
   Rack::Handler::Puma.run Noodle.new, Port: 2929
+  at_exit { ElasticAPM.stop }
 end
 
 describe 'Noodle' do
