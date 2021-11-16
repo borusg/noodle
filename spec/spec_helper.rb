@@ -160,6 +160,9 @@ module HappyHelper
         project:         :hr,
         prodlevel:       :dev,
         last_updated_by: :spec
+      },
+      facts: {
+        storage_gigs: 4.0
       }
     }
     node[:facts] = { magnitude: magnitude } unless magnitude.nil?
