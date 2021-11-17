@@ -5,7 +5,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it 'allows summation to work via FACT+' do
-    post '/nodes/somesum.example.com?now', HappyHelper.node_jupiter
+    post '/nodes/somesum.example.com?now', HappyHelper.node_stupiter
     assert_equal 201, last_response.status
 
     r = MultiJson.load last_response.body

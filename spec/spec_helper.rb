@@ -160,9 +160,6 @@ module HappyHelper
         project:         :hr,
         prodlevel:       :dev,
         last_updated_by: :spec
-      },
-      facts: {
-        storage_gigs: 4.0
       }
     }
     node[:facts] = { magnitude: magnitude } unless magnitude.nil?
@@ -221,6 +218,23 @@ module HappyHelper
         project:         :hr,
         prodlevel:       :dev,
         last_updated_by: :spec
+      }
+    }.to_json
+  end
+  def self.node_stupiter
+    {
+      params: {
+        created_by:      :spec,
+        ilk:             :host,
+        status:          :enabled,
+        site:            :jupiter,
+        justfora:        :test,
+        project:         :hr,
+        prodlevel:       :dev,
+        last_updated_by: :spec
+      },
+      facts: {
+        storage_gigs: 4.0
       }
     }.to_json
   end
