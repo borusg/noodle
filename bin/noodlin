@@ -174,10 +174,7 @@ end
 noodlin << ARGV.join(' ')
 # puts "Your noodlin is:\n#{noodlin}" #if opts[:debug]
 
-# Oh boy encoding is fun. Shirley, some other call would encode better
-# without the need for the gsubs. But just as Shirley, noodlin should
-# really be a POST so TODO that one day and encoding won't matter.
-noodle_query = URI.encode(noodlin.join(' ')).gsub('=', '%3D').gsub('+', '%2B')
+noodle_query = URI.encode_www_form_component(noodlin.join(' '))
 uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/noodlin/?now&#{noodle_query}")
 # puts "URI is #{uri}" if opts[:debug]
 

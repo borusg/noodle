@@ -123,7 +123,8 @@ query << "#{opts[:sum]}+"                  if opts[:sum]
 query << ":#{opts[:unique_value]}"         if opts[:unique_value]
 query += ARGV
 
-url = URI.parse("http://#{ENV['NOODLE_SERVER']}/nodes/_/")
-url.query = URI.encode_www_form_component("#{query.join(' ')}#{maybe_refresh}")
-puts "URI is #{url}" if opts[:debug]
-puts Net::HTTP.get(url)
+noodle_query = URI.encode_www_form_component(query.join(' '))
+uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/?#{noodle_query}#{maybe_refresh}")
+puts "URI is #{uri}" if opts[:debug]
+
+puts Net::HTTP.get(uri)
