@@ -123,13 +123,7 @@ query << "#{opts[:sum]}+"                  if opts[:sum]
 query << ":#{opts[:unique_value]}"         if opts[:unique_value]
 query += ARGV
 
-# Oh boy encoding is fun. Shirley, some other call would encode better
-# without the need for the gsubs. But just as Shirley, noodlin should
-# really be a POST so TODO that one day and encoding won't matter.
-noodle_query = URI.encode(query.join(' ')).gsub('=', '%3D').gsub('+', '%2B').gsub('?', '%3F')
-
-uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/?#{noodle_query}#{maybe_refresh}")
-
-puts "URI is #{uri}" if opts[:debug]
-r = Net::HTTP.get(uri)
-puts r unless r.empty?
+url = URI.parse("http://#{ENV['NOODLE_SERVER']}/nodes/_/")
+url.query = URI.encode_www_form_component("#{query.join(' ')}#{maybe_refresh}")
+puts "URI is #{url}" if opts[:debug]
+puts Net::HTTP.get(url)
