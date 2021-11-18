@@ -1,6 +1,7 @@
 development:
   elasticsearch_logging: true
   apm: true
+  ecs_logging: true
 
 test:
   elasticsearch_logging: true
@@ -8,3 +9,4 @@ test:
 production:
   elasticsearch_logging: false
   apm: true
+  ecs_logging: true

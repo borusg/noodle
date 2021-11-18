@@ -18,3 +18,4 @@ gem 'rest-client'
 gem 'deepsort'
 gem 'codecov', require: false, group: :test
 gem 'elastic-apm'
+gem 'ecs-logging'

@@ -14,6 +14,7 @@ require 'elasticsearch/persistence'
 require 'multi_json'
 require 'oj'
 require 'elastic-apm'
+require 'ecs_logging/middleware'
 
 # Super debug logging
 # Noodle::Node.gateway.client.transport.logger = Logger.new(STDERR)
@@ -24,6 +25,7 @@ class Noodle < Sinatra::Base
   configure do
     set elasticsearch_logging: false
     set apm: true
+    set ecs_logging: true
   end
 
   register Sinatra::ConfigFile
@@ -34,8 +36,7 @@ class Noodle < Sinatra::Base
   config_file File.exist?(etccfg) ? etccfg : '../config.yml'
 
   use ElasticAPM::Middleware if settings.apm
-
-  enable :logging
+  use EcsLogging::Middleware, $stdout if settings.ecs_logging
 
   require_relative 'noodle/model'
   require_relative 'noodle/controller'

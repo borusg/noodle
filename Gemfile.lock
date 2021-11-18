@@ -22,6 +22,7 @@ GEM
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
+    ecs-logging (1.0.0)
     elastic-apm (4.4.0)
       concurrent-ruby (~> 1.0)
       http (>= 3.0)
@@ -164,6 +165,7 @@ PLATFORMS
 DEPENDENCIES
   codecov
   deepsort
+  ecs-logging
   elastic-apm
   elasticsearch-persistence
   hashie
