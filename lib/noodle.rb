@@ -26,6 +26,7 @@ class Noodle < Sinatra::Base
     set elasticsearch_logging: false
     set apm: true
     set ecs_logging: true
+    set ecs_log_correlation: true
   end
 
   register Sinatra::ConfigFile
@@ -35,8 +36,10 @@ class Noodle < Sinatra::Base
   etccfg = '/etc/noodle/config.yml'
   config_file File.exist?(etccfg) ? etccfg : '../config.yml'
 
+  # Hi Elastic APM and ECS and log correlation!
   use ElasticAPM::Middleware if settings.apm
   use EcsLogging::Middleware, $stdout if settings.ecs_logging
+  require_relative 'monkeys' if ecs_log_correlation
 
   require_relative 'noodle/model'
   require_relative 'noodle/controller'
