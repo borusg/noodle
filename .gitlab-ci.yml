@@ -1,7 +1,15 @@
+include:
+  - template: Security/SAST.gitlab-ci.yml
+
 default:
   image: ruby:2.7
 
+stages:
+  - run-tests
+  - test
+
 run-tests:
+  stage: run-tests
   script:
     - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-amd64.deb
     - dpkg -i --force-confnew                                      elasticsearch-7.15.2-amd64.deb
