@@ -23,13 +23,13 @@ GEM
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     ecs-logging (1.0.0)
-    elastic-apm (4.4.0)
+    elastic-apm (4.5.0)
       concurrent-ruby (~> 1.0)
       http (>= 3.0)
-    elasticsearch (7.15.0)
-      elasticsearch-api (= 7.15.0)
-      elasticsearch-transport (= 7.15.0)
-    elasticsearch-api (7.15.0)
+    elasticsearch (7.16.0)
+      elasticsearch-api (= 7.16.0)
+      elasticsearch-transport (= 7.16.0)
+    elasticsearch-api (7.16.0)
       multi_json
     elasticsearch-model (7.2.0)
       activesupport (> 3)
@@ -41,7 +41,7 @@ GEM
       elasticsearch (~> 7)
       elasticsearch-model (= 7.2.0)
       hashie
-    elasticsearch-transport (7.15.0)
+    elasticsearch-transport (7.16.0)
       faraday (~> 1)
       multi_json
     faraday (1.8.0)
@@ -67,7 +67,7 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    hashie (4.1.0)
+    hashie (5.0.0)
     http (5.0.4)
       addressable (~> 2.8)
       http-cookie (~> 1.0)
@@ -77,15 +77,15 @@ GEM
     http-cookie (1.0.4)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
-    i18n (1.8.10)
+    i18n (1.8.11)
       concurrent-ruby (~> 1.0)
     llhttp-ffi (0.4.0)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
     method_source (1.0.0)
-    mime-types (3.3.1)
+    mime-types (3.4.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2021.0901)
+    mime-types-data (3.2021.1115)
     minitest (5.14.4)
     minitest-reporters (1.4.3)
       ansi
@@ -129,7 +129,7 @@ GEM
     rspec-mocks (3.10.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
-    rspec-support (3.10.2)
+    rspec-support (3.10.3)
     rspec_rake (1.0.0)
       rake
     ruby-progressbar (1.11.0)
@@ -157,7 +157,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8)
-    zeitwerk (2.4.2)
+    zeitwerk (2.5.1)
 
 PLATFORMS
   ruby
