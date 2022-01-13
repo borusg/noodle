@@ -11,8 +11,8 @@ stages:
 run-tests:
   stage: run-tests
   script:
-    - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.16.1-amd64.deb
-    - dpkg -i --force-confnew                                      elasticsearch-7.16.1-amd64.deb
+    - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.16.3-amd64.deb
+    - dpkg -i --force-confnew                                      elasticsearch-7.16.3-amd64.deb
     - service elasticsearch restart
     - sleep 5 # Wait for Elasticsearch to start :)
     - gem update bundler
