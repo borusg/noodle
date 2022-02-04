@@ -31,7 +31,7 @@ class Noodle < Sinatra::Base
     set elasticsearch_password_file: nil
     set elasticsearch_ca_file: nil
     set elasticsearch_ssl_verify: false
-    set elasticsearch_url: 'http://localhost:9200'
+    set elasticsearch_url: ENV['ELASTICSEARCH_URL']
   end
 
   register Sinatra::ConfigFile
