@@ -27,6 +27,11 @@ class Noodle < Sinatra::Base
     set apm: true
     set ecs_logging: true
     set ecs_log_correlation: true
+    set elasticsearch_username: nil
+    set elasticsearch_password_file: nil
+    set elasticsearch_ca_file: nil
+    set elasticsearch_ssl_verify: false
+    set elasticsearch_url: 'http://localhost:9200'
   end
 
   register Sinatra::ConfigFile
@@ -56,7 +61,7 @@ class Noodle < Sinatra::Base
   # Only force create Elasticsearch index when running tests
   maybe_force_create_index = false
   configure :test do
-    index = 'this-is-for-running-noodle-elasticsearch-tests-only-nodes'
+    index = 'noodle-this-is-for-running-noodle-elasticsearch-tests-only-nodes'
     index_settings = {
       number_of_shards: 1,
       number_of_replicas: 0,
@@ -73,7 +78,21 @@ class Noodle < Sinatra::Base
     }
   end
 
-  client = Elasticsearch::Client.new(url: ENV['ELASTICSEARCH_URL'], log: settings.elasticsearch_logging)
+  password = nil
+  password = File.read(settings.elasticsearch_password_file).chomp unless settings.elasticsearch_password_file.nil?
+  client = Elasticsearch::Client.new(
+    url: settings.elasticsearch_url,
+    user: settings.elasticsearch_username,
+    password: password,
+    transport_options: {
+      ssl: {
+        ca_file: settings.elasticsearch_ca_file,
+        verify: settings.elasticsearch_ssl_verify
+      }
+    },
+    log: settings.elasticsearch_logging
+  )
+
   repository = Noodle::NodeRepository.new(client: client, index_name: index)
   repository.settings index_settings
   # Create the index if it doesn't already exist

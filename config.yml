@@ -3,9 +3,19 @@ development:
   apm: true
   ecs_logging: true
   ecs_log_correlation: true
+  elasticsearch_username: 'noodle_user'
+  elasticsearch_password_file: 'config/.pw'
+  elasticsearch_ca_file: 'config/elastic-stack-cacert.pem'
+  elasticsearch_ssl_verify: false
+  elasticsearch_url: 'https://localhost:9200'
 
 test:
   elasticsearch_logging: true
+  elasticsearch_username: 'noodle_user'
+  elasticsearch_password_file: 'config/.pw'
+  elasticsearch_ca_file: 'config/elastic-stack-cacert.pem'
+  elasticsearch_ssl_verify: false
+  elasticsearch_url: 'https://localhost:9200'
 
 production:
   elasticsearch_logging: false
