@@ -80,8 +80,8 @@ class Noodle < Sinatra::Base
 
   password = nil
   password = File.read(settings.elasticsearch_password_file).chomp if
-    File.exist?(settings.elasticsearch_password_file) &&
-    !settings.elasticsearch_password_file.nil?
+    !settings.elasticsearch_password_file.nil? &&
+    File.exist?(settings.elasticsearch_password_file)
 
   client = Elasticsearch::Client.new(
     url: settings.elasticsearch_url,
