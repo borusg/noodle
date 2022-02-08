@@ -16,8 +16,6 @@ require 'oj'
 require 'elastic-apm'
 require 'ecs_logging/middleware'
 
-$stdout.sync
-
 # Super debug logging
 # Noodle::Node.gateway.client.transport.logger = Logger.new(STDERR)
 
