@@ -336,7 +336,7 @@ class Noodle
     def self.noodlin(changes, options)
       # Default to success
       status = 200
-      body = ''
+      body = +''
 
       # TODO: prettier?
       command, rest = changes.split(/\s+/, 2)
@@ -465,7 +465,7 @@ class Noodle
                     status = 400
                   end
                 else
-                  body << node.errors?(silent_if_none: true).to_s
+                  body << node.errors?(silent_if_none: true)[:errors].to_s
                 end
               end
             when '+=', '-='
@@ -486,7 +486,7 @@ class Noodle
                       status = 400
                     end
                   else
-                    body << node.errors?(silent_if_none: true).to_s
+                    body << node.errors?(silent_if_none: true)[:errors].to_s
                   end
                 else
                   body << "#{name} is not an array for #{node.name}"
@@ -510,7 +510,7 @@ class Noodle
               status = 400
             end
           else
-            body << node.errors?(silent_if_none: true).to_s
+            body << node.errors?(silent_if_none: true)[:errors].to_s
           end
         end
       when 'remove'
