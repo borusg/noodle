@@ -17,6 +17,7 @@ jobs:
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - uses: actions/checkout@v2
+
       - name: Set up Ruby
         # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
         # change this to (see https://github.com/ruby/setup-ruby#versioning):
@@ -25,11 +26,21 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-      - name: Install Elasticsearch
+
+      # Today (3/2022) the ES action doesn't seem to set up authentication or TLS
+      - name: Runs Elasticsearch and grabs CA cert
+        env:
+          ELASTICSEARCH_PASSWORD: ${{ secrets.ELASTICSEARCH_PASSWORD }}
+          NOODLE_PASSWORD: ${{ secrets.NOODLE_PASSWORD }}
         run: |
-          curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.16.3-amd64.deb
-          sudo dpkg -i --force-confnew                                 elasticsearch-7.16.3-amd64.deb
-          sudo service elasticsearch restart
-          sleep 5 # Wait for Elasticsearch to start :)
+          docker network create elastic
+          docker run --rm --name es01 --net elastic -p 9200:9200 -p 9300:9300 --env "ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}" --detach docker.elastic.co/elasticsearch/elasticsearch:8.0.1
+          sleep 60 # Yup, sleep is silly, better later
+          docker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt config/elastic-stack-cacert.pem
+          bin/elasticsearch-create-noodle-role.sh
+          bin/elasticsearch-create-noodle-user.sh
+          # Give noodle_user password to Noodle
+          echo "${NOODLE_PASSWORD}" > config/.pw
+
       - name: Run tests
-        run: bundle exec rake test
+        run: bundle exec rake test_authttps
