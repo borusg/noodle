@@ -34,7 +34,7 @@ jobs:
           NOODLE_PASSWORD: ${{ secrets.NOODLE_PASSWORD }}
         run: |
           docker network create elastic
-          docker run --rm --name es01 --net elastic -p 9200:9200 -p 9300:9300 --env "ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}" --detach hub.docker.com/elastic/elasticsearch:8.1.0
+          docker run --rm --name es01 --net elastic -p 9200:9200 -p 9300:9300 --env "ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}" --detach elastic/elasticsearch:8.1.0
           sleep 60 # Yup, sleep is silly, better later
           docker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt config/elastic-stack-cacert.pem
           bin/elasticsearch-create-noodle-role.sh
