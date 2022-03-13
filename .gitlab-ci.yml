@@ -1,21 +1,24 @@
-include:
-  - template: Security/SAST.gitlab-ci.yml
+variables:
+  ELASTIC_PASSWORD: "$ELASTICSEARCH_PASSWORD"
+  ELASTICSEARCH_PASSWORD: "$ELASTICSEARCH_PASSWORD"
+  NOODLE_PASSWORD: "$NOODLE_PASSWORD"
 
-default:
-  image: ruby:2.7
+image: ruby:2.7
+services:
+  - name: elastic/elasticsearch:8.1.0
+    alias: es01
 
 stages:
   - run-tests
-  - test
 
 run-tests:
   stage: run-tests
   script:
-    - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.16.3-amd64.deb
-    - dpkg -i --force-confnew                                      elasticsearch-7.16.3-amd64.deb
-    - service elasticsearch restart
-    - sleep 5 # Wait for Elasticsearch to start :)
+    - sleep 60 # Wait for ES, wait for it, better later.
+    - bin/elasticsearch-create-noodle-role.sh
+    - bin/elasticsearch-create-noodle-user.sh
+    - echo "${NOODLE_PASSWORD}" > config/.pw
     - gem update bundler
     - bundle config set path 'vendor/bundle'
     - bundle install
-    - bundle exec rake test
+    - bundle exec rake test_authttps
