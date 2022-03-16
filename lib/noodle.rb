@@ -80,6 +80,15 @@ class Noodle < Sinatra::Base
     }
     maybe_force_create_index = true
   end
+  configure :test_authttps_github do
+    index = 'noodle-this-is-for-running-noodle-elasticsearch-tests-only-nodes'
+    index_settings = {
+      number_of_shards: 1,
+      number_of_replicas: 0,
+      index: { mapping: { total_fields: { limit: '5000' } } }
+    }
+    maybe_force_create_index = true
+  end
   configure :production do
     index = 'noodle-nodes'
     index_settings = {

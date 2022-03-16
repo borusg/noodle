@@ -8,7 +8,7 @@ else
   tls_opt='-k'
 fi
 
-curl -s $tls_opt -u "elastic:${ELASTICSEARCH_PASSWORD}" -X POST "https://es01:9200/_security/user/noodle_user?pretty" -H 'Content-Type: application/json' -d'
+curl -v -s $tls_opt -u "elastic:${ELASTICSEARCH_PASSWORD}" -X POST "https://${ES_HOST}:9200/_security/user/noodle_user?pretty" -H 'Content-Type: application/json' -d'
 {
     "password" : "'${NOODLE_PASSWORD}'",
     "roles" : [ "noodle_role" ]

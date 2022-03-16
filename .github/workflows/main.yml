@@ -4,9 +4,13 @@ name: Ruby
 
 on: [push, pull_request]
 
+env:
+  ELASTICSEARCH_PASSWORD: ${{ secrets.ELASTICSEARCH_PASSWORD }}
+  NOODLE_PASSWORD: ${{ secrets.NOODLE_PASSWORD }}
+  ES_HOST: localhost
+
 jobs:
   test:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -28,19 +32,21 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
       # Today (3/2022) the ES action doesn't seem to set up authentication or TLS
-      - name: Runs Elasticsearch and grabs CA cert
-        env:
-          ELASTICSEARCH_PASSWORD: ${{ secrets.ELASTICSEARCH_PASSWORD }}
-          NOODLE_PASSWORD: ${{ secrets.NOODLE_PASSWORD }}
-        run: |
-          docker network create elastic
-          docker --debug run --rm --name es01 --net elastic -p 9200:9200 -p 9300:9300 --env "ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}" --detach docker.elastic.co/elasticsearch/elasticsearch:8.1.0
-          sleep 60 # Yup, sleep is silly, better later
-          docker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt config/elastic-stack-cacert.pem
-          bin/elasticsearch-create-noodle-role.sh
-          bin/elasticsearch-create-noodle-user.sh
-          # Give noodle_user password to Noodle
-          echo "${NOODLE_PASSWORD}" > config/.pw
+      - name: Create Docker net for elastic
+        run: docker network create elastic
+      - name: Start Elasticsearch and grabs CA cert
+        run: docker run -t --rm --name es01 --net elastic -p 9200:9200 -p 9300:9300 --env "ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}" --detach docker.elastic.co/elasticsearch/elasticsearch:8.0.1
+      - name: Wait for ES to be ready
+        run: sleep 60 # Yup, sleep is silly, better later
+      - name: Copy Elastic CA cert
+        run: docker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt config/elastic-stack-cacert.pem
+
+      - name: Create Noodle role in ES
+        run: bin/elasticsearch-create-noodle-role.sh
+      - name: Create Noodle user in ES
+        run: bin/elasticsearch-create-noodle-user.sh
+      - name: Give noodle_user password to Noodle
+        run: echo "${NOODLE_PASSWORD}" > config/.pw
 
       - name: Run tests
-        run: bundle exec rake test_authttps
+        run: bundle exec rake test_authttps_github
