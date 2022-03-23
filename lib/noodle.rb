@@ -80,7 +80,7 @@ class Noodle < Sinatra::Base
     }
     maybe_force_create_index = true
   end
-  configure :test_authttps_github do
+  configure :test_authttps_localhost do
     index = 'noodle-this-is-for-running-noodle-elasticsearch-tests-only-nodes'
     index_settings = {
       number_of_shards: 1,

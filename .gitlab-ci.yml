@@ -16,8 +16,8 @@ run-tests:
   stage: run-tests
   script:
     - sleep 60 # Wait for ES, wait for it, better later.
-    - bin/elasticsearch-create-noodle-role.sh
-    - bin/elasticsearch-create-noodle-user.sh
+    - bin/elasticsearch-create-noodle-role.sh "${ELASTICSEARCH_PASSWORD}" "${ES_HOST}"
+    - bin/elasticsearch-create-noodle-user.sh "${ELASTICSEARCH_PASSWORD}" "${NOODLE_PASSWORD}" "${ES_HOST}"
     - echo "${NOODLE_PASSWORD}" > config/.pw
     - gem update bundler
     - bundle config set path 'vendor/bundle'

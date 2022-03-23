@@ -1,4 +1,12 @@
-#!/bin/sh -x
+#!/bin/sh
+
+PW="$1"
+HOST="$2"
+if [ -z "$1" -o -z "$2" ]
+then
+  echo "Usage: $0 PASSWORD HOSTNAME"
+  exit 1
+fi
 
 ca_file='config/elastic-stack-cacert.pem'
 if [ -f $ca_file ]
@@ -8,7 +16,7 @@ else
   tls_opt='-k'
 fi
 
-curl -v -s $tls_opt -u "elastic:${ELASTICSEARCH_PASSWORD}" -X POST "https://${ES_HOST}:9200/_security/role/noodle_role?pretty" -H 'Content-Type: application/json' -d'
+curl -v -s $tls_opt -u "elastic:${PW}" -X POST "https://${HOST}:9200/_security/role/noodle_role?pretty" -H 'Content-Type: application/json' -d'
 {
   "cluster": ["monitor"],
   "indices": [
