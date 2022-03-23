@@ -1,0 +1,32 @@
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: UseRubyVersion@0
+  inputs:
+    versionSpec: '= 2.7'
+    addToPath: true
+  env:
+    ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD}
+    NOODLE_PASSWORD: ${NOODLE_PASSWORD}
+- script: docker network create elastic
+  displayName: 'create elastic net'
+- script: docker run -t --rm --name es01 --net elastic -p 9200:9200 -p 9300:9300 --env "ELASTIC_PASSWORD=$(ELASTICSEARCH_PASSWORD)" --detach docker.elastic.co/elasticsearch/elasticsearch:8.1.0
+  displayName: 'Start Elasticsearch container'
+- script: sleep 60
+  displayName: 'Wait for Elasticsearch to start'
+- script: docker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt config/elastic-stack-cacert.pem
+  displayName: Copy Elastic CA cert
+- script: bin/elasticsearch-create-noodle-role.sh $(ELASTICSEARCH_PASSWORD) localhost
+  displayName: Create Noodle role in ES
+- script: bin/elasticsearch-create-noodle-user.sh $(ELASTICSEARCH_PASSWORD) $(NOODLE_PASSWORD) localhost
+  displayName: Create Noodle user in ES
+- script: echo "$(NOODLE_PASSWORD)" > config/.pw
+  displayName: Give noodle_user password to Noodle
+- script: |
+    CALL gem install bundler
+    bundle config set path 'vendor/bundle'
+    bundle install
+  displayName: 'bundle install'
+- script: bundle exec rake test_authttps_localhost
+  displayName: 'Run tests'
