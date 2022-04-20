@@ -35,7 +35,7 @@ jobs:
       - name: Create Docker net for elastic
         run: docker network create elastic
       - name: Start Elasticsearch and grabs CA cert
-        run: docker run -t --rm --name es01 --net elastic -p 9200:9200 -p 9300:9300 --env "ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}" --detach docker.elastic.co/elasticsearch/elasticsearch:8.1.2
+        run: docker run -t --rm --name es01 --net elastic -p 9200:9200 -p 9300:9300 --env "ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}" --detach docker.elastic.co/elasticsearch/elasticsearch:8.1.3
       - name: Wait for ES to be ready
         run: sleep 60 # Yup, sleep is silly, better later
       - name: Copy Elastic CA cert
