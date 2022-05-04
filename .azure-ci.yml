@@ -1,3 +1,6 @@
+# 5/4/2022: Git in latest Ubuntu no workie, gave up on Azure DevOps
+# https://stackoverflow.com/questions/69875520/unable-to-negotiate-with-40-74-28-9-port-22-no-matching-host-key-type-found-th
+
 pool:
   vmImage: ubuntu-latest
 
