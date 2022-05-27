@@ -1,9 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (7.0.2.4)
-      activesupport (= 7.0.2.4)
-    activesupport (7.0.2.4)
+    activemodel (7.0.3)
+      activesupport (= 7.0.3)
+    activesupport (7.0.3)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -22,7 +22,7 @@ GEM
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     ecs-logging (1.0.0)
-    elastic-apm (4.5.0)
+    elastic-apm (4.5.1)
       concurrent-ruby (~> 1.0)
       http (>= 3.0)
     elasticsearch (7.17.1)
@@ -77,7 +77,7 @@ GEM
       http-form_data (~> 2.2)
       llhttp-ffi (~> 0.4.0)
     http-accept (1.7.0)
-    http-cookie (1.0.4)
+    http-cookie (1.0.5)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
     i18n (1.10.0)
@@ -101,7 +101,7 @@ GEM
       ruby2_keywords (~> 0.0.1)
     netrc (0.11.0)
     nio4r (2.5.8)
-    oj (3.13.11)
+    oj (3.13.13)
     optimist (3.0.1)
     pry (0.14.1)
       coderay (~> 1.1)
@@ -109,7 +109,7 @@ GEM
     public_suffix (4.0.7)
     puma (5.6.4)
       nio4r (~> 2.0)
-    rack (2.2.3)
+    rack (2.2.3.1)
     rack-protection (2.2.0)
       rack
     rack-test (1.1.0)
@@ -159,7 +159,7 @@ GEM
       concurrent-ruby (~> 1.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.8.1)
+    unf_ext (0.0.8.2)
 
 PLATFORMS
   ruby
