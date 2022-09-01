@@ -4,10 +4,21 @@ development:
   ecs_logging: true
   ecs_log_correlation: true
   elasticsearch_username: 'noodle_user'
-  elasticsearch_password_file: 'config/.pw'
+  elasticsearch_password_file: '.pw/empathy'
   elasticsearch_ca_file: 'config/elastic-stack-cacert.pem'
   elasticsearch_ssl_verify: false
   elasticsearch_url: 'https://localhost:9200'
+
+docker:
+  elasticsearch_logging: true
+  apm: true
+  ecs_logging: true
+  ecs_log_correlation: true
+  elasticsearch_username: 'noodle_user'
+  elasticsearch_password_file: '.pw/docker'
+  elasticsearch_ca_file: 'config/elastic-stack-cacert.pem'
+  elasticsearch_ssl_verify: false
+  elasticsearch_url: 'https://es01:9200'
 
 test:
   elasticsearch_logging: true
@@ -29,7 +40,7 @@ test_authttps_localhost:
   ecs_logging: true
   ecs_log_correlation: true
   elasticsearch_username: 'noodle_user'
-  elasticsearch_password_file: 'config/.pw'
+  elasticsearch_password_file: '.pw/empathy'
   elasticsearch_ca_file: 'config/elastic-stack-cacert.pem'
   elasticsearch_ssl_verify: false
   elasticsearch_url: 'https://localhost:9200'

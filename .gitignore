@@ -1,7 +1,10 @@
 .bundle
+.pw/
 *.swp
 attic/
+config/elastic-stack-cacert.pem
+config/elasticsearch-ca.pem
 coverage/
 docker/
 vendor
-.pw
+wip/

@@ -8,7 +8,6 @@
 # TODO: Assuming we're perfect and there's only one result for a search
 #       by name is probably stupid
 require 'sinatra/base'
-require 'sinatra/reloader'
 require 'sinatra/config_file'
 require 'elasticsearch/persistence'
 require 'multi_json'
@@ -53,15 +52,29 @@ class Noodle < Sinatra::Base
   require_relative 'noodle/repository'
   require_relative 'noodle/search'
 
-  configure :development do
-    register Sinatra::Reloader
-  end
-
   index = nil
   index_settings = nil
 
   # Only force create Elasticsearch index when running tests
   maybe_force_create_index = false
+  configure :development do
+    index = 'noodle-nodes-dev'
+    index_settings = {
+      number_of_shards: 1,
+      number_of_replicas: 0,
+      index: { mapping: { total_fields: { limit: '5000' } } }
+    }
+    maybe_force_create_index = true
+  end
+  configure :docker do
+    index = 'noodle-nodes-docker'
+    index_settings = {
+      number_of_shards: 1,
+      number_of_replicas: 0,
+      index: { mapping: { total_fields: { limit: '5000' } } }
+    }
+    maybe_force_create_index = true
+  end
   configure :test do
     index = 'noodle-this-is-for-running-noodle-elasticsearch-tests-only-nodes'
     index_settings = {
@@ -102,6 +115,10 @@ class Noodle < Sinatra::Base
   password = File.read(settings.elasticsearch_password_file).chomp if
     !settings.elasticsearch_password_file.nil? &&
     File.exist?(settings.elasticsearch_password_file)
+  if password.nil?
+    puts 'Error, password cannot be nil.'
+    exit 7
+  end
 
   client = Elasticsearch::Client.new(
     url: settings.elasticsearch_url,
@@ -117,6 +134,18 @@ class Noodle < Sinatra::Base
   )
 
   repository = Noodle::NodeRepository.new(client: client, index_name: index)
+  # Wait for repository to be ready:
+  health = nil
+  until %w[green yellow].include?(health)
+    begin
+      health = repository.client.cluster.health['status']
+      puts "Elasticsearch health: #{health}"
+    rescue
+      puts 'Elasticsearch is not healthy yet; waiting'
+      sleep 3
+    end
+  end
+
   repository.settings index_settings
   # Create the index if it doesn't already exist
   repository.create_index! force: maybe_force_create_index
