@@ -46,7 +46,7 @@ jobs:
       - name: Create Noodle user in ES
         run: bin/elasticsearch-create-noodle-user.sh "${ELASTICSEARCH_PASSWORD}" "${NOODLE_PASSWORD}" "${ES_HOST}"
       - name: Give noodle_user password to Noodle
-        run: echo "${NOODLE_PASSWORD}" > config/.pw
+        run: echo "${NOODLE_PASSWORD}" > .pw
 
       - name: Run tests
         run: bundle exec rake test_authttps_localhost

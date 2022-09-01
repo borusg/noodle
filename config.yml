@@ -29,7 +29,7 @@ test_authttps:
   ecs_logging: true
   ecs_log_correlation: true
   elasticsearch_username: 'noodle_user'
-  elasticsearch_password_file: 'config/.pw'
+  elasticsearch_password_file: '.pw'
   elasticsearch_ca_file: 'config/elastic-stack-cacert.pem'
   elasticsearch_ssl_verify: false
   elasticsearch_url: 'https://es01:9200'
