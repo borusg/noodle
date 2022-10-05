@@ -12,6 +12,7 @@
 require 'uri'
 require 'net/http'
 require 'optimist'
+require 'json'
 
 ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].nil?
 
@@ -66,19 +67,19 @@ def do_create
 
   puts "So, you want to create host(s) named #{hosts} with these options: #{opts}?" if opts[:debug]
   noodlin = ['create']
-  noodlin << "-i #{opts[:ilk]}"
-  noodlin << "-p #{opts[:prodlevel]}"
-  noodlin << "-P #{opts[:project]}"
-  noodlin << "-s #{opts[:site]}"
-  # noodlin << "-S #{opts[:status]}"
-  noodlin << "-a usgos=#{opts[:usgos]}" if opts[:usgos_given]
-  noodlin << "-w #{opts[:who]}"
+  noodlin += ['-i', opts[:ilk]]
+  noodlin += ['-p', opts[:prodlevel]]
+  noodlin += ['-P', opts[:project]]
+  noodlin += ['-s', opts[:site]]
+  # noodlin + ['-S', opts[:status]]
+  noodlin += ['-a', "usgos=#{opts[:usgos]}"] if opts[:usgos_given]
+  noodlin += ['-w', opts[:who]]
 
   opts[:param].each do |pair|
-    noodlin << "-a #{pair}"
+    noodlin += ['-a', pair]
   end
   opts[:fact].each do |pair|
-    noodlin << "-f #{pair}"
+    noodlin += ['-f', pair]
   end
   # Rubocop says this is not needed but when I remove it, tests fail
   return(noodlin)
@@ -94,8 +95,9 @@ def do_param
   end
 
   noodlin = ['param']
-  noodlin << "-w #{opts[:who]}"
+  noodlin += ['-w', opts[:who]]
   noodlin << '-r' if opts[:remove]
+
   # Rubocop says this is not needed but when I remove it, tests fail
   # presumabry because of the 'if'
   return(noodlin)
@@ -111,8 +113,9 @@ def do_fact
   end
 
   noodlin = ['fact']
-  noodlin << "-w #{opts[:who]}"
+  noodlin += ['-w', opts[:who]]
   noodlin << '-r' if opts[:remove]
+
   # Rubocop says this is not needed but when I remove it, tests fail
   # presumabry because of the 'if'
   return(noodlin)
@@ -126,7 +129,7 @@ def do_optionrefresh
 
   noodlin = []
   noodlin << 'optionrefresh'
-  noodlin << "-w #{opts[:who]}"
+  noodlin + ['-w', opts[:who]]
 end
 
 def do_remove
@@ -137,7 +140,7 @@ def do_remove
 
   noodlin = []
   noodlin << 'remove'
-  noodlin << "-w #{opts[:who]}"
+  noodlin + ['-w', opts[:who]]
 end
 
 def do_surplus
@@ -148,7 +151,7 @@ def do_surplus
 
   noodlin = []
   noodlin << 'surplus'
-  noodlin << "-w #{opts[:who]}"
+  noodlin + ['-w', opts[:who]]
 end
 
 command = ARGV.shift
@@ -171,12 +174,14 @@ else
 end
 
 # Append the remaining args which may be hostnames and/or key/value pairs
-noodlin << ARGV.join(' ')
+noodlin += ARGV
+noodlin = noodlin.to_json
 # puts "Your noodlin is:\n#{noodlin}" #if opts[:debug]
 
-noodle_query = URI.encode_www_form_component(noodlin.join(' '))
-uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/noodlin/?now&#{noodle_query}")
+uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/noodlin/?now")
 # puts "URI is #{uri}" if opts[:debug]
 
-r = Net::HTTP.get(uri)
-puts r unless r.empty?
+http = Net::HTTP.new(uri.host, uri.port)
+request = Net::HTTP::Put.new(uri, 'Content-Type' => 'application/json')
+request.body = noodlin
+puts http.request(request).body

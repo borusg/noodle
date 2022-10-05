@@ -340,15 +340,16 @@ class Noodle
       body = +''
 
       # TODO: prettier?
-      command, rest = changes.split(/\s+/, 2)
+      changes = changes.split(/\s+/, 2) if changes.instance_of?(String)
+      command = changes.shift
+      # TODO: Handle the case where rest is nil (how is it I haven't encountered that before?!)
+      rest = changes
+
       # TODO: TEMPORARY HACK: This is ugly and will only refresh options on a single node in the cluster!
       if command == 'optionrefresh'
         Noodle::Option.refresh
         return ['Your options had a nap and they are nicely refreshed.', 200]
       end
-
-      # TODO: Handle the case where rest is nil (how is it I haven't encountered that before?!)
-      rest = rest.split(/\s+/)
 
       p = Optimist::Parser.new do
         opt :remove,    'thing to remove (used with fact, param)', type: :string
@@ -362,6 +363,7 @@ class Noodle
         opt :who,       'Username of person making the change',    type: :string, short: 'w', required: true
       end
       opts = p.parse(rest)
+
       # At this point rest contains node(s) and possibly key=value
       # pairs for the fact or param sub-commands
 
@@ -396,7 +398,7 @@ class Noodle
           params = {}
 
           # Convert special opts into params:
-          params['created_by']      = opts[:who],
+          params['created_by']      = opts[:who]
           params['ilk']             = opts[:ilk] # TODO: || default_ilk,
           params['project']         = opts[:project]
           params['prodlevel']       = opts[:prodlevel]

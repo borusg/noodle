@@ -294,8 +294,9 @@ class Noodle < Sinatra::Base
 
   # Magic via POST to allow query via JSON
   post '/nodes/_/' do
-    query = JSON.parse(request.body.read)
     maybe_refresh(params)
+
+    query = JSON.parse(request.body.read)
     b, s = Noodle::Controller.magic(query)
     body   b
     status s
@@ -317,7 +318,21 @@ class Noodle < Sinatra::Base
     # TODO: This can't be the way to do this!
     changes = String.new(params.keys.first)
     changes << "=#{params.values.first}" unless params.values.first.nil?
-    b, s = Noodle::Controller.noodlin(changes, { now: now })
+    b, s = Noodle::Controller.noodlin(changes, now: now)
+    if b == false
+      b = 'No nodes matched, no action taken.'
+      s = 400
+    end
+    body   b
+    status s
+  end
+
+  # Noodlin via put to allow query via JSON
+  put '/nodes/noodlin/' do
+    maybe_refresh(params)
+
+    noodlin = JSON.parse(request.body.read)
+    b, s = Noodle::Controller.noodlin(noodlin, now: params.key?('now'))
     if b == false
       b = 'No nodes matched, no action taken.'
       s = 400
