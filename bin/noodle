@@ -6,6 +6,7 @@
 require 'uri'
 require 'net/http'
 require 'optimist'
+require 'json'
 
 ENV['NOODLE_SERVER'] = 'localhost:9292' if ENV['NOODLE_SERVER'].nil?
 
@@ -123,8 +124,12 @@ query << "#{opts[:sum]}+"                  if opts[:sum]
 query << ":#{opts[:unique_value]}"         if opts[:unique_value]
 query += ARGV
 
-noodle_query = URI.encode_www_form_component(query.join(' '))
-uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/?#{noodle_query}#{maybe_refresh}")
+uri = URI("http://#{ENV['NOODLE_SERVER']}/nodes/_/?#{maybe_refresh}")
+noodle_query = query.to_json
 puts "URI is #{uri}" if opts[:debug]
+puts "query is #{noodle_query}" if opts[:debug]
 
-puts Net::HTTP.get(uri)
+http = Net::HTTP.new(uri.host, uri.port)
+request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
+request.body = noodle_query
+puts http.request(request).body

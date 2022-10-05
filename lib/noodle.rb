@@ -286,10 +286,19 @@ class Noodle < Sinatra::Base
       body ''
       status 200
     else
-      b,s = Noodle::Controller.magic(query)
+      b, s = Noodle::Controller.magic(query)
       body   b
       status s
     end
+  end
+
+  # Magic via POST to allow query via JSON
+  post '/nodes/_/' do
+    query = JSON.parse(request.body.read)
+    maybe_refresh(params)
+    b, s = Noodle::Controller.magic(query)
+    body   b
+    status s
   end
 
   # TODO: Really this old-style noodlin should go away in favor of a

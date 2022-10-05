@@ -71,7 +71,8 @@ class Noodle
 
       # TODO: The required ordering below is ugly which indicates
       # there's a better way.
-      query.split(/\s+/).each do |part|
+      query = query.split(/\s+/) if query.instance_of?(String)
+      query.each do |part|
         case part
         when *bareword_hash.keys
           format = :list
