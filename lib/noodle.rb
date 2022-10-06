@@ -115,7 +115,7 @@ class Noodle < Sinatra::Base
   password = File.read(settings.elasticsearch_password_file).chomp if
     !settings.elasticsearch_password_file.nil? &&
     File.exist?(settings.elasticsearch_password_file)
-  if password.nil?
+  if password.nil? && !settings.elasticsearch_username.nil?
     puts 'Error, password cannot be nil.'
     exit 7
   end
