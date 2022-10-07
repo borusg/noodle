@@ -69,71 +69,76 @@ class Noodle
       term_unique_values          = Regexp.new '^:'            # Matches when term starts with :
       term_sum                    = Regexp.new '[+]$'          # Matches when term ends with +
 
+      # Avoid overriding certain formats
+      final_formats = %i[full json json_params_only]
+
       # TODO: The required ordering below is ugly which indicates
       # there's a better way.
       query = query.split(/\s+/) if query.instance_of?(String)
+
       query.each do |part|
+        warn "part=#{part}."
         case part
         when *bareword_hash.keys
-          format = :list
+          format = :list unless final_formats.include?(format)
           value = part
           term = bareword_hash[value]
           search.equals(term, value)
 
         # Look for this before term_persent since term_present matches both
         when term_present_and_show_value
-          format = :list
+          format = :list unless final_formats.include?(format)
           term = part.sub(term_present_and_show_value, '')
           search.exists(term)
           show << term
 
         when term_does_not_equal
-          format = :list
+          format = :list unless final_formats.include?(format)
           term, value = part.sub(/^[-@]/, '').split(/=/, 2)
           search.not_equal(term, value)
 
         # Look for this after term_does_not_equal since it this regexp matches. TODO: Ugly!
         when term_not_present
-          format = :list
+          format = :list unless final_formats.include?(format)
           term = part.sub(/^[-@]/, '')
           search.does_not_exist(term)
 
         when term_present
-          format = :list
+          format = :list unless final_formats.include?(format)
           term = part.sub(/\?$/, '')
           search.exists(term)
 
         when term_show_value
-          format = :list
+          format = :list unless final_formats.include?(format)
           show << part.chop
 
         when term_matches_regexp
-          format = :list
+          format = :list unless final_formats.include?(format)
           term, value = part.split(term_matches_regexp, 2)
           search.match_regexp(term, value)
 
         when term_equals
-          format = :list
+          format = :list unless final_formats.include?(format)
           term, value = part.split(term_equals, 2)
           search.equals(term, value)
 
         when term_unique_values
           thing2unique = part.sub(term_unique_values, '')
-          format = :unique_values
+          format = :unique_values unless final_formats.include?(format)
 
         when term_sum
-          format = :sum
+          format = :sum unless final_formats.include?(format)
           term = part.sub(term_sum, '')
           search.sum(term)
 
         when 'full'
-          format = :full
+          format = :full unless %i[json json_params_only].include?(format)
 
         when 'json'
           format = :json
 
         when 'json_params_only'
-          format = :json_params_only
+          format = :json_params_only unless format == :json
 
         # TODO: What use cas was merge intended for? The search code had this:
         # found = merge(found,hostnames,show) if merge
