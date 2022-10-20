@@ -1,4 +1,0 @@
----
-threaded: true
-port: 9292
-log: "/tmp/thin.log"
