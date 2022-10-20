@@ -7,6 +7,7 @@
 workers 0 if ENV['RACK_ENV'] == 'test'
 
 if ENV['RACK_ENV'] == 'production'
-  stdout_redirect('/var/log/noodle/error.log', '/var/log/noodle/access.log', true)
+  stdout_redirect('/var/log/noodle/access.log', '/var/log/noodle/error.log', true)
+  log_requests
   set_remote_address header: 'X-Forwarded-For'
 end
