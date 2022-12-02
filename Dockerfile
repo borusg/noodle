@@ -3,7 +3,7 @@
 # Check if you leaked secrets:
 # docker history my-fancy-image
 
-FROM ruby:2.7.6-alpine3.16 AS BUILDER
+FROM ruby:3.1.3-alpine3.17 AS BUILDER
 
 RUN apk add --update build-base
 
@@ -15,7 +15,7 @@ RUN echo 'gem: --no-document' >> ~/.gemrc &&        \
     bundle install
 
 # The final image: we start clean
-FROM ruby:2.7.6-alpine3.16
+FROM ruby:3.1.3-alpine3.17
 
 RUN adduser -D noodle
 USER noodle
@@ -25,6 +25,7 @@ COPY --chown=noodle --from=builder /usr/local/bundle/ /usr/local/bundle/
 
 # Source code
 WORKDIR /srv
+# Um, .pw used to be in .dockerignore so maybe this needs to be handled a different way
 COPY --chown=noodle . .pw/docker ./
 
 # Start! Listen on all IP addresses because Docker.

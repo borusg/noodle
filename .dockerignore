@@ -5,7 +5,6 @@
 *.png
 .docker-compose.env
 .git
-.pw/
 Dockerfile*
 LICENSE
 Rakefile
