@@ -3,7 +3,7 @@
 # Check if you leaked secrets:
 # docker history my-fancy-image
 
-FROM ruby:3.1.3-alpine3.17 AS BUILDER
+FROM ruby:3.2.2-alpine3.18 AS BUILDER
 
 RUN apk add --update build-base
 
@@ -15,7 +15,7 @@ RUN echo 'gem: --no-document' >> ~/.gemrc &&        \
     bundle install
 
 # The final image: we start clean
-FROM ruby:3.1.3-alpine3.17
+FROM ruby:3.2.2-alpine3.18
 
 RUN adduser -D noodle
 USER noodle
