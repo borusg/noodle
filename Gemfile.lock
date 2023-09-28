@@ -26,10 +26,10 @@ GEM
       concurrent-ruby (~> 1.0)
       http (>= 3.0)
       ruby2_keywords
-    elasticsearch (7.17.8)
-      elasticsearch-api (= 7.17.8)
-      elasticsearch-transport (= 7.17.8)
-    elasticsearch-api (7.17.8)
+    elasticsearch (7.17.9)
+      elasticsearch-api (= 7.17.9)
+      elasticsearch-transport (= 7.17.9)
+    elasticsearch-api (7.17.9)
       multi_json
     elasticsearch-model (7.2.1)
       activesupport (> 3)
@@ -41,7 +41,7 @@ GEM
       elasticsearch (~> 7)
       elasticsearch-model (= 7.2.1)
       hashie
-    elasticsearch-transport (7.17.8)
+    elasticsearch-transport (7.17.9)
       faraday (~> 1)
       multi_json
     faraday (1.10.3)
@@ -67,7 +67,7 @@ GEM
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
     faraday-retry (1.0.3)
-    ffi (1.15.5)
+    ffi (1.16.2)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -108,7 +108,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (5.0.3)
-    puma (6.3.1)
+    puma (6.4.0)
       nio4r (~> 2.0)
     rack (2.2.8)
     rack-protection (3.1.0)
