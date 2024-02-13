@@ -226,6 +226,7 @@ class Noodle < Sinatra::Base
 
   post '/nodes/:name' do
     maybe_refresh(params)
+    request.body.rewind
     body, status = create(request, params)
 
     body body
@@ -296,6 +297,7 @@ class Noodle < Sinatra::Base
   post '/nodes/_/' do
     maybe_refresh(params)
 
+    request.body.rewind
     query = JSON.parse(request.body.read)
     b, s = Noodle::Controller.magic(query)
     body   b
@@ -331,6 +333,7 @@ class Noodle < Sinatra::Base
   put '/nodes/noodlin/' do
     maybe_refresh(params)
 
+    request.body.rewind
     noodlin = JSON.parse(request.body.read)
     b, s = Noodle::Controller.noodlin(noodlin, now: params.key?('now'))
     if b == false
@@ -355,6 +358,7 @@ class Noodle < Sinatra::Base
     end
 
     def request2object(request, params)
+      request.body.rewind
       s = request.body.read
       hash = MultiJson.load(s)
       hash['name'] = params[:name] unless params[:name].nil?

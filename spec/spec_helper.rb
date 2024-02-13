@@ -13,6 +13,7 @@ ENV['RACK_ENV'] = 'test'
 require 'rack/test'
 require_relative '../lib/noodle'
 require 'securerandom'
+require 'rackup'
 require 'rack/handler/puma'
 
 ENV['NOODLE_SERVER'] = 'localhost:2929'
@@ -425,7 +426,7 @@ end
 @server_thread = Thread.new do
   # TODO: Add setting to skip APM. How/Where to do that?
   ElasticAPM.start(app: Noodle)
-  Rack::Handler::Puma.run Noodle.new, Port: 2929
+  Rackup::Handler::Puma.run Noodle.new, Port: 2929
   at_exit { ElasticAPM.stop }
 end
 

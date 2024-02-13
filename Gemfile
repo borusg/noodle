@@ -19,3 +19,4 @@ gem 'deepsort'
 gem 'codecov', require: false, group: :test
 gem 'elastic-apm'
 gem 'ecs-logging'
+gem 'rackup'
