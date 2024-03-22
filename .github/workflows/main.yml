@@ -39,7 +39,7 @@ jobs:
       - name: Wait for ES to be ready
         run: sleep 60 # Yup, sleep is silly, better later
       - name: Copy Elastic CA cert
-        run: docker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt config/elastic-stack-cacert.pem
+        run: docker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt config/elasticsearch-ca.pem
 
       - name: Create Noodle role in ES
         run: bin/elasticsearch-create-noodle-role.sh "${ELASTICSEARCH_PASSWORD}" "${ES_HOST}"
