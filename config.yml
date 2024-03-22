@@ -40,8 +40,8 @@ test_authttps_localhost:
   ecs_log_correlation: true
   elasticsearch_username: 'noodle_user'
   elasticsearch_password_file: '.pw/empathy'
-  elasticsearch_ca_file: 'config/elastic-stack-cacert.pem'
-  elasticsearch_ssl_verify: false
+  elasticsearch_ca_file: 'config/elasticsearch-ca.pem'
+  elasticsearch_ssl_verify: true
   elasticsearch_url: 'https://localhost:9200'
 
 production:
