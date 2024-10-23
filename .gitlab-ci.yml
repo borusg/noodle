@@ -4,7 +4,7 @@ variables:
   NOODLE_PASSWORD: "$NOODLE_PASSWORD"
   ES_HOST: "es01"
 
-image: ruby:3.2
+image: ruby:3.3
 services:
   - name: elastic/elasticsearch:8.15.3
     alias: es01
