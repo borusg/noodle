@@ -6,7 +6,7 @@ variables:
 
 image: ruby:3.3
 services:
-  - name: elastic/elasticsearch:8.17.1
+  - name: elastic/elasticsearch:8.17.3
     alias: es01
 
 stages:
