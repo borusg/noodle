@@ -34,7 +34,7 @@ GEM
     domain_name (0.6.20240107)
     drb (2.2.1)
     ecs-logging (1.0.0)
-    elastic-apm (4.7.3)
+    elastic-apm (4.8.0)
       concurrent-ruby (~> 1.0)
       http (>= 3.0)
       ruby2_keywords
@@ -85,10 +85,10 @@ GEM
       rake (~> 13.0)
     logger (1.7.0)
     method_source (1.1.0)
-    mime-types (3.6.2)
+    mime-types (3.7.0)
       logger
-      mime-types-data (~> 3.2015)
-    mime-types-data (3.2025.0429)
+      mime-types-data (~> 3.2025, >= 3.2025.0507)
+    mime-types-data (3.2025.0507)
     minitest (5.25.5)
     minitest-reporters (1.7.1)
       ansi
@@ -113,7 +113,7 @@ GEM
     public_suffix (6.0.2)
     puma (6.6.0)
       nio4r (~> 2.0)
-    rack (3.1.13)
+    rack (3.1.14)
     rack-protection (4.1.1)
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
