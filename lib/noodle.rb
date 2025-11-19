@@ -22,6 +22,8 @@ $stdout.sync = true
 
 # Docs RSN :)
 class Noodle < Sinatra::Base
+  use Rack::RewindableInput::Middleware
+
   # Default settings:
   configure do
     set elasticsearch_logging: false
