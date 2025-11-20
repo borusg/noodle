@@ -126,6 +126,8 @@ class Noodle < Sinatra::Base
     url: settings.elasticsearch_url,
     user: settings.elasticsearch_username,
     password: password,
+    # TODO: request_timeout should be an option. (The default is 60 seconds, apparently inherited from Net::HTTP):
+    request_timeout: 300,
     transport_options: {
       ssl: {
         ca_file: settings.elasticsearch_ca_file,
