@@ -9,6 +9,6 @@ describe 'Noodle' do
     assert_equal 201, last_response.status
 
     post '/nodes/_/', ['jupjup', 'prodlevel='].to_json
-    assert last_response.body.must_include 'jupjup.example.com prodlevel=dev'
+    assert _(last_response.body).must_include 'jupjup.example.com prodlevel=dev'
   end
 end
