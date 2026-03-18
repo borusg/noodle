@@ -11,7 +11,7 @@ describe 'Noodle' do
     `bin/noodlin #{noodlin}`
 
     # Enable it
-    noodlin = "enabled #{hostname} -w test"
+    noodlin = "param status=enabled #{hostname} -w test"
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Make sure status changed to enabled

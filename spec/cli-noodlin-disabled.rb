@@ -11,7 +11,7 @@ describe 'Noodle' do
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Disable it
-    noodlin = "disabled #{hostname} -w test"
+    noodlin = "param status=disabled #{hostname} -w test"
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Make sure status changed to disabled

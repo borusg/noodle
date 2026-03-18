@@ -5,7 +5,7 @@ require_relative 'spec_helper'
 
 describe 'Noodle' do
   it 'allow TERM= to show a fact value' do
-    post '/nodes/factshow.example.com?now', HappyHelper.node_moon
+    post '/nodes/factshow.example.com?now', HappyHelper.node_jupiter
     assert_equal 201, last_response.status
 
     get '/nodes/_/factshow.example.com%20fqdn='

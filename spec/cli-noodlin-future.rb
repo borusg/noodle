@@ -11,7 +11,7 @@ describe 'Noodle' do
     `bin/noodlin #{noodlin}`
 
     # Mark it future
-    noodlin = "future #{hostname} -w test"
+    noodlin = "param status=future #{hostname} -w test"
     assert_output("\n") { puts `bin/noodlin #{noodlin}` }
 
     # Make sure status changed to future
