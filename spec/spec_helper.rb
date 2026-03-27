@@ -1,13 +1,13 @@
 # Rubocop says:
 # frozen_string_literal: true
 
-if ENV.key?('GITLAB_CI')
+#if ENV.key?('GITLAB_CI')
   require 'simplecov'
   SimpleCov.start
 
-  require 'codecov'
-  SimpleCov.formatter = SimpleCov::Formatter::Codecov
-end
+#  require 'codecov'
+#  SimpleCov.formatter = SimpleCov::Formatter::Codecov
+#end
 
 ENV['RACK_ENV'] = 'test'
 require 'rack/test'

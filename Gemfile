@@ -16,7 +16,8 @@ gem 'optimist'
 gem 'pry', require: false
 gem 'rest-client'
 gem 'deepsort'
-gem 'codecov', require: false, group: :test
 gem 'elastic-apm'
 gem 'ecs-logging'
 gem 'rackup'
+gem 'codecov', require: false, group: :test
+gem 'simplecov', require: false, group: :test_authttps_localhost
