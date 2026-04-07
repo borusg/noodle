@@ -18,7 +18,7 @@ GEM
       uri (>= 0.13.1)
     ansi (1.6.0)
     base64 (0.3.0)
-    bigdecimal (4.1.0)
+    bigdecimal (4.1.1)
     builder (3.3.0)
     codecov (0.6.0)
       simplecov (>= 0.15, < 0.22)
@@ -35,7 +35,7 @@ GEM
       concurrent-ruby (~> 1.0)
       http (>= 3.0)
       ruby2_keywords
-    elastic-transport (8.4.1)
+    elastic-transport (8.5.0)
       faraday (< 3)
       multi_json
     elasticsearch (8.19.3)
@@ -66,7 +66,7 @@ GEM
       http-cookie (~> 1.0)
       llhttp (~> 0.6.1)
     http-accept (1.7.0)
-    http-cookie (1.1.0)
+    http-cookie (1.1.4)
       domain_name (~> 0.5)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
@@ -82,10 +82,10 @@ GEM
     minitest (6.0.3)
       drb (~> 2.0)
       prism (~> 1.5)
-    minitest-reporters (1.7.1)
+    minitest-reporters (1.8.0)
       ansi
       builder
-      minitest (>= 5.0)
+      minitest (>= 5.0, < 7)
       ruby-progressbar
     multi_json (1.19.1)
     mustermann (3.0.4)
@@ -111,7 +111,7 @@ GEM
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
       rack (>= 3.0.0, < 4)
-    rack-session (2.1.1)
+    rack-session (2.1.2)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
     rack-test (2.2.0)
