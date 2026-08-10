@@ -8,7 +8,7 @@ describe 'Noodle' do
     post '/nodes/jojo.example.com?now', HappyHelper.node_moon
     assert_equal 201, last_response.status
 
-    r = MultiJson.load last_response.body
+    r = MultiJSON.parse last_response.body
     assert_equal 'jojo.example.com', r['name']
     assert_equal 'host',             r['params']['ilk']
     assert_equal 'surplus',          r['params']['status']

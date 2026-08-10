@@ -364,10 +364,10 @@ class Noodle < Sinatra::Base
     def request2object(request, params)
       request.body.rewind
       s = request.body.read
-      hash = MultiJson.load(s)
+      hash = MultiJSON.parse(s)
       hash['name'] = params[:name] unless params[:name].nil?
       hash
-    rescue MultiJson::ParseError => e
+    rescue MultiJSON::ParseError => e
       puts e.data
       puts e.cause
       halt 500

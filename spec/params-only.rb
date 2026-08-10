@@ -10,7 +10,7 @@ describe 'Noodle' do
     assert_equal 201, last_response.status
 
     get "/nodes/_/#{hostname}%20json_params_only"
-    r = MultiJson.load(last_response.body).first
+    r = MultiJSON.parse(last_response.body).first
     assert_equal hostname, r['name']
     assert_equal 'host', r['params']['ilk']
     assert_equal 'jupiter', r['params']['site']

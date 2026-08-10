@@ -10,7 +10,7 @@ describe 'Noodle' do
 
     get '/nodes/_/output=json2%20json'
     assert_equal 200, last_response.status
-    r = MultiJson.load(last_response.body).first
+    r = MultiJSON.parse(last_response.body).first
     assert_equal 'fofo.example.com', r['name']
     assert_equal 'host',             r['params']['ilk']
     assert_equal 'enabled',          r['params']['status']

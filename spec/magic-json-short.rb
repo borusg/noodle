@@ -11,7 +11,7 @@ describe 'Noodle' do
     get '/nodes/_/output=json%20prodlevel=%20json'
     assert_equal 200, last_response.status
     puts last_response.body
-    r = MultiJson.load(last_response.body).first
+    r = MultiJSON.parse(last_response.body).first
     # We expect a single param:
     assert_equal r['params'].keys, ['prodlevel']
     # and no facts:
