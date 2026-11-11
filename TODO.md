@@ -1,3 +1,6 @@
+HA! Test for non-existent cert files and such :)
+
+
 # TODO
 doc noodlin hash. Samples:
 
